@@ -9,7 +9,7 @@ class App extends Component {
       <div className="container">
         <div className="row header">
           <div className="four columns offset-by-four logo">
-            <h1 className="tree-logo"><span role='img'>🌲</span></h1>
+            <h1 className="tree-logo"><span role='img' aria-label="Tree logo">🌲</span></h1>
             <h1>StakeTree</h1>
           </div> 
         </div>
@@ -51,7 +51,7 @@ class App extends Component {
             <p>I need your help to build StakeTree. In true dogfooding fashion, I'll be funding StakeTree using a staketree contract myself. The MVP is almost done. Signup to the mailing list to get updates (or follow development on <a href="https://github.com/staketree" target="_blank" rel="noopener noreferrer">Github</a> & <a href="https://twitter.com/staketree" target="_blank" rel="noopener noreferrer">Twitter</a>):</p>
           
             <div id="mc_embed_signup">
-            <form action="//staketree.us2.list-manage.com/subscribe/post?u=8cb1857d350191921500a6ac3&amp;id=86873ce044" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" className="validate" target="_blank" novalidate>
+            <form action="//staketree.us2.list-manage.com/subscribe/post?u=8cb1857d350191921500a6ac3&amp;id=86873ce044" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" className="validate" target="_blank" noValidate>
                 <div id="mc_embed_signup_scroll">
             <div className="mc-field-group">
               <input type="email" placeholder="Email address" name="EMAIL" className="required email" id="mce-EMAIL" />
@@ -61,13 +61,13 @@ class App extends Component {
                 <div className="response" id="mce-error-response" style={{"display": 'none'}}></div>
                 <div className="response" id="mce-success-response" style={{"display": 'none'}}></div>
               </div>
-              <div className="mc-hidden-input" aria-hidden="true"><input type="text" name="b_8cb1857d350191921500a6ac3_86873ce044" tabindex="-1" value="" /></div></div>
+              <div className="mc-hidden-input" aria-hidden="true"><input type="text" name="b_8cb1857d350191921500a6ac3_86873ce044" tabIndex="-1" value="" /></div></div>
             </form>
             </div>
 
           </div>
           <div className="three columns avatar">
-            <img src="ava.jpg" />
+            <img src="ava.jpg" alt="Niel's face" />
           </div>
         </div>
       </div>
