@@ -55,7 +55,7 @@ class App extends Component {
                 <div id="mc_embed_signup_scroll">
             <div className="mc-field-group">
               <input type="email" placeholder="Email address" name="EMAIL" className="required email" id="mce-EMAIL" />
-              <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" className="button" />
+              <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" className="mc-button" />
             </div>
               <div id="mce-responses" className="clear">
                 <div className="response" id="mce-error-response" style={{"display": 'none'}}></div>

@@ -32,10 +32,12 @@
 }
 .avatar{
   margin-top: 65px;
+
 }
 .avatar img{
   width: 100%;
-  border-radius: 100px;
+  border-radius: 150px;
+  border: 2px solid #097b4e;
 }
 .info {
   text-align: justify;
@@ -52,4 +54,8 @@
   position: relative;
   top: -1px;
   margin-right: 10px;
+}
+
+.mc-button {
+  background-color: white !important;
 }
