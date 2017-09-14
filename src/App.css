@@ -40,3 +40,16 @@
 .info {
   text-align: justify;
 }
+
+.mc-hidden-input {
+  position: absolute; left: -5000px;
+}
+.mc-label-email {
+  width: 150px;
+  display: inline-block;
+}
+.mc-field-group .email{
+  position: relative;
+  top: -1px;
+  margin-right: 10px;
+}
