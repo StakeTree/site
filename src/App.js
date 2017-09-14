@@ -29,7 +29,7 @@ class App extends Component {
           <div className="four columns">
             <div className="featurette">
               <h4>Get your stake back at any time</h4>
-              <p>Funders can withdraw their funding at any time.</p>
+              <p>Funders can withdraw what's left of their funding at any time.</p>
             </div>
           </div> 
         </div>
