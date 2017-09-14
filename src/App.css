@@ -1,0 +1,42 @@
+.container {
+  border-radius: 5px;
+}
+.header {
+  margin-top: 10px;
+}
+
+.logo {
+  text-align: center;
+  color: yellow;
+}
+
+.tree-logo {
+  font-size: 8em;
+  margin-bottom: -10px;
+}
+
+.featurette {
+  text-align: center;
+  padding: 10px;
+}
+
+.featurette h4 {
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+.content {
+  padding-top: 10px;
+  border-top: 2px solid #444;
+
+}
+.avatar{
+  margin-top: 65px;
+}
+.avatar img{
+  width: 100%;
+  border-radius: 100px;
+}
+.info {
+  text-align: justify;
+}
