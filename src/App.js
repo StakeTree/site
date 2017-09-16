@@ -34,21 +34,30 @@ class App extends Component {
           </div> 
         </div>
         <div className="row content info">
-          <div className="nine columns">
+          
+          <div className="ten columns offset-by-one">
             <h4>More on StakeTree</h4>
-            <p>Hi everyone. <a href="https://twitter.com/nieldlr" target="_blank" rel="noopener noreferrer">Niel de la Rouviere</a> here. StakeTree is just starting out. I believe that to grow the crypto ecosystem
+            <img className="avatar" alt="Niel's face" src="ava.jpg" />
+            <p>
+            Hi everyone. <a href="https://twitter.com/nieldlr" target="_blank" rel="noopener noreferrer">Niel de la Rouviere</a> here. StakeTree is just starting out. I believe that to grow the crypto ecosystem
             (and hopefully much more in the future!) we need sustainable ways to fund projects & creators. ICOs are all the rage, but sometimes it just doesn't make
-            sense for all that capital to be tied up, especially if your dapp doesn't need a token yet.</p>
+            sense for all that capital to be tied up, especially if your dapp doesn't need a token yet.
+            </p>
+            
+            
             <p>Using smart contracts on Ethereum, creators & funders can back projects with no intermediaries, fees and instant settlement.</p>
             <p>There's lots more planned for StakeTree:</p>
             <ul>
-              <li><strong>Creating a simple UI</strong> for funders & creators to fund & withdraw from the contracts.</li>
+              <li><strong>Creating a simple UI</strong> for funders & creators to fund & withdraw from contracts.</li>
               <li><strong>Develop funding tiers</strong>. This is where creators can reward dedicated backers with special rewards/access. Think tiers like Kickstarter & Patreon.</li> 
               <li><strong>Fund contracts with any ERC-20 token.</strong></li>
               <li><strong>Tokenization for funders & creators</strong>. When the creator withdraws ether, it mints tokens for all parties. These tokens can then be used for many things: voting, curation, special access, discounts and more. The creativity of the creator is the limit here.</li>
               <li><strong>Create funding buckets</strong>. For example fund many Ethereum dev related projects using a single payment.</li>
+              <li><strong>Build a platform</strong>. Make it easy for creators to communicate with and build their communities.</li>
             </ul>
-            <p>I need your help to build StakeTree. In true dogfooding fashion, I'll be funding StakeTree using a staketree contract myself. The MVP is almost done. Signup to the mailing list to get updates (or follow development on <a href="https://github.com/staketree" target="_blank" rel="noopener noreferrer">Github</a> & <a href="https://twitter.com/staketree" target="_blank" rel="noopener noreferrer">Twitter</a>):</p>
+            <p>Plus many more ideas to come. But...</p>
+            <p><strong>I need your help to build StakeTree.</strong></p>
+            <p>In true dogfooding fashion, I'll be funding StakeTree using a staketree contract myself. The MVP is almost done. Signup to the mailing list to get updates (or follow development on <a href="https://github.com/staketree" target="_blank" rel="noopener noreferrer">Github</a> & <a href="https://twitter.com/staketree" target="_blank" rel="noopener noreferrer">Twitter</a>):</p>
           
             <div id="mc_embed_signup">
             <form action="//staketree.us2.list-manage.com/subscribe/post?u=8cb1857d350191921500a6ac3&amp;id=86873ce044" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" className="validate" target="_blank" noValidate>
@@ -65,9 +74,6 @@ class App extends Component {
             </form>
             </div>
 
-          </div>
-          <div className="three columns avatar">
-            <img src="ava.jpg" alt="Niel's face" />
           </div>
         </div>
       </div>

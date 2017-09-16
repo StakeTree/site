@@ -1,16 +1,18 @@
-
+@import url('https://fonts.googleapis.com/css?family=Source+Code+Pro:300');
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Courier New', sans-serif !important;
+  /*font-family: 'Courier New', sans-serif !important;*/
+  font-family: 'Source Code Pro', sans-serif !important;
   background-color: white;
-  color: white;
+  color: #444;
   margin-bottom: 50px !important;
 
   background: #d3ffd9;  /* fallback for old browsers */
 	background: -webkit-linear-gradient(to bottom, #fefefe, #e8ffea);  /* Chrome 10-25, Safari 5.1-6 */
 	background: linear-gradient(to bottom, #fefefe, #e8ffea); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
+  background: #fefefe;
 }
 
 h1, h2, h3, h4 {
