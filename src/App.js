@@ -9,8 +9,15 @@ class App extends Component {
     super(props);
 
     this.state = {
-      customAmount: 10
+      customAmount: 10,
+      web3available: false
     };
+
+    window.addEventListener('load', function() {
+      if (typeof web3 !== 'undefined') {
+        this.setState({"web3available": true});
+      }
+    }.bind(this))
   }
   fund(etherAmount) {
     let web3 = window.web3;
@@ -31,7 +38,7 @@ class App extends Component {
   }
 
   noWeb3() {
-    if(typeof web3 === "undefined") {
+    if(!this.state.web3available) {
       return <div className="no-web3"><p>To fund StakeTree using buttons below you need have <a href="https://metamask.io" target="_blank" rel="noopener noreferrer">Metamask</a> installed. Otherwise send ether to this address, {contractAddress}, using your preffered wallet.</p></div>;
     }
     return "";
