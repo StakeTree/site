@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './normalize.css';
 import './skeleton.css';
 import './App.css';
 
@@ -94,10 +93,10 @@ class App extends Component {
             <p>In true dogfooding fashion, I'll be funding StakeTree using a staketree contract myself:</p>
             {noWeb3}
             <div className="cta-buttons">
-              <button onClick={this.fund.bind(this, 1)}>Stake 1 ether towards StakeTree</button>
-              <button onClick={this.fund.bind(this, 5)}>Stake 5 ether towards StakeTree</button>
+              <button className="btn" onClick={this.fund.bind(this, 1)}>Stake 1 ether towards StakeTree</button>
+              <button className="btn" onClick={this.fund.bind(this, 5)}>Stake 5 ether towards StakeTree</button>
               <div className="custom-value">
-                Custom Amount: <input step="0.1" className="custom-value-input" defaultValue={this.state.customAmount} type="number" onChange={this.handleCustomAmount.bind(this)} /><button onClick={this.fund.bind(this, this.state.customAmount)}>Stake {this.state.customAmount} ether towards StakeTree</button>
+                Custom Amount: <input step="0.1" className="custom-value-input" defaultValue={this.state.customAmount} type="number" onChange={this.handleCustomAmount.bind(this)} /><button className="btn" onClick={this.fund.bind(this, this.state.customAmount)}>Stake {this.state.customAmount} ether towards StakeTree</button>
               </div>
             </div>
             <h4>Stay up-to-date</h4>
@@ -107,7 +106,7 @@ class App extends Component {
                 <div id="mc_embed_signup_scroll">
             <div className="mc-field-group">
               <input type="email" placeholder="Email address" name="EMAIL" className="required email" id="mce-EMAIL" />
-              <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" className="mc-button" />
+              <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" className="btn" />
             </div>
               <div id="mce-responses" className="clear">
                 <div className="response" id="mce-error-response" style={{"display": 'none'}}></div>
