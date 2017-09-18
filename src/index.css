@@ -1,12 +1,11 @@
-@import url('https://fonts.googleapis.com/css?family=Source+Code+Pro:300');
+@import url('https://fonts.googleapis.com/css?family=Source+Code+Pro:300|600');
 body {
   margin: 0;
   padding: 0;
-  /*font-family: 'Courier New', sans-serif !important;*/
   font-family: 'Source Code Pro', sans-serif !important;
   background-color: white;
   color: #444;
-  margin-bottom: 50px !important;
+  margin-bottom: 50px;
 
   background: #d3ffd9;  /* fallback for old browsers */
 	background: -webkit-linear-gradient(to bottom, #fefefe, #e8ffea);  /* Chrome 10-25, Safari 5.1-6 */
@@ -17,5 +16,39 @@ body {
 
 h1, h2, h3, h4 {
 	color: #097b4e;
+}
+
+#mc_embed_signup input,
+input{
+  font-family: 'Source Code Pro', sans-serif;
+  transition: box-shadow 0.3s, border 0.3s;
+  border: 1px solid #45bf9a !important;
+  box-shadow: 0px 5px 10px #ededed !important;
+  top: -2px;
+  position: relative;
+}
+
+#mc_embed_signup input:focus,
+input:focus {
+  box-shadow: 0px 5px 10px #bbb !important;
+  border: 1px solid #3ac5d8 !important;
+}
+
+#mc_embed_signup .btn,
+.btn {
+  font-family: 'Source Code Pro', sans-serif;
+  transition: box-shadow 0.3s, border 0.3s;
+  box-shadow: 0px 5px 10px #ededed;
+  font-weight: 300;
+  font-size: 1.2rem;
+  border: 1px solid #45bf9a;
+  color: #444;
+  background: #fefefe;  /* fallback for old browsers */
+}
+
+#mc_embed_signup .btn:hover,
+.btn:hover {
+  box-shadow: 0px 5px 10px #ccc;
+  border: 1px solid #3ac5d8;
 }
 
