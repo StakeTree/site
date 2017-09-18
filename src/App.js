@@ -3,8 +3,44 @@ import './normalize.css';
 import './skeleton.css';
 import './App.css';
 
+const contractAddress = "0x9561c133dd8580860b6b7e504bc5aa500f0f06a7";
+
 class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      customAmount: 10
+    };
+  }
+  fund(etherAmount) {
+    let web3 = window.web3;
+    web3.eth.getAccounts((error, accounts) => {
+      const account = accounts[0];
+
+      web3.eth.sendTransaction(
+        {"from": account, "to": contractAddress, "value": web3.toWei(etherAmount, "ether")}, 
+        (err, transactionHash) => {
+          console.log(transactionHash);
+        }
+      );
+    });
+  }
+
+  handleCustomAmount(e) {
+    this.setState({customAmount: e.target.value});
+  }
+
+  noWeb3() {
+    if(typeof web3 === "undefined") {
+      return <div className="no-web3"><p>To fund StakeTree using buttons below you need have <a href="https://metamask.io" target="_blank" rel="noopener noreferrer">Metamask</a> installed. Otherwise send ether to this address, {contractAddress}, using your preffered wallet.</p></div>;
+    }
+    return "";
+  }
+
   render() {
+    const noWeb3 = this.noWeb3();
+
     return (
       <div className="container">
         <div className="row header">
@@ -43,8 +79,6 @@ class App extends Component {
             (and hopefully much more in the future!) we need sustainable ways to fund projects & creators. ICOs are all the rage, but sometimes it just doesn't make
             sense for all that capital to be tied up, especially if your dapp doesn't need a token yet.
             </p>
-            
-            
             <p>Using smart contracts on Ethereum, creators & funders can back projects with no intermediaries, fees and instant settlement.</p>
             <p>There's lots more planned for StakeTree:</p>
             <ul>
@@ -57,8 +91,17 @@ class App extends Component {
             </ul>
             <p>Plus many more ideas to come. But...</p>
             <p><strong>I need your help to build StakeTree.</strong></p>
-            <p>In true dogfooding fashion, I'll be funding StakeTree using a staketree contract myself. The MVP is almost done. Signup to the mailing list to get updates (or follow development on <a href="https://github.com/staketree" target="_blank" rel="noopener noreferrer">Github</a> & <a href="https://twitter.com/staketree" target="_blank" rel="noopener noreferrer">Twitter</a>):</p>
-          
+            <p>In true dogfooding fashion, I'll be funding StakeTree using a staketree contract myself:</p>
+            {noWeb3}
+            <div className="cta-buttons">
+              <button onClick={this.fund.bind(this, 1)}>Stake 1 ether towards StakeTree</button>
+              <button onClick={this.fund.bind(this, 5)}>Stake 5 ether towards StakeTree</button>
+              <div className="custom-value">
+                Custom Amount: <input step="0.1" className="custom-value-input" defaultValue={this.state.customAmount} type="number" onChange={this.handleCustomAmount.bind(this)} /><button onClick={this.fund.bind(this, this.state.customAmount)}>Stake {this.state.customAmount} ether towards StakeTree</button>
+              </div>
+            </div>
+            <h4>Stay up-to-date</h4>
+            <p>Sign up to the mailing list (or follow development on <a href="https://github.com/staketree" target="_blank" rel="noopener noreferrer">Github</a> & <a href="https://twitter.com/staketree" target="_blank" rel="noopener noreferrer">Twitter</a>)</p>
             <div id="mc_embed_signup">
             <form action="//staketree.us2.list-manage.com/subscribe/post?u=8cb1857d350191921500a6ac3&amp;id=86873ce044" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" className="validate" target="_blank" noValidate>
                 <div id="mc_embed_signup_scroll">

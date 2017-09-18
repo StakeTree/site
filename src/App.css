@@ -41,6 +41,38 @@ img.avatar{
   text-align: justify;
 }
 
+.no-web3 {
+  font-size: 1.2rem;
+  border: 1px solid #ff9b9b;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  padding: 10px;
+}
+
+.custom-value-input {
+  width: 125px;
+  margin-right: 10px;
+}
+
+.cta-buttons {
+  text-align: center;
+}
+.cta-buttons button {
+  display: block;
+  width: 100%;
+  margin: 0px 5px 10px 0px;
+}
+
+.custom-value {
+  padding-left: 10px;
+  text-align: center;
+}
+
+.custom-value button {
+  width: initial;
+  display: inline-block;
+}
+
 .mc-hidden-input {
   position: absolute; left: -5000px;
 }
