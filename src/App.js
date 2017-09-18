@@ -3,7 +3,45 @@ import './normalize.css';
 import './skeleton.css';
 import './App.css';
 
+import Web3 from 'web3';
+
+const contractAddress = "0x9561c133dd8580860b6b7e504bc5aa500f0f06a7";
+
 class App extends Component {
+  constructor(props) {
+    let web3 = window.web3;
+    if (typeof web3 !== 'undefined') {
+      App.web3Provider = web3.currentProvider;
+      web3 = new Web3(web3.currentProvider);
+    } else {
+      // set the provider you want from Web3.providers
+      App.web3Provider = new web3.providers.HttpProvider('http://localhost:8545');
+      web3 = new Web3(App.web3Provider);
+    }
+    super(props);
+
+    this.state = {
+      customAmount: 10
+    };
+  }
+  fund(etherAmount) {
+    let web3 = window.web3;
+    web3.eth.getAccounts((error, accounts) => {
+      const account = accounts[0];
+
+      web3.eth.sendTransaction(
+        {"from": account, "to": contractAddress, "value": web3.toWei(etherAmount, "ether")}, 
+        (err, transactionHash) => {
+          console.log(transactionHash);
+        }
+      );
+    });
+  }
+
+  handleCustomAmount(e) {
+    this.setState({customAmount: e.target.value});
+  }
+
   render() {
     return (
       <div className="container">
@@ -58,7 +96,13 @@ class App extends Component {
             <p>Plus many more ideas to come. But...</p>
             <p><strong>I need your help to build StakeTree.</strong></p>
             <p>In true dogfooding fashion, I'll be funding StakeTree using a staketree contract myself. The MVP is almost done. Signup to the mailing list to get updates (or follow development on <a href="https://github.com/staketree" target="_blank" rel="noopener noreferrer">Github</a> & <a href="https://twitter.com/staketree" target="_blank" rel="noopener noreferrer">Twitter</a>):</p>
-          
+            <div className="cta-buttons">
+            <button onClick={this.fund.bind(this, 1)}>Stake 1 ether towards StakeTree</button>
+            <button onClick={this.fund.bind(this, 5)}>Stake 5 ether towards StakeTree</button>
+            <div className="custom-value">
+              Custom Amount: <input step="0.1" className="custom-value-input" defaultValue={this.state.customAmount} type="number" onChange={this.handleCustomAmount.bind(this)} /><button onClick={this.fund.bind(this, this.state.customAmount)}>Stake {this.state.customAmount} ether towards StakeTree</button>
+              </div>
+            </div>
             <div id="mc_embed_signup">
             <form action="//staketree.us2.list-manage.com/subscribe/post?u=8cb1857d350191921500a6ac3&amp;id=86873ce044" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" className="validate" target="_blank" noValidate>
                 <div id="mc_embed_signup_scroll">

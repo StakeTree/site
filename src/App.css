@@ -41,6 +41,30 @@ img.avatar{
   text-align: justify;
 }
 
+.custom-value-input {
+  width: 125px;
+  margin-right: 10px;
+}
+
+.cta-buttons {
+  text-align: center;
+}
+.cta-buttons button {
+  display: block;
+  width: 100%;
+  margin: 0px 5px 10px 5px;
+}
+
+.custom-value {
+  padding-left: 10px;
+  text-align: center;
+}
+
+.custom-value button {
+  width: initial;
+  display: inline-block;
+}
+
 .mc-hidden-input {
   position: absolute; left: -5000px;
 }
