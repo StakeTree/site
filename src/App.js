@@ -65,7 +65,7 @@ class App extends Component {
           <div className="four columns">
             <div className="featurette">
               <h4>Creators can withdraw funding</h4>
-              <p>Creators can withdraw 10% every two weeks from the staked pool.</p>
+              <p>Creators can withdraw 10% every week from the staked pool.</p>
             </div>
           </div> 
           <div className="four columns">
@@ -112,7 +112,7 @@ class App extends Component {
             <form action="//staketree.us2.list-manage.com/subscribe/post?u=8cb1857d350191921500a6ac3&amp;id=86873ce044" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" className="validate" target="_blank" noValidate>
                 <div id="mc_embed_signup_scroll">
             <div className="mc-field-group">
-              <input type="email" placeholder="Email address" name="EMAIL" className="required email" id="mce-EMAIL" />
+              <input style={{"top": '-3px'}}type="email" placeholder="Email address" name="EMAIL" className="required email" id="mce-EMAIL" />
               <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" className="btn" />
             </div>
               <div id="mce-responses" className="clear">
