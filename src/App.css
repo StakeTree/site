@@ -50,7 +50,7 @@ img.avatar{
 }
 
 .custom-value-input {
-  width: 125px;
+  width: 150px;
   margin-right: 10px;
 }
 
@@ -58,19 +58,13 @@ img.avatar{
   text-align: center;
 }
 .cta-buttons button {
-  display: block;
-  width: 100%;
+  display: inline-block;
+  width: 50%;
   margin: 0px 5px 10px 0px;
 }
 
-.custom-value {
-  padding-left: 10px;
-  text-align: center;
-}
-
-.custom-value button {
-  width: initial;
-  display: inline-block;
+.btn.custom-value-button {
+  width: 29%;
 }
 
 .mc-hidden-input {

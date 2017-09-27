@@ -47,6 +47,8 @@ class App extends Component {
   render() {
     const noWeb3 = this.noWeb3();
 
+    const customAmount = this.state.customAmount > 0 ? this.state.customAmount : 10;
+
     return (
       <div className="container">
         <div className="row header">
@@ -101,10 +103,10 @@ class App extends Component {
             {noWeb3}
             <div className="cta-buttons">
               <button className="btn" onClick={this.fund.bind(this, 1)}>Stake 1 ether towards StakeTree</button>
-              <button className="btn" onClick={this.fund.bind(this, 5)}>Stake 5 ether towards StakeTree</button>
-              <div className="custom-value">
-                Custom Amount: <input step="0.1" className="custom-value-input" defaultValue={this.state.customAmount} type="number" onChange={this.handleCustomAmount.bind(this)} /><button className="btn" onClick={this.fund.bind(this, this.state.customAmount)}>Stake {this.state.customAmount} ether towards StakeTree</button>
-              </div>
+              <button className="btn" onClick={this.fund.bind(this, 5)}>Stake 5 ether towards StakeTree</button><br />
+              <input step="0.1" placeholder="Custom amount?" className="custom-value-input" type="number" onChange={this.handleCustomAmount.bind(this)} />
+              <button className="btn custom-value-button" onClick={this.fund.bind(this, customAmount)}>Stake {customAmount} ether</button>
+      
             </div>
             <h4>Stay up-to-date</h4>
             <p>Sign up to the mailing list (or follow development on <a href="https://github.com/staketree" target="_blank" rel="noopener noreferrer">Github</a> & <a href="https://twitter.com/staketree" target="_blank" rel="noopener noreferrer">Twitter</a>)</p>

@@ -19,36 +19,42 @@ h1, h2, h3, h4 {
 }
 
 #mc_embed_signup input,
-input{
+input {
   font-family: 'Source Code Pro', sans-serif;
   transition: box-shadow 0.3s, border 0.3s;
-  border: 1px solid #45bf9a !important;
-  box-shadow: 0px 5px 10px #ededed !important;
+  border: 1px solid #59b1ef !important;
+  box-shadow: 0px 4px 10px #dcdada !important;
   top: -2px;
   position: relative;
+  border-radius: 8px !important;
 }
 
 #mc_embed_signup input:focus,
 input:focus {
-  box-shadow: 0px 5px 10px #bbb !important;
-  border: 1px solid #3ac5d8 !important;
+  box-shadow: 0px 4px 10px #bbb !important;
+  border: 1px solid #fefefe !important;
 }
 
 #mc_embed_signup .btn,
 .btn {
   font-family: 'Source Code Pro', sans-serif;
-  transition: box-shadow 0.3s, border 0.3s;
-  box-shadow: 0px 5px 10px #ededed;
-  font-weight: 300;
+  transition: box-shadow 0.3s, border 0.3s, background 0s;
+  box-shadow: 0px 4px 10px #dcdada;
+  font-weight: 800;
   font-size: 1.2rem;
-  border: 1px solid #45bf9a;
-  color: #444;
-  background: #fefefe;  /* fallback for old browsers */
+  border: 1px solid #fff !important;
+  border-radius: 8px;
+  color: #fff;
+
+  background: #59b1ef;
+ 
+
 }
 
 #mc_embed_signup .btn:hover,
 .btn:hover {
-  box-shadow: 0px 5px 10px #ccc;
-  border: 1px solid #3ac5d8;
+  color: #fff;
+  box-shadow: 0px 4px 10px #bbb !important;
+  border: 1px solid #fff !important;
 }
 
