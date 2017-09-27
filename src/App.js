@@ -22,14 +22,20 @@ class App extends Component {
   fund(etherAmount) {
     let web3 = window.web3;
     web3.eth.getAccounts((error, accounts) => {
-      const account = accounts[0];
+      if(accounts.length > 0){
+        this.setState({web3available: true});
+        const account = accounts[0];
 
-      web3.eth.sendTransaction(
-        {"from": account, "to": contractAddress, "value": web3.toWei(etherAmount, "ether")}, 
-        (err, transactionHash) => {
-          console.log(transactionHash);
-        }
-      );
+        web3.eth.sendTransaction(
+          {"from": account, "to": contractAddress, "value": web3.toWei(etherAmount, "ether")}, 
+          (err, transactionHash) => {
+            console.log(transactionHash);
+          }
+        );
+      }
+      else {
+        this.setState({web3available: false});
+      }
     });
   }
 
@@ -39,7 +45,7 @@ class App extends Component {
 
   noWeb3() {
     if(!this.state.web3available) {
-      return <div className="no-web3"><p>To fund StakeTree using buttons below you need have <a href="https://metamask.io" target="_blank" rel="noopener noreferrer">Metamask</a> installed. Otherwise send ether to this address, {contractAddress}, using your preffered wallet.</p></div>;
+      return <div className="no-web3"><p>To fund StakeTree using the buttons below you need have <a href="https://metamask.io" target="_blank" rel="noopener noreferrer">MetaMask</a> installed. If you have MetaMask installed, try unlocking it before trying again. Otherwise send ether to this address, <code>{contractAddress}</code>, using your preffered wallet.</p></div>;
     }
     return "";
   }
