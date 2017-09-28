@@ -89,7 +89,7 @@ class App extends Component {
             <h4>More on StakeTree</h4>
             <img className="avatar" alt="Niel's face" src="ava.jpg" />
             <p>
-            Hi everyone. <a href="https://twitter.com/nieldlr" target="_blank" rel="noopener noreferrer">Niel de la Rouviere</a> here. StakeTree is just starting out. I believe that to grow the crypto ecosystem
+            Hi everyone. <a href="https://twitter.com/nieldlr" target="_blank" rel="noopener noreferrer">Niel de la Rouviere</a> here. Welcome to StakeTree! I'm excited to introduce this project. I believe that to grow the crypto ecosystem
             (and hopefully much more in the future!) we need sustainable ways to fund projects & creators. ICOs are all the rage, but sometimes it just doesn't make
             sense for all that capital to be tied up, especially if your dapp doesn't need a token yet.
             </p>
@@ -105,7 +105,7 @@ class App extends Component {
             </ul>
             <p>Plus many more ideas to come. But...</p>
             <p><strong>I need your help to build StakeTree.</strong></p>
-            <p>In true dogfooding fashion, I'll be funding StakeTree using a staketree contract myself:</p>
+            <p>In true dogfooding fashion, I'll be funding StakeTree using the MVP StakeTree contract myself. You can help fund development using the buttons below. If at any time you want to take back what's left of your ether, you can do this at any time. The UI to make that easy is coming very soon!</p>
             {noWeb3}
             <div className="cta-buttons">
               <button className="btn" onClick={this.fund.bind(this, 1)}>Stake 1 ether towards StakeTree</button><br />
