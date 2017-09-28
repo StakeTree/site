@@ -108,7 +108,7 @@ class App extends Component {
             <p>In true dogfooding fashion, I'll be funding StakeTree using a staketree contract myself:</p>
             {noWeb3}
             <div className="cta-buttons">
-              <button className="btn" onClick={this.fund.bind(this, 1)}>Stake 1 ether towards StakeTree</button>
+              <button className="btn" onClick={this.fund.bind(this, 1)}>Stake 1 ether towards StakeTree</button><br />
               <button className="btn" onClick={this.fund.bind(this, 5)}>Stake 5 ether towards StakeTree</button><br />
               <input step="0.1" placeholder="Custom amount?" className="custom-value-input" type="number" onChange={this.handleCustomAmount.bind(this)} />
               <button className="btn custom-value-button" onClick={this.fund.bind(this, customAmount)}>Stake {customAmount} ether</button>

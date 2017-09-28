@@ -38,7 +38,7 @@ img.avatar{
   margin: 2px 20px 10px 0px;
 }
 .info {
-  text-align: justify;
+  text-align: left;
 }
 
 .no-web3 {
@@ -53,6 +53,7 @@ img.avatar{
 .custom-value-input {
   width: 150px;
   margin-right: 10px;
+  top: -1px;
 }
 
 .cta-buttons {
@@ -60,12 +61,7 @@ img.avatar{
 }
 .cta-buttons button {
   display: inline-block;
-  width: 50%;
   margin: 0px 5px 10px 0px;
-}
-
-.btn.custom-value-button {
-  width: 30%;
 }
 
 .mc-hidden-input {
@@ -79,4 +75,33 @@ img.avatar{
   position: relative;
   top: -1px;
   margin-right: 10px;
+}
+
+@media(max-width: 500px){
+  img.avatar {
+    height: 75px;
+    margin: 10px 15px 0px 0px;
+  }
+}
+
+@media(max-width: 420px){
+  .cta-buttons button {
+    width: 100%;
+  }
+  .custom-value-input {
+    margin-right: 10px;
+  }
+  .btn.custom-value-button {
+    text-align: center;
+    width: 100%;
+  }
+}
+
+
+@media(max-width: 360px){
+  .cta-buttons button {
+    width: 100%;
+    font-size: 0.8rem;
+  }
+  
 }
