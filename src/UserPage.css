@@ -1,0 +1,20 @@
+.up-highlights {
+  margin-top: 20px;
+}
+.featurette.up-highlight {
+	border: 1px solid #eee;
+  border-radius: 5px;
+  box-shadow: inset 0px 0px 10px #efefef;
+}
+
+
+img.up-avatar{
+  float: left;
+  border-radius: 5px;
+  height: 225px;
+  margin: 2px 20px 10px 0px;
+}
+
+.up-project-name {
+  margin-top: 14px;
+}

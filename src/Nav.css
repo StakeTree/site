@@ -1,0 +1,9 @@
+.nav-header a {
+  text-decoration: none;
+}
+.nav-header {
+  border-bottom: 1px dashed #444;
+}
+.nav-logo {
+	font-size: 2.5rem;
+}

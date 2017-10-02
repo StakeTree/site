@@ -12,6 +12,10 @@ h1, h2, h3, h4 {
 	color: #097b4e;
 }
 
+a {
+  color: #59b1ef;
+}
+
 #mc_embed_signup input,
 input {
   font-family: 'Source Code Pro', sans-serif;
@@ -40,6 +44,14 @@ input:focus {
   border-radius: 8px;
   color: #fff;
   background: #59b1ef;
+}
+
+.btn.clean {
+  background: #fff;
+  color: #444;
+}
+.btn.clean:hover {
+  color: #444;
 }
 
 #mc_embed_signup .btn:hover, #mc_embed_signup .btn:active, #mc_embed_signup .btn:focus,

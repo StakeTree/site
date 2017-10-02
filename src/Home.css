@@ -25,6 +25,12 @@
   font-weight: 500;
 }
 
+.featurette-mini-text {
+  font-size: 1rem;
+  position: relative;
+  top: -15px;
+}
+
 .content {
   padding-top: 10px;
   border-top: 2px solid #444;
