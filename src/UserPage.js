@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Web3 from 'web3'; // TODO: follow up on how to use web3 when pulled in vs metamask
 import './UserPage.css';
 
 import Nav from './Nav.js';
@@ -6,19 +7,38 @@ import Nav from './Nav.js';
 class UserPage extends Component {
   constructor(props) {
     super(props);
-
+    const web3 = new Web3();
+    console.log(web3);
     this.state = {
       customAmount: 1,
       web3available: false,
       user: { // Fetch this information in the future
         title: 'StakeTree Development Fund',
         contract: {
-          totalContributors: 10,
-          totalBalance: 50,
-          address: "0x9561c133dd8580860b6b7e504bc5aa500f0f06a7"
+          totalContributors: "...",
+          totalBalance: "...",
+          address: "0xcfeb869f69431e42cdb54a4f4f105c19c080a601"
         }
       }
     };
+
+    const fetchHost = window.location.hostname === "localhost" ? "http://localhost:3000" : ''; 
+    const fetchUrl = `${fetchHost}/contract/${this.state.user.contract.address}`;
+    // TODO: Polyfill fetch for back suport
+    fetch(fetchUrl)
+      .then((res) => {return res.json()})
+      .then(data => {
+        this.setState({
+          user: {
+            ...this.state.user,
+            contract: {
+              ...this.state.user.contract,
+              totalContributors: data.totalContributors,
+              totalBalance: web3.utils.fromWei(data.balance, 'ether')
+            },
+          },
+        });
+      });
 
     window.addEventListener('load', function() {
       if (typeof web3 !== 'undefined') {
@@ -27,6 +47,7 @@ class UserPage extends Component {
     }.bind(this))
   }
   fund(etherAmount) {
+    // TODO: follow up on how to use web3 when pulled in vs metamask
     let web3 = window.web3;
     web3.eth.getAccounts((error, accounts) => {
       if(accounts.length > 0){

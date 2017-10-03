@@ -1,0 +1,555 @@
+{
+  "contract_name": "StakeTreeMVP",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "sunset",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "funders",
+      "outputs": [
+        {
+          "name": "exists",
+          "type": "bool"
+        },
+        {
+          "name": "balance",
+          "type": "uint256"
+        },
+        {
+          "name": "withdrawalEntry",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "startAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "calculateWithdrawalAmount",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "lastWithdrawal",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "addr",
+          "type": "address"
+        }
+      ],
+      "name": "isFunder",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "withdrawalCounter",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "setMinimumFundingAmount",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getWithdrawalCounter",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "beneficiary",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "sunsetWithdrawalPeriod",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "withdraw",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getBeneficiary",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getCurrentTotalFunders",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "refund",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getContractBalance",
+      "outputs": [
+        {
+          "name": "balance",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "minimumFundingAmount",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "addr",
+          "type": "address"
+        }
+      ],
+      "name": "getRefundAmountForFunder",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "addr",
+          "type": "address"
+        }
+      ],
+      "name": "getWithdrawalEntryForFunder",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "live",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "totalCurrentFunders",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "fund",
+      "outputs": [],
+      "payable": true,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "nextWithdrawal",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "funder",
+          "type": "address"
+        }
+      ],
+      "name": "getFunderBalance",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "withdrawalPeriod",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "recipient",
+          "type": "address"
+        }
+      ],
+      "name": "swipe",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "removeFunder",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "name": "withdrawalTimes",
+          "type": "uint256"
+        }
+      ],
+      "name": "calculateRefundAmount",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "sunsetWithdrawDate",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "name": "beneficiaryAddress",
+          "type": "address"
+        },
+        {
+          "name": "withdrawalPeriodInit",
+          "type": "uint256"
+        },
+        {
+          "name": "withdrawalStart",
+          "type": "uint256"
+        },
+        {
+          "name": "sunsetWithdrawPeriodInit",
+          "type": "uint256"
+        },
+        {
+          "name": "minimumFundingAmountInit",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "constructor"
+    },
+    {
+      "payable": true,
+      "type": "fallback"
+    }
+  ],
+  "unlinked_binary": "0x60606040526001805460ff19168117905560006002819055600355341561002557600080fd5b60405160a080610c1f83398101604052808051919060200180519190602001805191906020018051919060200180519150505b60048054600160a060020a031916600160a060020a03871617905560068490556005829055600883905582840160095560078190555b50505050505b610b7c806100a36000396000f300606060405236156101675763ffffffff7c0100000000000000000000000000000000000000000000000000000000600035041663026164ad8114610173578063031b3677146101885780630e1a0399146101cd5780631dd300ce146101f55780631ea488701461021a57806320d786b51461024d57806334caa9991461027257806337ea1f631461028a57806338af3eed146102af57806339b8dc40146102de5780633ccfd60b14610303578063565a2e2c146103185780635896521b14610347578063590e1ae31461036c5780636f9fb98a14610381578063783c8db0146103a657806383c28ddc146103cb578063930c0bba146103fc578063957aa58c1461042d578063962ffeae14610454578063b60d428814610167578063b7e9f19314610483578063b8b3d85b146104a8578063bca7093d146104d9578063cce7db58146104fe578063cfd32aa01461051f578063d3d5549314610534578063fa2e9db81461055f575b5b610170610584565b5b005b341561017e57600080fd5b610170610670565b005b341561019357600080fd5b6101a7600160a060020a03600435166106c2565b604051921515835260208301919091526040808301919091526060909101905180910390f35b34156101d857600080fd5b6101e36004356106e7565b60405190815260200160405180910390f35b341561020057600080fd5b6101e3610713565b60405190815260200160405180910390f35b341561022557600080fd5b610239600160a060020a0360043516610719565b604051901515815260200160405180910390f35b341561025857600080fd5b6101e361073b565b60405190815260200160405180910390f35b341561027d57600080fd5b610170600435610741565b005b341561029557600080fd5b6101e3610773565b60405190815260200160405180910390f35b34156102ba57600080fd5b6102c261077a565b604051600160a060020a03909116815260200160405180910390f35b34156102e957600080fd5b6101e3610789565b60405190815260200160405180910390f35b341561030e57600080fd5b61017061078f565b005b341561032357600080fd5b6102c2610844565b604051600160a060020a03909116815260200160405180910390f35b341561035257600080fd5b6101e3610854565b60405190815260200160405180910390f35b341561037757600080fd5b61017061085b565b005b341561038c57600080fd5b6101e36108eb565b60405190815260200160405180910390f35b34156103b157600080fd5b6101e36108fa565b60405190815260200160405180910390f35b34156103d657600080fd5b6101e3600160a060020a0360043516610900565b60405190815260200160405180910390f35b341561040757600080fd5b6101e3600160a060020a036004351661093c565b60405190815260200160405180910390f35b341561043857600080fd5b61023961095e565b604051901515815260200160405180910390f35b341561045f57600080fd5b6101e3610967565b60405190815260200160405180910390f35b610170610584565b005b341561048e57600080fd5b6101e361096d565b60405190815260200160405180910390f35b34156104b357600080fd5b6101e3600160a060020a0360043516610973565b60405190815260200160405180910390f35b34156104e457600080fd5b6101e3610986565b60405190815260200160405180910390f35b341561050957600080fd5b610170600160a060020a036004351661098c565b005b341561052a57600080fd5b610170610a09565b005b341561053f57600080fd5b6101e3600435602435610a65565b60405190815260200160405180910390f35b341561056a57600080fd5b6101e3610aa9565b60405190815260200160405180910390f35b60015460ff16151561059557600080fd5b6007543410156105a457600080fd5b6105ad33610719565b1515610629576002546105c790600163ffffffff610aaf16565b60025560606040519081016040908152600182523460208084019190915260035482840152600160a060020a033316600090815290819052208151815460ff19169015151781556020820151816001015560408201516002909101555061066c565b6106423461063633610900565b9063ffffffff610aaf16565b600160a060020a033316600090815260208190526040902060018101919091556003546002909101555b5b5b565b60045433600160a060020a0390811691161461068b57600080fd5b60015460ff16151561069c57600080fd5b6005546106b090429063ffffffff610aaf16565b600a556001805460ff191690555b5b5b565b60006020819052908152604090208054600182015460029092015460ff909116919083565b600061070b60646106ff84600a63ffffffff610ac916565b9063ffffffff610af816565b90505b919050565b60085481565b600160a060020a03811660009081526020819052604090205460ff165b919050565b60035481565b60045433600160a060020a0390811691161461075c57600080fd5b6000811161076957600080fd5b60078190555b5b50565b6003545b90565b600454600160a060020a031681565b60055481565b60045460009033600160a060020a039081169116146107ad57600080fd5b6009544210156107bc57600080fd5b60015460ff1615156107cd57600080fd5b6107e030600160a060020a0316316106e7565b6003549091506107f790600163ffffffff610aaf16565b60035542600855600654600980549091019055600454600160a060020a031681156108fc0282604051600060405180830381858888f19350505050151561076f57600080fd5b5b5b5b5b50565b600454600160a060020a03165b90565b6002545b90565b60008061086733610719565b151561087257600080fd5b30600160a060020a031631915061088833610900565b90506000811161089757600080fd5b61089f610a09565b600160a060020a03331681156108fc0282604051600060405180830381858888f1935050505015156108d057600080fd5b600160a060020a03301631818303146108e557fe5b5b5b5050565b600160a060020a033016315b90565b60075481565b600160a060020a0381166000908152602081905260408120600101548161092684610b14565b90506109328282610a65565b92505b5050919050565b600160a060020a0381166000908152602081905260409020600201545b919050565b60015460ff1681565b60025481565b60095481565b600061070b82610900565b90505b919050565b60065481565b60015460ff161561099c57600080fd5b60045433600160a060020a039081169116146109b757600080fd5b600a544210156109c657600080fd5b80600160a060020a03166108fc30600160a060020a0316319081150290604051600060405180830381858888f19350505050151561076f57600080fd5b5b5b5b50565b610a1233610719565b1515610a1d57600080fd5b600160a060020a0333166000908152602081905260408120805460ff19168155600180820183905560029182019290925554610a5e9163ffffffff610b3916565b6002555b5b565b6000805b82811015610a9e57610a93600a6106ff86600963ffffffff610ac916565b9063ffffffff610af816565b93505b600101610a69565b8391505b5092915050565b600a5481565b600082820183811015610abe57fe5b8091505b5092915050565b6000828202831580610ae55750828482811515610ae257fe5b04145b1515610abe57fe5b8091505b5092915050565b6000808284811515610b0657fe5b0490508091505b5092915050565b600061070b610b228361093c565b6003549063ffffffff610b3916565b90505b919050565b600082821115610b4557fe5b508082035b929150505600a165627a7a7230582067ea0db46d83fb1cf56ec6433871cd1e9cd9ccaa81bd7960c64a5b3e4d33b0c10029",
+  "networks": {
+    "4": {
+      "events": {
+        "0x9f1a5e1a5d3381f9af1a62f8d61e4ae71444e28af488786cb10c8b2b457632ae": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "funderAddress",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "LogFunding",
+          "type": "event"
+        },
+        "0x3f79606b9a3f0a10b4c5564da683a63c8fce60c2a3a71556db71e9a2012f789a": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "source",
+              "type": "string"
+            }
+          ],
+          "name": "LogAmount",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x97ca54a0c80da87b3d19b9ad99b8a8ca56ae67ef",
+      "updated_at": 1505832715312
+    },
+    "1505555105788": {
+      "events": {
+        "0x9f1a5e1a5d3381f9af1a62f8d61e4ae71444e28af488786cb10c8b2b457632ae": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "funderAddress",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "LogFunding",
+          "type": "event"
+        },
+        "0x3f79606b9a3f0a10b4c5564da683a63c8fce60c2a3a71556db71e9a2012f789a": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "source",
+              "type": "string"
+            }
+          ],
+          "name": "LogAmount",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0xe97dbd7116d168190f8a6e7beb1092c103c53a12",
+      "updated_at": 1505742286859
+    },
+    "1505814797195": {
+      "events": {
+        "0x9f1a5e1a5d3381f9af1a62f8d61e4ae71444e28af488786cb10c8b2b457632ae": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "funderAddress",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "LogFunding",
+          "type": "event"
+        },
+        "0x3f79606b9a3f0a10b4c5564da683a63c8fce60c2a3a71556db71e9a2012f789a": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "source",
+              "type": "string"
+            }
+          ],
+          "name": "LogAmount",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0xcfeb869f69431e42cdb54a4f4f105c19c080a601",
+      "updated_at": 1505814814421
+    },
+    "1506949116059": {
+      "events": {},
+      "links": {},
+      "address": "0xff6049b87215476abf744eaa3a476cbad46fb1ca",
+      "updated_at": 1507017211159
+    }
+  },
+  "schema_version": "0.0.5",
+  "updated_at": 1507017211159
+}

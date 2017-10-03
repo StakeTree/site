@@ -9,7 +9,7 @@ class Home extends Component {
 
     this.state = {
       customAmount: 10,
-      web3available: false
+      web3available: typeof web3 !== 'undefined'
     };
 
     window.addEventListener('load', function() {
