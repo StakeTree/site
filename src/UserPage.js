@@ -8,7 +8,7 @@ class UserPage extends Component {
     super(props);
 
     this.state = {
-      customAmount: 10,
+      customAmount: 1,
       web3available: false,
       user: { // Fetch this information in the future
         title: 'StakeTree Development Fund',
@@ -60,30 +60,11 @@ class UserPage extends Component {
   render() {
     const noWeb3 = this.noWeb3();
 
-    const customAmount = this.state.customAmount > 0 ? this.state.customAmount : 10;
+    const customAmount = this.state.customAmount > 0 ? this.state.customAmount : 1;
 
     return (
       <div className="container">
         <Nav />
-        <div className="row up-highlights">
-          <div className="three columns">
-            <div className="featurette up-highlight">
-              <h4>10 <br />contributors</h4>
-            </div>
-          </div>
-          <div className="six columns">
-            <div className="featurette">
-              <input step="0.1" placeholder="Custom amount?" className="custom-value-input" type="number" />
-              <button className="btn">Stake 1 Ether</button>
-            </div>
-          </div>  
-          <div className="three columns">
-            <div className="featurette up-highlight">
-              <h4>50 <br />ether staked</h4>
-            </div>
-          </div> 
-          
-        </div>
         <div className="row">
           <div className="twelve columns">
             <h3 className="up-project-name">{this.state.user.title}</h3>
@@ -92,9 +73,15 @@ class UserPage extends Component {
         <div className="row">
           <div className="three columns sidebar">
             <img className="up-avatar" alt="Niel's face" src="ava.jpg" />
-            <div className="sidebar-info">
+            <div className="sidebar">
+              <button className="btn" onClick={this.fund.bind(this, customAmount)}>Stake {customAmount} Ether</button>
+              <input step="0.1" placeholder="Custom amount?" className="custom-value-input" type="number" onChange={this.handleCustomAmount.bind(this)} />
+              <div className="sidebar-info">
+              Total contributors: {this.state.user.contract.totalContributors}. <br />
+              Total staked: {this.state.user.contract.totalBalance}. <br />
               Fund started: xx/xx/xxxx. <br />
               Next withdrawal date: xx/xx/xxxx.
+              </div>
             </div>
             <div className="sidebar-actions">
               <button className="btn clean">Refund my ether</button>

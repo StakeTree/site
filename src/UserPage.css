@@ -2,16 +2,27 @@
   margin-top: 20px;
 }
 .featurette.up-highlight {
-	border: 1px solid #eee;
+	border: 1px solid #ddd;
   border-radius: 5px;
+  /*background-color: #efefef;*/
   box-shadow: inset 0px 0px 10px #efefef;
+  padding: 10px 0px 0px 0px;
+  height: 40px;
+  margin-top: 10px;
 }
 
+.sidebar .btn {
+  width: 100%;
+}
+
+.sidebar input[type="number"] {
+  width: 100%;
+}
 
 img.up-avatar{
   float: left;
   border-radius: 5px;
-  height: 225px;
+  width: 100%;
   margin: 2px 20px 10px 0px;
 }
 
