@@ -105,7 +105,7 @@ class UserPage extends Component {
               <div className="sidebar-key-info">
                 <div className="sidebar-key-info-heading">Fund Details</div>
                 Total contributors: {this.state.contract.totalContributors} <br />
-                Total staked: {balance} <br />
+                Total staked: {balance} ether<br />
                 Fund started: {fundStarted} <br />
                 Next withdrawal: {nextWithdrawal}
               </div>
