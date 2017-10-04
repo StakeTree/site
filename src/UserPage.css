@@ -18,14 +18,33 @@
 .sidebar input[type="number"] {
   width: 100%;
 }
-
-img.up-avatar{
+.up-avatar {
+  display: inline-block;
+  padding-left: 10%;
+}
+.up-avatar img{
   float: left;
   border-radius: 5px;
-  width: 100%;
+  width: 90%;
   margin: 2px 20px 10px 0px;
 }
 
 .up-project-name {
   margin-top: 14px;
+}
+
+.sidebar-key-info-heading {
+  font-size: 2rem;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 10px;
+}
+
+.sidebar-key-info {
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.sidebar-other-info {
+  font-size: 1rem;
 }

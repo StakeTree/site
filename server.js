@@ -47,9 +47,19 @@ app.get('/contract/:address', async (req, res, next) => {
   const instance = await contract.at(req.params.address);
   const balance = await instance.getContractBalance.call();
   const totalContributors = await instance.getCurrentTotalFunders.call();
+  const contractStartTime = await instance.contractStartTime.call();
+  const nextWithdrawal = await instance.nextWithdrawal.call();
+
+  const live = await instance.live.call();
+  const sunsetPeriod = await instance.sunsetWithdrawalPeriod.call();
+  
   res.json({
     "balance": balance,
     "totalContributors": totalContributors,
+    "contractStartTime": contractStartTime,
+    "nextWithdrawal": nextWithdrawal,
+    "live": live,
+    "sunsetPeriod": sunsetPeriod
   });
 });
 

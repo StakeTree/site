@@ -4,39 +4,38 @@ import './UserPage.css';
 
 import Nav from './Nav.js';
 
+const web3 = new Web3();
+
 class UserPage extends Component {
   constructor(props) {
     super(props);
-    const web3 = new Web3();
-    console.log(web3);
+    
     this.state = {
-      customAmount: 1,
+      customAmount: 0.1,
       web3available: false,
+      contractAddress: "0xe982e462b094850f12af94d21d470e21be9d0e9c",
+      contract: {
+        totalContributors: "...",
+        balance: 0,
+        startTime: "...",
+        nextWithdrawal: "...",
+        live: true,
+        sunsetPeriod: "..."
+      },
       user: { // Fetch this information in the future
         title: 'StakeTree Development Fund',
-        contract: {
-          totalContributors: "...",
-          totalBalance: "...",
-          address: "0xcfeb869f69431e42cdb54a4f4f105c19c080a601"
-        }
       }
     };
 
     const fetchHost = window.location.hostname === "localhost" ? "http://localhost:3000" : ''; 
-    const fetchUrl = `${fetchHost}/contract/${this.state.user.contract.address}`;
+    const fetchUrl = `${fetchHost}/contract/${this.state.contractAddress}`;
     // TODO: Polyfill fetch for back suport
     fetch(fetchUrl)
       .then((res) => {return res.json()})
       .then(data => {
         this.setState({
-          user: {
-            ...this.state.user,
-            contract: {
-              ...this.state.user.contract,
-              totalContributors: data.totalContributors,
-              totalBalance: web3.utils.fromWei(data.balance, 'ether')
-            },
-          },
+          ...this.state,
+          contract: data
         });
       });
 
@@ -55,7 +54,7 @@ class UserPage extends Component {
         const account = accounts[0];
 
         web3.eth.sendTransaction(
-          {"from": account, "to": this.state.user.contract.address, "value": web3.toWei(etherAmount, "ether")}, 
+          {"from": account, "to": this.state.contractAddress, "value": web3.toWei(etherAmount, "ether")}, 
           (err, transactionHash) => {
             console.log(transactionHash);
           }
@@ -73,7 +72,7 @@ class UserPage extends Component {
 
   noWeb3() {
     if(!this.state.web3available) {
-      return <div className="no-web3"><p>To fund StakeTree using the buttons below you need have <a href="https://metamask.io" target="_blank" rel="noopener noreferrer">MetaMask</a> installed. If you have MetaMask installed, try unlocking it before trying again. Otherwise send ether to this address, <code>{this.state.user.contract.address}</code>, using your preffered wallet.</p></div>;
+      return <div className="no-web3"><p>To fund StakeTree using the buttons below you need have <a href="https://metamask.io" target="_blank" rel="noopener noreferrer">MetaMask</a> installed. If you have MetaMask installed, try unlocking it before trying again. Otherwise send ether to this address, <code>{this.state.contractAddress}</code>, using your preffered wallet.</p></div>;
     }
     return "";
   }
@@ -81,7 +80,13 @@ class UserPage extends Component {
   render() {
     const noWeb3 = this.noWeb3();
 
-    const customAmount = this.state.customAmount > 0 ? this.state.customAmount : 1;
+    const customAmount = this.state.customAmount > 0 ? this.state.customAmount : 0.1;
+
+    const fundStarted = new Date(this.state.contract.contractStartTime*1000).toLocaleDateString();
+    const nextWithdrawal = new Date(this.state.contract.nextWithdrawal*1000).toLocaleDateString();
+    const sunsetPeriodDays = Math.floor((this.state.contract.sunsetPeriod % 31536000) / 86400);
+
+    const balance = web3.utils.fromWei(this.state.contract.balance, 'ether');
 
     return (
       <div className="container">
@@ -92,16 +97,21 @@ class UserPage extends Component {
           </div>
         </div>
         <div className="row">
-          <div className="three columns sidebar">
-            <img className="up-avatar" alt="Niel's face" src="ava.jpg" />
+          <div className="four columns sidebar">
             <div className="sidebar">
+              <span className="up-avatar"><img alt="Niel's face" src="ava.jpg" /></span>
               <button className="btn" onClick={this.fund.bind(this, customAmount)}>Stake {customAmount} Ether</button>
               <input step="0.1" placeholder="Custom amount?" className="custom-value-input" type="number" onChange={this.handleCustomAmount.bind(this)} />
-              <div className="sidebar-info">
-              Total contributors: {this.state.user.contract.totalContributors}. <br />
-              Total staked: {this.state.user.contract.totalBalance}. <br />
-              Fund started: xx/xx/xxxx. <br />
-              Next withdrawal date: xx/xx/xxxx.
+              <div className="sidebar-key-info">
+                <div className="sidebar-key-info-heading">Fund Details</div>
+                Total contributors: {this.state.contract.totalContributors} <br />
+                Total staked: {balance} <br />
+                Fund started: {fundStarted} <br />
+                Next withdrawal: {nextWithdrawal}
+              </div>
+              <div className="sidebar-other-info">
+                Live: {this.state.contract.live ? '✅' : '🚫'}<br />
+                Sunset Period: {sunsetPeriodDays} days
               </div>
             </div>
             <div className="sidebar-actions">
