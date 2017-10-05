@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './Home.css';
 
+import Nav from './Nav.js';
+
 const contractAddress = "0x9561c133dd8580860b6b7e504bc5aa500f0f06a7";
 
 class Home extends Component {
@@ -56,10 +58,16 @@ class Home extends Component {
 
     return (
       <div className="container">
+        <Nav />
         <div className="row header">
-          <div className="four columns offset-by-four logo">
+          <div className="four columns logo">
+            <h1 className="tree-logo"><span role='img' aria-label="Tree logo">🙌</span></h1>
+          </div> 
+          <div className="four columns logo">
             <h1 className="tree-logo"><span role='img' aria-label="Tree logo">🌲</span></h1>
-            <h1>StakeTree</h1>
+          </div> 
+          <div className="four columns logo">
+            <h1 className="tree-logo"><span role='img' aria-label="Tree logo">⏰</span></h1>
           </div> 
         </div>
         <div className="row content">
@@ -72,7 +80,7 @@ class Home extends Component {
           <div className="four columns">
             <div className="featurette">
               <h4>Creators can withdraw funding</h4>
-              <p>Creators can withdraw 10% every week from the staked pool.</p>
+              <p>Every week creators can withdraw 10% from their fund, providing a steady cashflow.</p>
             </div>
           </div> 
           <div className="four columns">
