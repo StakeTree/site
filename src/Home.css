@@ -1,0 +1,112 @@
+.container {
+  border-radius: 5px;
+}
+.header {
+  margin-top: 10px;
+}
+
+.logo {
+  text-align: center;
+  color: yellow;
+}
+
+.tree-logo {
+  font-size: 4em;
+  margin-bottom: -10px;
+  margin-top: 10px;
+}
+
+.featurette {
+  text-align: center;
+  padding: 10px;
+}
+
+.featurette h4 {
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+.featurette-mini-text {
+  font-size: 1rem;
+  position: relative;
+  top: -15px;
+}
+
+.content {
+  padding-top: 10px;
+}
+
+img.avatar{
+  float: left;
+  border-radius: 5px;
+  height: 145px;
+  margin: 2px 20px 10px 0px;
+}
+.info {
+  text-align: left;
+}
+
+.no-web3 {
+  font-size: 1.3rem;
+  border: 1px solid #ff9b9b;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  padding: 10px;
+  text-align: left;
+}
+
+.custom-value-input {
+  width: 150px;
+  margin-right: 10px;
+  top: -1px;
+}
+
+.cta-buttons {
+  text-align: center;
+}
+.cta-buttons button {
+  display: inline-block;
+  margin: 0px 5px 10px 0px;
+}
+
+.mc-hidden-input {
+  position: absolute; left: -5000px;
+}
+.mc-label-email {
+  width: 150px;
+  display: inline-block;
+}
+.mc-field-group .email{
+  position: relative;
+  top: -1px;
+  margin-right: 10px;
+}
+
+@media(max-width: 500px){
+  img.avatar {
+    height: 75px;
+    margin: 10px 15px 0px 0px;
+  }
+}
+
+@media(max-width: 420px){
+  .cta-buttons button {
+    width: 100%;
+  }
+  .custom-value-input {
+    margin-right: 10px;
+  }
+  .btn.custom-value-button {
+    text-align: center;
+    width: 100%;
+  }
+}
+
+
+@media(max-width: 360px){
+  .cta-buttons button {
+    width: 100%;
+    font-size: 0.8rem;
+  }
+  
+}

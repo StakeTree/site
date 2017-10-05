@@ -3,19 +3,17 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Source Code Pro', sans-serif !important;
-  background-color: white;
   color: #444;
   margin-bottom: 50px;
-
-  background: #d3ffd9;  /* fallback for old browsers */
-	background: -webkit-linear-gradient(to bottom, #fefefe, #e8ffea);  /* Chrome 10-25, Safari 5.1-6 */
-	background: linear-gradient(to bottom, #fefefe, #e8ffea); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
   background: #fefefe;
 }
 
 h1, h2, h3, h4 {
 	color: #097b4e;
+}
+
+a {
+  color: #59b1ef;
 }
 
 #mc_embed_signup input,
@@ -45,10 +43,23 @@ input:focus {
   border: 1px solid #fff !important;
   border-radius: 8px;
   color: #fff;
-
   background: #59b1ef;
- 
+}
 
+.btn.clean {
+  background: #fff;
+  color: #444;
+}
+.btn.clean:hover {
+  color: #444;
+}
+
+.btn.clean:active {
+  color: #444;
+}
+
+.btn.clean:focus {
+  color: #444;
 }
 
 #mc_embed_signup .btn:hover, #mc_embed_signup .btn:active, #mc_embed_signup .btn:focus,
