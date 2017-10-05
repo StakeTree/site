@@ -54,6 +54,14 @@ input:focus {
   color: #444;
 }
 
+.btn.clean:active {
+  color: #444;
+}
+
+.btn.clean:focus {
+  color: #444;
+}
+
 #mc_embed_signup .btn:hover, #mc_embed_signup .btn:active, #mc_embed_signup .btn:focus,
 .btn:hover, .btn:active, .btn:focus {
   color: #fff;

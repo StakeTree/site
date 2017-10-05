@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
 import Web3 from 'web3'; // TODO: follow up on how to use web3 when pulled in vs metamask
+import TruffleContract from 'truffle-contract';
+import StakeTreeMVP from './abi/StakeTreeMVP.json';
+
+// Styling
 import './UserPage.css';
 
+//Components
 import Nav from './Nav.js';
 
+let contractInstance;
 const web3 = new Web3();
 
 class UserPage extends Component {
@@ -11,9 +17,10 @@ class UserPage extends Component {
     super(props);
     
     this.state = {
+      isFunder: false,
       customAmount: 0.1,
       web3available: false,
-      contractAddress: "0xe982e462b094850f12af94d21d470e21be9d0e9c",
+      contractAddress: "0x9561c133dd8580860b6b7e504bc5aa500f0f06a7",
       contract: {
         totalContributors: "...",
         balance: 0,
@@ -39,12 +46,39 @@ class UserPage extends Component {
         });
       });
 
-    window.addEventListener('load', function() {
-      if (typeof web3 !== 'undefined') {
+    window.addEventListener('load', async function() {
+      if (typeof window.web3 !== 'undefined') {
         this.setState({"web3available": true});
+
+        // dirty hack for web3@1.0.0 support for localhost testrpc, 
+        // see https://github.com/trufflesuite/truffle-contract/issues/56#issuecomment-331084530
+        if (typeof window.web3.currentProvider.sendAsync !== "function") {
+          window.web3.currentProvider.sendAsync = function() {
+            return window.web3.currentProvider.send.apply(
+              window.web3.currentProvider,
+                  arguments
+            );
+          };
+        }
+
+        const contract = TruffleContract(StakeTreeMVP);
+        contract.setProvider(window.web3.currentProvider);
+
+        contractInstance = await contract.at(this.state.contractAddress);
+        window.contractInstance = contractInstance; // debugging
+
+        window.web3.eth.getAccounts(async (error, accounts) => {
+          const isFunder = await contractInstance.isFunder(accounts[0]);
+          this.setState({
+            ...this.state,
+            isFunder: isFunder
+          });
+        });
+
       }
     }.bind(this))
   }
+
   fund(etherAmount) {
     // TODO: follow up on how to use web3 when pulled in vs metamask
     let web3 = window.web3;
@@ -77,8 +111,23 @@ class UserPage extends Component {
     return "";
   }
 
+  async refund(e) {
+    window.web3.eth.getAccounts(async (error, accounts) => {
+      const gasRequired = await contractInstance.refund.estimateGas({from: accounts[0]});
+      console.log(gasRequired);
+      // TODO: Figure out why estimated gas cost is wrong
+      contractInstance.refund({"from": accounts[0], "gas": 100000});
+
+      // TODO: Add success handler to remove button
+      this.setState({
+        ...this.state,
+        isFunder: false
+      });
+    });
+    
+  }
+
   render() {
-    const noWeb3 = this.noWeb3();
 
     const customAmount = this.state.customAmount > 0 ? this.state.customAmount : 0.1;
 
@@ -115,7 +164,7 @@ class UserPage extends Component {
               </div>
             </div>
             <div className="sidebar-actions">
-              <button className="btn clean">Refund my ether</button>
+              {this.state.isFunder ? <button className="btn clean" onClick={this.refund.bind(this)}>Refund my ether</button> : ''}
             </div>
           </div>
           <div className="eight columns">
