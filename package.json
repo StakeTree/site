@@ -2,6 +2,9 @@
   "name": "staketreesite",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "7.10.1"
+  },
   "dependencies": {
     "express": "^4.15.4",
     "react": "^15.6.1",
