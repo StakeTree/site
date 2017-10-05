@@ -30,7 +30,6 @@ app.use(express.static(path.join(__dirname, 'build')));
 app.get('/contract/:address', async (req, res, next) => {
   const contract = TruffleContract(MVPContractABI);
   contract.setProvider(web3.currentProvider);
-  console.log(contract);
 
   // dirty hack for web3@1.0.0 support for localhost testrpc, 
   // see https://github.com/trufflesuite/truffle-contract/issues/56#issuecomment-331084530
@@ -50,6 +49,7 @@ app.get('/contract/:address', async (req, res, next) => {
   const totalContributors = await instance.getCurrentTotalFunders.call();
   const contractStartTime = await instance.contractStartTime.call();
   const nextWithdrawal = await instance.nextWithdrawal.call();
+  const withdrawalPeriod = await instance.withdrawalPeriod.call();
 
   const live = await instance.live.call();
   const sunsetPeriod = await instance.sunsetWithdrawalPeriod.call();
@@ -59,6 +59,7 @@ app.get('/contract/:address', async (req, res, next) => {
     "totalContributors": totalContributors,
     "contractStartTime": contractStartTime,
     "nextWithdrawal": nextWithdrawal,
+    "withdrawalPeriod": withdrawalPeriod,
     "live": live,
     "sunsetPeriod": sunsetPeriod
   });

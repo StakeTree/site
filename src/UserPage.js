@@ -18,14 +18,16 @@ class UserPage extends Component {
     
     this.state = {
       isFunder: false,
+      isBeneficiary: false,
       customAmount: 0.1,
       web3available: false,
-      contractAddress: "0x9561c133dd8580860b6b7e504bc5aa500f0f06a7",
+      contractAddress: "0xd611f1af9d056f00f49cb036759de2753efa82c2",
       contract: {
         totalContributors: "...",
         balance: 0,
         startTime: "...",
         nextWithdrawal: "...",
+        withdrawalPeriod: "...",
         live: true,
         sunsetPeriod: "..."
       },
@@ -72,6 +74,12 @@ class UserPage extends Component {
           this.setState({
             ...this.state,
             isFunder: isFunder
+          });
+
+          const beneficiary = await contractInstance.beneficiary.call();
+          this.setState({
+            ...this.state,
+            isBeneficiary: accounts[0] === beneficiary
           });
         });
 
@@ -127,6 +135,16 @@ class UserPage extends Component {
     
   }
 
+  async withdraw(e) {
+    // TODO: Add client-side validation when not in time for withdrawal
+    window.web3.eth.getAccounts(async (error, accounts) => {
+      // const gasRequired = await contractInstance.withdraw.estimateGas({from: accounts[0]});
+      // console.log(gasRequired);
+      // TODO: Figure out why estimated gas cost is wrong
+      contractInstance.withdraw({"from": accounts[0], "gas": 100000});
+    });
+  }
+
   render() {
 
     const customAmount = this.state.customAmount > 0 ? this.state.customAmount : 0.1;
@@ -134,6 +152,7 @@ class UserPage extends Component {
     const fundStarted = new Date(this.state.contract.contractStartTime*1000).toLocaleDateString();
     const nextWithdrawal = new Date(this.state.contract.nextWithdrawal*1000).toLocaleDateString();
     const sunsetPeriodDays = Math.floor((this.state.contract.sunsetPeriod % 31536000) / 86400);
+    const withdrawalPeriodDays = Math.floor((this.state.contract.withdrawalPeriod % 31536000) / 86400);
 
     const balance = web3.utils.fromWei(this.state.contract.balance, 'ether');
 
@@ -160,10 +179,12 @@ class UserPage extends Component {
               </div>
               <div className="sidebar-other-info">
                 Live: {this.state.contract.live ? '✅' : '🚫'}<br />
+                Withdrawal period: {withdrawalPeriodDays} days <br />
                 Sunset Period: {sunsetPeriodDays} days
               </div>
             </div>
             <div className="sidebar-actions">
+              {this.state.isBeneficiary ? <button className="btn clean" onClick={this.withdraw.bind(this)}>Withdraw from fund</button> : ''}
               {this.state.isFunder ? <button className="btn clean" onClick={this.refund.bind(this)}>Refund my ether</button> : ''}
             </div>
           </div>
