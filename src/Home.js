@@ -112,7 +112,7 @@ class Home extends Component {
             </ul>
             <p>Plus many more ideas to come. But...</p>
             <p><strong>I need your help to build StakeTree.</strong></p>
-            <p>In true dogfooding fashion, I'll be funding StakeTree using the MVP StakeTree contract myself. You can help fund development using the buttons below. If at any time you want to take back what's left of your ether, you can do this at any time. The UI to make that easy is coming very soon!</p>
+            <p>In true dogfooding fashion, I'll be funding StakeTree using the <a href="https://etherscan.io/address/0xa899495d47b6a575c830ffc330bc83318df46a44" target="_blank" rel="noopener noreferrer">MVP StakeTree contract</a> myself. You can help fund development using the buttons below. If at any time you want to take back what's left of your ether, you can do this at any time. The UI to make that easy is coming very soon!</p>
             {noWeb3}
             <div className="cta-buttons">
               <button className="btn" onClick={this.fund.bind(this, 1)}>Stake 1 ether towards StakeTree</button><br />
