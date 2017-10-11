@@ -69,3 +69,18 @@ input:focus {
   border: 1px solid #fff !important;
 }
 
+.modal {
+  position: fixed;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  box-shadow: 0px 0px 15px #ddd;
+  border: 1px solid #bbb;
+  background : #fff;
+  overflow: auto;
+  border-radius: 4px;
+  outline: none;
+  padding: 20px;
+  width: 300px;
+}
+

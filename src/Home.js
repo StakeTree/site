@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './Home.css';
 
 import Nav from './Nav.js';
+import Modal from 'react-modal';
 
 const contractAddress = "0xa899495d47b6a575c830ffc330bc83318df46a44";
 
@@ -11,6 +12,7 @@ class Home extends Component {
 
     this.state = {
       customAmount: 10,
+      showValueModal: false,
       web3available: typeof web3 !== 'undefined'
     };
 
@@ -22,7 +24,8 @@ class Home extends Component {
   }
   fund(etherAmount) {
     if(etherAmount < 0.01) {
-      return window.alert("Yikes! So sorry! The minimum funding amount is set to 0.01 ether at present. Try a bigger amount");
+      return this.setState({showValueModal: true});
+      // return window.alert("Yikes! So sorry! The minimum funding amount is set to 0.01 ether at present. Try a bigger amount");
     }
     let web3 = window.web3;
     web3.eth.getAccounts((error, accounts) => {
@@ -55,6 +58,10 @@ class Home extends Component {
     return "";
   }
 
+  closeModal() {
+    this.setState({showValueModal: false});
+  }
+
   render() {
     const noWeb3 = this.noWeb3();
 
@@ -62,6 +69,16 @@ class Home extends Component {
 
     return (
       <div className="container">
+        <Modal 
+          isOpen={this.state.showValueModal}
+          className={{
+            base: 'modal'
+          }}
+          onRequestClose={this.closeModal.bind(this)}
+        >
+          <h2>So sorry!</h2>
+          <p>The minimum funding amount is set to 0.01 ether at present. Try a bigger amount.</p>
+        </Modal>
         <Nav />
         <div className="row header">
           <div className="four columns logo">
