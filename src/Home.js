@@ -25,7 +25,6 @@ class Home extends Component {
   fund(etherAmount) {
     if(etherAmount < 0.01) {
       return this.setState({showValueModal: true});
-      // return window.alert("Yikes! So sorry! The minimum funding amount is set to 0.01 ether at present. Try a bigger amount");
     }
     let web3 = window.web3;
     web3.eth.getAccounts((error, accounts) => {

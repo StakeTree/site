@@ -8,6 +8,7 @@ import './UserPage.css';
 
 //Components
 import Nav from './Nav.js';
+import Modal from 'react-modal';
 
 let contractInstance;
 const web3 = new Web3();
@@ -17,6 +18,7 @@ class UserPage extends Component {
     super(props);
     
     this.state = {
+      showValueModal: false,
       isFunder: false,
       isBeneficiary: false,
       customAmount: 0.1,
@@ -88,7 +90,10 @@ class UserPage extends Component {
   }
 
   fund(etherAmount) {
-    // TODO: follow up on how to use web3 when pulled in vs metamask
+    // TODO: Use the minimum amount from the contract itself
+    if(etherAmount < 0.01) {
+      return this.setState({showValueModal: true});
+    }
     let web3 = window.web3;
     web3.eth.getAccounts((error, accounts) => {
       if(accounts.length > 0){
@@ -117,6 +122,9 @@ class UserPage extends Component {
       return <div className="no-web3"><p>To fund StakeTree using the buttons below you need have <a href="https://metamask.io" target="_blank" rel="noopener noreferrer">MetaMask</a> installed. If you have MetaMask installed, try unlocking it before trying again. Otherwise send ether to this address, <code>{this.state.contractAddress}</code>, using your preffered wallet.</p></div>;
     }
     return "";
+  }
+  closeModal() {
+    this.setState({showValueModal: false});
   }
 
   async refund(e) {
@@ -158,6 +166,16 @@ class UserPage extends Component {
 
     return (
       <div className="container">
+        <Modal 
+          isOpen={this.state.showValueModal}
+          className={{
+            base: 'modal'
+          }}
+          onRequestClose={this.closeModal.bind(this)}
+        >
+          <h2>So sorry!</h2>
+          <p>The minimum funding amount is set to 0.01 ether at present. Try a bigger amount.</p>
+        </Modal>
         <Nav />
         <div className="row">
           <div className="twelve columns">
