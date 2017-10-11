@@ -21,7 +21,7 @@ class UserPage extends Component {
       isBeneficiary: false,
       customAmount: 0.1,
       web3available: false,
-      contractAddress: "0xd611f1af9d056f00f49cb036759de2753efa82c2",
+      contractAddress: "0xa899495d47b6a575c830ffc330bc83318df46a44",
       contract: {
         totalContributors: "...",
         balance: 0,

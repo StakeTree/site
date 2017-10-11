@@ -3,7 +3,7 @@ import './Home.css';
 
 import Nav from './Nav.js';
 
-const contractAddress = "0x9561c133dd8580860b6b7e504bc5aa500f0f06a7";
+const contractAddress = "0xa899495d47b6a575c830ffc330bc83318df46a44";
 
 class Home extends Component {
   constructor(props) {

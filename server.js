@@ -7,12 +7,12 @@ const MVPContractABI = require('./abi/StakeTreeMVP.json');
 
 const isLocal = process.env.PORT ? false : true;
 let web3;
-if(isLocal){
-  web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-}
-else {
-  web3 = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io"));
-}
+// if(isLocal){
+//   web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+// }
+// else {
+web3 = new Web3(new Web3.providers.HttpProvider("https://mainnet.infura.io"));
+// }
 
 
 if(isLocal){
