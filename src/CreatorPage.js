@@ -10,6 +10,7 @@ import './CreatorPage.css';
 import Nav from './Nav.js';
 
 let contractInstance;
+let web3Polling;
 const web3 = new Web3();
 
 class UserPage extends Component {
@@ -17,6 +18,7 @@ class UserPage extends Component {
     super(props);
     
     this.state = {
+      currentEthAccount: "",
       showTooltip: "",
       isFunder: false,
       isBeneficiary: false,
@@ -49,9 +51,12 @@ class UserPage extends Component {
           contract: data
         });
       });
+  }
 
-    window.addEventListener('load', async function() {
-      if (typeof window.web3 !== 'undefined') {
+  async componentWillMount() {
+    // Poll for account/web3 changes
+    web3Polling = setInterval(async ()=> {
+      if(typeof window.web3 !== 'undefined') {
         this.setState({"web3available": true});
 
         // dirty hack for web3@1.0.0 support for localhost testrpc, 
@@ -70,9 +75,13 @@ class UserPage extends Component {
 
         contractInstance = await contract.at(this.state.contractAddress);
         window.contractInstance = contractInstance; // debugging
-
+      
         window.web3.eth.getAccounts(async (error, accounts) => {
-          const isFunder = await contractInstance.isFunder(accounts[0]);
+          if(this.state.currentEthAccount !== accounts[0]){
+            this.setState({currentEthAccount: accounts[0]});
+          }
+
+          const isFunder = await contractInstance.isFunder(this.state.currentEthAccount);
           this.setState({
             ...this.state,
             isFunder: isFunder
@@ -81,12 +90,15 @@ class UserPage extends Component {
           const beneficiary = await contractInstance.beneficiary.call();
           this.setState({
             ...this.state,
-            isBeneficiary: accounts[0] === beneficiary
+            isBeneficiary: this.state.currentEthAccount === beneficiary
           });
         });
-
       }
-    }.bind(this))
+    }, 1500);
+  }
+
+  componentWillUnmount() {
+    clearInterval(web3Polling);
   }
 
   canFund(etherAmount) {
@@ -148,13 +160,6 @@ class UserPage extends Component {
       // const gasRequired = await contractInstance.refund.estimateGas({from: accounts[0]});
       // TODO: Figure out why estimated gas cost is wrong
       await contractInstance.refund({"from": accounts[0], "gas": 100000});
-
-      // TODO: Check for tx status when byzantium fork goes through
-      // Then set to false if transaction is success
-      this.setState({
-        ...this.state,
-        isFunder: false
-      });
     });
     
   }
