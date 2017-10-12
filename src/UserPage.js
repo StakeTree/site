@@ -8,7 +8,6 @@ import './UserPage.css';
 
 //Components
 import Nav from './Nav.js';
-import Modal from 'react-modal';
 
 let contractInstance;
 const web3 = new Web3();
@@ -18,8 +17,7 @@ class UserPage extends Component {
     super(props);
     
     this.state = {
-      showModal: false,
-      modalText: "",
+      showTooltip: "",
       isFunder: false,
       isBeneficiary: false,
       customAmount: 0.1,
@@ -91,17 +89,31 @@ class UserPage extends Component {
     }.bind(this))
   }
 
-  fund(etherAmount) {
+  canFund(etherAmount) {
     let web3 = window.web3; // Uses web3 from metamask
-
     const minAmount = web3.fromWei(this.state.contract.minimumFundingAmount, 'ether');
     if(etherAmount < minAmount) {
-      return this.setState({
-        showModal: true,
-        modalText: `The minimum funding amount is ${minAmount} ether. Try a bigger amount.`
-      });
+      return false;
     }
-    
+    else{
+      return true;
+    } 
+  }
+
+  canWithdraw() {
+    const withdrawalDate = new Date(this.state.contract.nextWithdrawal*1000);
+    if(new Date() <= withdrawalDate) {
+      return false;
+    }
+    else {
+      return true;
+    }
+  }
+
+  fund(etherAmount) {
+    if(!this.canFund(etherAmount)){ return false;}
+
+    let web3 = window.web3; // Uses web3 from metamask
     web3.eth.getAccounts((error, accounts) => {
       if(accounts.length > 0){
         this.setState({web3available: true});
@@ -130,9 +142,6 @@ class UserPage extends Component {
     }
     return "";
   }
-  closeModal() {
-    this.setState({showModal: false});
-  }
 
   async refund(e) {
     window.web3.eth.getAccounts(async (error, accounts) => {
@@ -151,13 +160,8 @@ class UserPage extends Component {
   }
 
   async withdraw(e) {
-    const withdrawalDate = new Date(this.state.contract.nextWithdrawal*1000);
-
-    if(new Date() <= withdrawalDate) {
-      return this.setState({
-        showModal: true,
-        modalText: `Unfortunately you need to till approximately ${withdrawalDate.toLocaleString()} to withdraw.`
-      });
+    if(!this.canWithdraw()) {
+      return false;
     }
     
     window.web3.eth.getAccounts(async (error, accounts) => {
@@ -166,6 +170,35 @@ class UserPage extends Component {
       // TODO: Figure out why estimated gas cost is wrong
       contractInstance.withdraw({"from": accounts[0], "gas": 100000});
     });
+  }
+
+  hideTooltip() {
+    this.setState({showTooltip: ""});
+  }
+
+  checkTooltip(tooltipId) {
+    switch(tooltipId){
+      case "withdrawal":
+        if(!this.canWithdraw()) {
+          const withdrawalDate = new Date(this.state.contract.nextWithdrawal*1000);
+          this.setState({
+            showTooltip: tooltipId,
+            tooltipText: `Unfortunately, you can only withdraw after ${withdrawalDate.toLocaleString()}.`
+          });
+        }
+        break;
+      case "fund":
+        if(!this.canFund(this.state.customAmount)) {
+          const minAmount = web3.utils.fromWei(this.state.contract.minimumFundingAmount, 'ether');
+          this.setState({
+            showTooltip: tooltipId,
+            tooltipText: `The minimum funding amount is ${minAmount} ether. Try a bigger amount.`
+          });
+        }
+        break;
+      default:
+        return false;
+    }
   }
 
   render() {
@@ -178,19 +211,15 @@ class UserPage extends Component {
     const withdrawalPeriodDays = Math.floor((this.state.contract.withdrawalPeriod % 31536000) / 86400);
 
     const balance = web3.utils.fromWei(this.state.contract.balance, 'ether');
+    
+    let withdrawTooltipClassNames = "tooltip";
+    if(this.state.showTooltip === "withdrawal") withdrawTooltipClassNames += ' visible';
+
+    let fundTooltipClassNames = "tooltip";
+    if(this.state.showTooltip === "fund") fundTooltipClassNames += ' visible';
 
     return (
       <div className="container">
-        <Modal 
-          isOpen={this.state.showModal}
-          className={{
-            base: 'modal'
-          }}
-          onRequestClose={this.closeModal.bind(this)}
-        >
-          <h2>So sorry!</h2>
-          <p>{this.state.modalText}</p>
-        </Modal>
         <Nav />
         <div className="row">
           <div className="twelve columns">
@@ -201,7 +230,10 @@ class UserPage extends Component {
           <div className="four columns sidebar">
             <div className="sidebar">
               <span className="up-avatar"><img alt="Niel's face" src="ava.jpg" /></span>
-              <button className="btn" onClick={this.fund.bind(this, customAmount)}>Stake {customAmount} Ether</button>
+              <span className="tooltip-button">
+                <div className={fundTooltipClassNames}>{this.state.tooltipText}</div>
+                <button className="btn" onMouseOver={this.checkTooltip.bind(this, 'fund')} onMouseLeave={this.hideTooltip.bind(this)} onClick={this.fund.bind(this, customAmount)}>Stake {customAmount} Ether</button>
+              </span>
               <input step="0.1" placeholder="Custom amount?" className="custom-value-input" type="number" onChange={this.handleCustomAmount.bind(this)} />
               <div className="sidebar-key-info">
                 <div className="sidebar-key-info-heading">Fund Details</div>
@@ -217,8 +249,13 @@ class UserPage extends Component {
               </div>
             </div>
             <div className="sidebar-actions">
-              {this.state.isBeneficiary ? <button className="btn clean" onClick={this.withdraw.bind(this)}>Withdraw from fund</button> : ''}
-              {this.state.isFunder ? <button className="btn clean" onClick={this.refund.bind(this)}>Refund my ether</button> : ''}
+              {this.state.isBeneficiary ? 
+                <span className="tooltip-button">
+                  <div className={withdrawTooltipClassNames}>{this.state.tooltipText}</div>
+                  <button onMouseOver={this.checkTooltip.bind(this, 'withdrawal')} onMouseLeave={this.hideTooltip.bind(this)} className="btn clean" onClick={this.withdraw.bind(this)}>Withdraw from fund</button> 
+                </span>
+              : ''}
+              {this.state.isFunder ?  <button onMouseOver={this.checkTooltip.bind(this, 'fund')} onMouseLeave={this.hideTooltip.bind(this)} className="btn clean" onClick={this.refund.bind(this)}>Refund my ether</button> : ''}
             </div>
           </div>
           <div className="eight columns">

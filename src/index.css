@@ -83,4 +83,21 @@ input:focus {
   padding: 20px;
   width: 300px;
 }
-
+.tooltip {
+  display: none;
+  position: absolute;
+  bottom: 50px;
+  left: -15%;
+  border-radius: 5px;
+  background-color: #444;
+  width: 120%;
+  color: #fff;
+  padding: 10px;
+}
+.tooltip-button {
+  position: relative;
+  display: block;
+}
+.visible {
+  display: block;
+}

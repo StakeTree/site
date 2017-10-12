@@ -10,6 +10,9 @@
   height: 40px;
   margin-top: 10px;
 }
+.sidebar {
+  position: relative;
+}
 
 .sidebar .btn {
   width: 100%;
@@ -48,4 +51,8 @@
 .sidebar-other-info {
   font-size: 1rem;
   margin-bottom: 10px;
+}
+
+.sidebar-actions {
+  position: relative;
 }
