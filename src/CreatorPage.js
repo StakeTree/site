@@ -13,7 +13,7 @@ let contractInstance;
 let web3Polling;
 const web3 = new Web3();
 
-class UserPage extends Component {
+class CreatorPage extends Component {
   constructor(props) {
     super(props);
     
@@ -291,4 +291,4 @@ class UserPage extends Component {
   }
 }
 
-export default UserPage;
+export default CreatorPage;
