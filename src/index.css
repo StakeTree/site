@@ -69,3 +69,35 @@ input:focus {
   border: 1px solid #fff !important;
 }
 
+.modal {
+  position: fixed;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  box-shadow: 0px 0px 15px #ddd;
+  border: 1px solid #bbb;
+  background : #fff;
+  overflow: auto;
+  border-radius: 4px;
+  outline: none;
+  padding: 20px;
+  width: 300px;
+}
+.tooltip {
+  display: none;
+  position: absolute;
+  bottom: 50px;
+  left: -15%;
+  border-radius: 5px;
+  background-color: #444;
+  width: 120%;
+  color: #fff;
+  padding: 10px;
+}
+.tooltip-button {
+  position: relative;
+  display: block;
+}
+.visible {
+  display: block;
+}
