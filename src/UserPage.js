@@ -31,7 +31,8 @@ class UserPage extends Component {
         nextWithdrawal: "...",
         withdrawalPeriod: "...",
         live: true,
-        sunsetPeriod: "..."
+        sunsetPeriod: "...",
+        minimumFundingAmount: 0
       },
       user: { // Fetch this information in the future
         title: 'StakeTree Development Fund',
@@ -90,11 +91,13 @@ class UserPage extends Component {
   }
 
   fund(etherAmount) {
-    // TODO: Use the minimum amount from the contract itself
-    if(etherAmount < 0.01) {
+    let web3 = window.web3; // Uses web3 from metamask
+
+    const minAmount = web3.fromWei(this.state.contract.minimumFundingAmount, 'ether');
+    if(etherAmount < minAmount) {
       return this.setState({showValueModal: true});
     }
-    let web3 = window.web3;
+    
     web3.eth.getAccounts((error, accounts) => {
       if(accounts.length > 0){
         this.setState({web3available: true});
