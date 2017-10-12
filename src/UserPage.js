@@ -129,12 +129,12 @@ class UserPage extends Component {
 
   async refund(e) {
     window.web3.eth.getAccounts(async (error, accounts) => {
-      const gasRequired = await contractInstance.refund.estimateGas({from: accounts[0]});
-      console.log(gasRequired);
+      // const gasRequired = await contractInstance.refund.estimateGas({from: accounts[0]});
       // TODO: Figure out why estimated gas cost is wrong
-      contractInstance.refund({"from": accounts[0], "gas": 100000});
+      await contractInstance.refund({"from": accounts[0], "gas": 100000});
 
-      // TODO: Add success handler to remove button
+      // TODO: Check for tx status when byzantium fork goes through
+      // Then set to false if transaction is success
       this.setState({
         ...this.state,
         isFunder: false
