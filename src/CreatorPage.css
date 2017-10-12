@@ -1,7 +1,7 @@
-.up-highlights {
+.creatorpage-highlights {
   margin-top: 20px;
 }
-.featurette.up-highlight {
+.featurette.creatorpage-highlight {
 	border: 1px solid #ddd;
   border-radius: 5px;
   /*background-color: #efefef;*/
@@ -21,18 +21,18 @@
 .sidebar input[type="number"] {
   width: 100%;
 }
-.up-avatar {
+.creatorpage-avatar {
   display: inline-block;
   padding-left: 10%;
 }
-.up-avatar img{
+.creatorpage-avatar img{
   float: left;
   border-radius: 5px;
   width: 90%;
   margin: 2px 20px 10px 0px;
 }
 
-.up-project-name {
+.creatorpage-project-name {
   margin-top: 14px;
 }
 

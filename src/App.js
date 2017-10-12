@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import './skeleton.css';
 
 import Home from './Home.js';
-import UserPage from './UserPage.js';
+import CreatorPage from './CreatorPage.js';
 
 class App extends Component {
   render() {
@@ -11,7 +11,7 @@ class App extends Component {
       <Router>
         <div>
           <Route exact path="/" component={Home} />
-          <Route path="/dev" component={UserPage} />
+          <Route path="/dev" component={CreatorPage} />
         </div>
       </Router>
     );

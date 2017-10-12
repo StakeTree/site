@@ -4,7 +4,7 @@ import TruffleContract from 'truffle-contract';
 import StakeTreeMVP from './abi/StakeTreeMVP.json';
 
 // Styling
-import './UserPage.css';
+import './CreatorPage.css';
 
 //Components
 import Nav from './Nav.js';
@@ -223,13 +223,13 @@ class UserPage extends Component {
         <Nav />
         <div className="row">
           <div className="twelve columns">
-            <h3 className="up-project-name">{this.state.user.title}</h3>
+            <h3 className="creatorpage-project-name">{this.state.user.title}</h3>
           </div>
         </div>
         <div className="row">
           <div className="four columns sidebar">
             <div className="sidebar">
-              <span className="up-avatar"><img alt="Niel's face" src="ava.jpg" /></span>
+              <span className="creatorpage-avatar"><img alt="Niel's face" src="ava.jpg" /></span>
               <span className="tooltip-button">
                 <div className={fundTooltipClassNames}>{this.state.tooltipText}</div>
                 <button className="btn" onMouseOver={this.checkTooltip.bind(this, 'fund')} onMouseLeave={this.hideTooltip.bind(this)} onClick={this.fund.bind(this, customAmount)}>Stake {customAmount} Ether</button>
