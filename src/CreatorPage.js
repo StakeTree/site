@@ -145,7 +145,9 @@ class UserPage extends Component {
   }
 
   handleCustomAmount(e) {
-    this.setState({customAmount: e.target.value});
+    let value = e.target.value;
+    if(e.target.value === "") value = 0.1;
+    this.setState({customAmount: value});
   }
 
   noWeb3() {
