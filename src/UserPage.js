@@ -18,7 +18,8 @@ class UserPage extends Component {
     super(props);
     
     this.state = {
-      showValueModal: false,
+      showModal: false,
+      modalText: "",
       isFunder: false,
       isBeneficiary: false,
       customAmount: 0.1,
@@ -95,7 +96,10 @@ class UserPage extends Component {
 
     const minAmount = web3.fromWei(this.state.contract.minimumFundingAmount, 'ether');
     if(etherAmount < minAmount) {
-      return this.setState({showValueModal: true});
+      return this.setState({
+        showModal: true,
+        modalText: `The minimum funding amount is ${minAmount} ether. Try a bigger amount.`
+      });
     }
     
     web3.eth.getAccounts((error, accounts) => {
@@ -127,7 +131,7 @@ class UserPage extends Component {
     return "";
   }
   closeModal() {
-    this.setState({showValueModal: false});
+    this.setState({showModal: false});
   }
 
   async refund(e) {
@@ -147,7 +151,15 @@ class UserPage extends Component {
   }
 
   async withdraw(e) {
-    // TODO: Add client-side validation when not in time for withdrawal
+    const withdrawalDate = new Date(this.state.contract.nextWithdrawal*1000);
+
+    if(new Date() <= withdrawalDate) {
+      return this.setState({
+        showModal: true,
+        modalText: `Unfortunately you need to till approximately ${withdrawalDate.toLocaleString()} to withdraw.`
+      });
+    }
+    
     window.web3.eth.getAccounts(async (error, accounts) => {
       // const gasRequired = await contractInstance.withdraw.estimateGas({from: accounts[0]});
       // console.log(gasRequired);
@@ -170,14 +182,14 @@ class UserPage extends Component {
     return (
       <div className="container">
         <Modal 
-          isOpen={this.state.showValueModal}
+          isOpen={this.state.showModal}
           className={{
             base: 'modal'
           }}
           onRequestClose={this.closeModal.bind(this)}
         >
           <h2>So sorry!</h2>
-          <p>The minimum funding amount is set to 0.01 ether at present. Try a bigger amount.</p>
+          <p>{this.state.modalText}</p>
         </Modal>
         <Nav />
         <div className="row">
