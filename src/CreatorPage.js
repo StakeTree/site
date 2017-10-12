@@ -260,7 +260,7 @@ class UserPage extends Component {
                   <button onMouseOver={this.checkTooltip.bind(this, 'withdrawal')} onMouseLeave={this.hideTooltip.bind(this)} className="btn clean" onClick={this.withdraw.bind(this)}>Withdraw from fund</button> 
                 </span>
               : ''}
-              {this.state.isFunder ?  <button onMouseOver={this.checkTooltip.bind(this, 'fund')} onMouseLeave={this.hideTooltip.bind(this)} className="btn clean" onClick={this.refund.bind(this)}>Refund my ether</button> : ''}
+              {this.state.isFunder ? <button className="btn clean" onClick={this.refund.bind(this)}>Refund my ether</button> : ''}
             </div>
           </div>
           <div className="eight columns">
