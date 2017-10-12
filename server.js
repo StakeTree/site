@@ -7,12 +7,12 @@ const MVPContractABI = require('./abi/StakeTreeMVP.json');
 
 const isLocal = process.env.PORT ? false : true;
 let web3;
-// if(isLocal){
-//   web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-// }
-// else {
+if(isLocal){
+  web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+}
+else {
 web3 = new Web3(new Web3.providers.HttpProvider("https://mainnet.infura.io"));
-// }
+}
 
 
 if(isLocal){
@@ -53,6 +53,7 @@ app.get('/contract/:address', async (req, res, next) => {
 
   const live = await instance.live.call();
   const sunsetPeriod = await instance.sunsetWithdrawalPeriod.call();
+  const minimumFundingAmount = await instance.minimumFundingAmount.call();
 
   res.json({
     "balance": balance,
@@ -61,7 +62,8 @@ app.get('/contract/:address', async (req, res, next) => {
     "nextWithdrawal": nextWithdrawal,
     "withdrawalPeriod": withdrawalPeriod,
     "live": live,
-    "sunsetPeriod": sunsetPeriod
+    "sunsetPeriod": sunsetPeriod,
+    "minimumFundingAmount": minimumFundingAmount
   });
 });
 
