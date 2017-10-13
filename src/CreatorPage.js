@@ -78,19 +78,27 @@ class CreatorPage extends Component {
       
         window.web3.eth.getAccounts(async (error, accounts) => {
           if(this.state.currentEthAccount !== accounts[0]){
-            this.setState({currentEthAccount: accounts[0]});
+            // RESET UI
+            this.setState({
+              currentEthAccount: accounts[0],
+              isFunder: false,
+              isBeneficiary: false
+            });
           }
 
-          const isFunder = await contractInstance.isFunder(this.state.currentEthAccount);
-          this.setState({
-            ...this.state,
-            isFunder: isFunder
+          // Check again for new accounts
+          contractInstance.isFunder(this.state.currentEthAccount).then((isFunder) => {
+            this.setState({
+              ...this.state,
+              isFunder: isFunder
+            });
           });
 
-          const beneficiary = await contractInstance.beneficiary.call();
-          this.setState({
-            ...this.state,
-            isBeneficiary: this.state.currentEthAccount === beneficiary
+          contractInstance.beneficiary.call().then((beneficiary) => {
+            this.setState({
+              ...this.state,
+              isBeneficiary: this.state.currentEthAccount === beneficiary
+            });
           });
         });
       }
