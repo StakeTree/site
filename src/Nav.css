@@ -1,5 +1,6 @@
 .nav-header a {
   text-decoration: none;
+  color: #444;
 }
 .nav-header {
   border-bottom: 1px dashed #444;
@@ -14,4 +15,13 @@
   margin-left: 10px;
   position: relative;
   bottom: 2px;
+}
+.right-nav-links {
+	position: relative;
+	top: 10px;
+	float: right;
+}
+
+.right-nav-links a{
+  margin-left: 10px;
 }
