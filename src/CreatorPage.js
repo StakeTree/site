@@ -275,23 +275,23 @@ class CreatorPage extends Component {
           </div>
           <div className="eight columns">
             <p>
-            Hi everyone. <a href="https://twitter.com/nieldlr" target="_blank" rel="noopener noreferrer">Niel de la Rouviere</a> here. Welcome to StakeTree! I'm excited to introduce this project. I believe that to grow the crypto ecosystem
-            (and hopefully much more in the future!) we need sustainable ways to fund projects & creators. ICOs are all the rage, but sometimes it just doesn't make
-            sense for all that capital to be tied up, especially if your dapp doesn't need a token yet.
+            Hi everyone. I'm <a href="https://twitter.com/nieldlr" target="_blank" rel="noopener noreferrer">Niel</a>, the founder of StakeTree.<br />
+            This dev fund is my only source of funding right now. I would really appreciate any help with bringing this ecosystem to the world.
             </p>
-            <p>Using smart contracts on Ethereum, creators & funders can back projects with no intermediaries, fees and instant settlement.</p>
+            <p>StakeTree uses smart contracts on Ethereum, where creators & funders can back projects with no intermediaries, fees and instant settlement.</p>
             <p>There's lots more planned for StakeTree:</p>
             <ul>
-              <li><strong>Creating a simple UI</strong> for funders & creators to fund & withdraw from contracts.</li>
+              <li><strong>Creating a simple UI</strong> for funders & creators to create, fund & withdraw from contracts.</li>
               <li><strong>Develop funding tiers</strong>. This is where creators can reward dedicated backers with special rewards/access. Think tiers like Kickstarter & Patreon.</li> 
               <li><strong>Fund contracts with any ERC-20 token.</strong></li>
               <li><strong>Tokenization for funders & creators</strong>. When the creator withdraws ether, it mints tokens for all parties. These tokens can then be used for many things: voting, curation, special access, discounts and more. The creativity of the creator is the limit here.</li>
               <li><strong>Create funding buckets</strong>. For example fund many Ethereum dev related projects using a single payment.</li>
               <li><strong>Build a platform</strong>. Make it easy for creators to communicate with and build their communities.</li>
             </ul>
-            <p>Plus many more ideas to come. But...</p>
+            <p>Plus many more ideas to come!</p>
             <p><strong>I need your help to build StakeTree.</strong></p>
-            <p>In true dogfooding fashion, I'll be funding StakeTree using the MVP StakeTree contract myself. You can help fund development using the buttons below. If at any time you want to take back what's left of your ether, you can do this at any time. The UI to make that easy is coming very soon!</p>
+            <p>In true dogfooding fashion, I'll be building StakeTree using StakeTree itself.</p>
+            <p>For updates, follow me on <a href="https://twitter.com/staketree" target="_blank" rel="noopener noreferrer">Twitter</a> & <a href="https://github.com/StakeTree" target="_blank" rel="noopener noreferrer">Github</a>.</p>
           </div>
         </div>
       </div>
