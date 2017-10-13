@@ -16,8 +16,12 @@
   position: relative;
   bottom: 2px;
 }
-.right-nav-link {
+.right-nav-links {
 	position: relative;
 	top: 10px;
 	float: right;
+}
+
+.right-nav-links a{
+  margin-left: 10px;
 }
