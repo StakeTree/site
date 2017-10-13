@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Web3 from 'web3'; // TODO: follow up on how to use web3 when pulled in vs metamask
 import TruffleContract from 'truffle-contract';
-import StakeTreeMVP from './abi/StakeTreeMVP.json';
+import StakeTreeMVP from 'staketree-contracts/build/contracts/StakeTreeMVP.json';
 
 // Styling
 import './CreatorPage.css';

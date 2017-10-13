@@ -3,7 +3,7 @@ const path = require('path');
 const app = express();
 const Web3 = require('web3');
 const TruffleContract = require('truffle-contract');
-const MVPContractABI = require('./abi/StakeTreeMVP.json');
+const MVPContractABI = require('staketree-contracts/build/contracts/StakeTreeMVP.json');
 
 const isLocal = process.env.PORT ? false : true;
 let web3;
