@@ -288,8 +288,8 @@ class CreatorPage extends Component {
               <li><strong>Create funding buckets</strong>. For example fund many Ethereum dev related projects using a single payment.</li>
               <li><strong>Build a platform</strong>. Make it easy for creators to communicate with and build their communities.</li>
             </ul>
-            <p>Plus many more ideas to come!</p>
-            <p><strong>I need your help to build StakeTree.</strong></p>
+            <p>Plus many more ideas to come! Check out the <a href="https://trello.com/b/ThPpLwFm/staketree-transparent-roadmap" target="_blank" rel="noopener noreferrer">transparent roadmap</a> here.</p>
+            <p><strong>But I need your help to build StakeTree.</strong></p>
             <p>In true dogfooding fashion, I'll be building StakeTree using StakeTree itself.</p>
             <p>For updates, follow me on <a href="https://twitter.com/staketree" target="_blank" rel="noopener noreferrer">Twitter</a> & <a href="https://github.com/StakeTree" target="_blank" rel="noopener noreferrer">Github</a>.</p>
           </div>
