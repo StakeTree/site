@@ -1,0 +1,15 @@
+.faq h3 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.faq h4 {
+  font-size: 2rem;
+}
+
+.web3-info {
+  border: 1px solid red;
+  padding: 8px;
+  border-radius: 5px;
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+}

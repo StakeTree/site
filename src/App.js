@@ -5,12 +5,15 @@ import './skeleton.css';
 import Home from './Home.js';
 import CreatorPage from './CreatorPage.js';
 
+import FAQ from './FAQ.js';
+
 class App extends Component {
   render() {
     return (
       <Router>
         <div>
           <Route exact path="/" component={Home} />
+          <Route path="/faq" component={FAQ} />
           <Route path="/dev" component={CreatorPage} />
         </div>
       </Router>
