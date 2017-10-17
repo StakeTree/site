@@ -18,6 +18,7 @@ class CreatorPage extends Component {
     super(props);
     
     this.state = {
+      exchangeRate: 0,
       currentEthAccount: "",
       showTooltip: "",
       isFunder: false,
@@ -39,21 +40,31 @@ class CreatorPage extends Component {
         title: 'StakeTree Development Fund',
       }
     };
+  }
 
+  async componentWillMount() {
     const fetchHost = window.location.hostname === "localhost" ? "http://localhost:3000" : ''; 
     const fetchUrl = `${fetchHost}/contract/${this.state.contractAddress}`;
     // TODO: Polyfill fetch for back suport
     fetch(fetchUrl)
       .then((res) => {return res.json()})
       .then(data => {
+        console.log("DATA", data);
         this.setState({
           ...this.state,
           contract: data
         });
       });
-  }
 
-  async componentWillMount() {
+    fetch("https://api.coinmarketcap.com/v1/ticker/ethereum/?convert=USD")
+      .then(res => {return res.json()})
+      .then(data => {
+        console.log("DATA", data);
+        this.setState({
+          exchangeRate: parseInt(data[0].price_usd, 10)
+        });
+      });
+
     // Poll for account/web3 changes
     web3Polling = setInterval(async ()=> {
       if(typeof window.web3 !== 'undefined') {
@@ -233,6 +244,9 @@ class CreatorPage extends Component {
     let fundTooltipClassNames = "tooltip";
     if(this.state.showTooltip === "fund") fundTooltipClassNames += ' visible';
 
+    let withdrawalAmount = this.state.exchangeRate * (balance * 0.1);
+    withdrawalAmount = withdrawalAmount.toFixed(2);
+
     return (
       <div className="container">
         <Nav />
@@ -252,6 +266,7 @@ class CreatorPage extends Component {
               <input step="0.1" placeholder="Custom amount?" className="custom-value-input" type="number" onChange={this.handleCustomAmount.bind(this)} />
               <div className="sidebar-key-info">
                 <div className="sidebar-key-info-heading">Fund Details</div>
+                Next withdrawal amount: ±${withdrawalAmount}<br />
                 Total contributors: {this.state.contract.totalContributors} <br />
                 Total staked: {balance} ether<br />
                 Fund started: {fundStarted} <br />
