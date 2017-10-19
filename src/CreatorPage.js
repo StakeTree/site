@@ -269,13 +269,14 @@ class CreatorPage extends Component {
                 Next withdrawal amount: ±${withdrawalAmount}<br />
                 Total contributors: {this.state.contract.totalContributors} <br />
                 Total staked: {balance} ether<br />
-                Fund started: {fundStarted} <br />
                 Next withdrawal: {nextWithdrawal}
               </div>
               <div className="sidebar-other-info">
                 Live: {this.state.contract.live ? '✅' : '🚫'}<br />
+                Fund started: {fundStarted} <br />
                 Withdrawal period: {withdrawalPeriodDays} days <br />
-                Sunset Period: {sunsetPeriodDays} days
+                Sunset Period: {sunsetPeriodDays} days <br />
+                Contract Source: <a href={`https://etherscan.io/address/${this.state.contractAddress}`} target="_blank" rel="noopener noreferrer">View on Etherscan</a>
               </div>
             </div>
             <div className="sidebar-actions">
