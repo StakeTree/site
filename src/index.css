@@ -62,6 +62,10 @@ input:focus {
   color: #444;
 }
 
+.btn.full-width {
+  width: 100%;
+}
+
 #mc_embed_signup .btn:hover, #mc_embed_signup .btn:active, #mc_embed_signup .btn:focus,
 .btn:hover, .btn:active, .btn:focus {
   color: #fff;
@@ -100,4 +104,14 @@ input:focus {
 }
 .visible {
   display: block;
+}
+
+.well {
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+}
+code {
+  padding: 8px;
 }
