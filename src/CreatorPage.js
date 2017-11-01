@@ -278,7 +278,7 @@ class CreatorPage extends Component {
           <div className="twelve columns">
             <div style={{"marginBottom": "25px"}}className="well">
             The <EtherscanLink text={"MVP contract"} type={"address"} id={"0xa899495d47B6a575c830Ffc330BC83318Df46a44"} /> has been put into sunset mode. Click <a href="" onClick={this.refundOld.bind(this)}>here</a> to refund your ether.<br />
-            Read more on what's changed in the new contract. I hope to see you fund the new contract below!
+            Read more on <a target="_blank" rel="noopener noreferrer" href="https://medium.com/@StakeTree/sunsetting-the-mvp-now-with-tokenization-4b4be1339b71">what's changed</a> in the new contract. I hope to see you fund the new contract below!
             </div>
           </div>
         </div>
