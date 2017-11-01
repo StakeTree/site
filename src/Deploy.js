@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import TruffleContract from 'truffle-contract';
-import StakeTreeMVPFactory from 'staketree-contracts/build/contracts/StakeTreeMVPFactory.json';
+import StakeTreeWithTokenizationFactory from 'staketree-contracts/build/contracts/StakeTreeWithTokenizationFactory.json';
 
 // Styling
 import './Deploy.css';
@@ -18,7 +18,7 @@ class Deploy extends Component {
     super(props);
 
     this.state = {
-      contractAddress: "0x4e2067c3e769e203c08fdc767c5f1c9791cf7c75",
+      contractAddress: "0x06afedaf28ca94be647418cbf9c02502f4554aa1",
       deployedAddresses: [],
       contractConfig: {
         beneficiaryAddress: "",
@@ -42,14 +42,14 @@ class Deploy extends Component {
           };
         }
 
-        const contract = TruffleContract(StakeTreeMVPFactory);
+        const contract = TruffleContract(StakeTreeWithTokenizationFactory);
         contract.setProvider(window.web3.currentProvider);
 
         contractInstance = await contract.at(this.state.contractAddress);
         window.contractInstance = contractInstance; // debugging
 
         // Use the web3 instance of the contract to allow for async tx
-        contractInstanceWeb3 = await window.web3.eth.contract(StakeTreeMVPFactory.abi).at(this.state.contractAddress);
+        contractInstanceWeb3 = await window.web3.eth.contract(StakeTreeWithTokenizationFactory.abi).at(this.state.contractAddress);
         window.contractInstanceWeb3 = contractInstanceWeb3; // debugging
 
         window.web3.eth.getAccounts(async (error, accounts) => {

@@ -2,14 +2,17 @@ import React, { Component } from 'react';
 import Web3 from 'web3'; // TODO: follow up on how to use web3 when pulled in vs metamask
 import TruffleContract from 'truffle-contract';
 import StakeTreeMVP from 'staketree-contracts/build/contracts/StakeTreeMVP.json';
+import StakeTreeWithTokenization from 'staketree-contracts/build/contracts/StakeTreeWithTokenization.json';
 
 // Styling
 import './CreatorPage.css';
 
 //Components
 import Nav from './Nav.js';
+import EtherscanLink from './EtherscanLink.js';
 
 let contractInstance;
+let contractInstanceMVP;
 let web3Polling;
 const web3 = new Web3();
 
@@ -25,7 +28,7 @@ class CreatorPage extends Component {
       isBeneficiary: false,
       customAmount: 0.1,
       web3available: false,
-      contractAddress: "0xa899495d47B6a575c830Ffc330BC83318Df46a44",
+      contractAddress: "0x8c79ec3f260b067157b0a7db0bb465f90b87f8f1",
       contract: {
         totalContributors: "...",
         balance: 0,
@@ -81,11 +84,18 @@ class CreatorPage extends Component {
           };
         }
 
-        const contract = TruffleContract(StakeTreeMVP);
+        const contract = TruffleContract(StakeTreeWithTokenization);
         contract.setProvider(window.web3.currentProvider);
 
         contractInstance = await contract.at(this.state.contractAddress);
         window.contractInstance = contractInstance; // debugging
+
+        // OLD MVP for refunding backwards compatible
+        const contractMVP = TruffleContract(StakeTreeMVP);
+        contractMVP.setProvider(window.web3.currentProvider);
+
+        contractInstanceMVP = await contractMVP.at("0xa899495d47B6a575c830Ffc330BC83318Df46a44");
+        window.contractInstanceMVP = contractInstanceMVP; // debugging
       
         window.web3.eth.getAccounts(async (error, accounts) => {
           if(this.state.currentEthAccount !== accounts[0]){
@@ -185,6 +195,15 @@ class CreatorPage extends Component {
     
   }
 
+  async refundOld(e) {
+    e.preventDefault();
+    window.web3.eth.getAccounts(async (error, accounts) => {
+      // const gasRequired = await contractInstance.refund.estimateGas({from: accounts[0]});
+      // TODO: Figure out why estimated gas cost is wrong
+      await contractInstanceMVP.refund({"from": accounts[0], "gas": 100000});
+    });
+  }
+
   async withdraw(e) {
     if(!this.canWithdraw()) {
       return false;
@@ -253,6 +272,14 @@ class CreatorPage extends Component {
         <div className="row">
           <div className="twelve columns">
             <h3 className="creatorpage-project-name">{this.state.user.title}</h3>
+          </div>
+        </div>
+        <div className="row">
+          <div className="twelve columns">
+            <div style={{"marginBottom": "25px"}}className="well">
+            The <EtherscanLink text={"MVP contract"} type={"address"} id={"0xa899495d47B6a575c830Ffc330BC83318Df46a44"} /> has been put into sunset mode. Click <a href="" onClick={this.refundOld.bind(this)}>here</a> to refund your ether.<br />
+            Read more on what's changed in the new contract. I hope to see you fund the new contract below!
+            </div>
           </div>
         </div>
         <div className="row">
