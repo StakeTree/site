@@ -17,13 +17,11 @@ class RefundButton extends Component {
   refund(e) {
     this.closeModal();
     window.web3.eth.getAccounts(async (error, accounts) => {
-      console.log("EG");
       this.props.contract.refund({"from": accounts[0], "gas": 100000});
     });
   }
   render() {
-    return (
-      <span>
+    let buttonHtml = this.props.visible ? <span>
         <Modal 
           className={{
             base: 'modal',
@@ -39,10 +37,8 @@ class RefundButton extends Component {
           <button className="btn clean right" onClick={this.closeModal.bind(this)}>Cancel</button>
         </Modal>
         <button className="btn clean" onClick={this.showModal.bind(this)}>{this.props.children}</button>
-      </span>
-
-    )
-
+      </span> : <span></span>;
+    return buttonHtml;
   }
   
 };
