@@ -9,6 +9,7 @@ import './ContractCard.css';
 //Components
 import Nav from './Nav.js';
 import RefundButton from './RefundButton.js';
+import WithdrawButton from './WithdrawButton.js';
 import EtherscanLink from './EtherscanLink.js';
 
 let contractInstance;
@@ -38,6 +39,7 @@ class ContractCard extends Component {
         sunsetPeriod: "...",
         minimumFundingAmount: 0
       },
+      contractInstance: '',
       user: { // Fetch this information in the future
         title: 'StakeTree Development Fund',
       }
@@ -74,6 +76,7 @@ class ContractCard extends Component {
         contract.setProvider(window.web3.currentProvider);
 
         contractInstance = await contract.at(this.state.contractAddress);
+        this.setState({contractInstance: contractInstance});
         window.contractInstance = contractInstance; // debugging
 
         contractInstance.totalCurrentFunders.call().then(result => {
@@ -296,7 +299,6 @@ class ContractCard extends Component {
       funderClaimAmount = web3.utils.fromWei(this.state.funder.contribution-this.state.funder.contributionClaimed, 'ether');
     }
     
-    
     let withdrawTooltipClassNames = "tooltip";
     if(this.state.showTooltip === "withdrawal") withdrawTooltipClassNames += ' visible';
 
@@ -310,6 +312,9 @@ class ContractCard extends Component {
     totalStakedDollar = totalStakedDollar.toFixed(2);
 
     const tokenHtml = !this.state.contract.tokenized && this.state.isBeneficiary ? <div className="token-action">You haven't add token claiming to the contract yet. Add it by clicking <a href="">here</a>.</div> : '';
+
+    const refundAction = this.refund.bind(this);
+    const withdrawAction = this.withdraw.bind(this);
 
     return (
       <div className="container">
@@ -335,8 +340,13 @@ class ContractCard extends Component {
                     </ul>
                   </div> : ''}
                   <div className="secondary-actions">
-                    {this.state.isBeneficiary ? <button className="btn clean" onClick={this.withdraw.bind(this)}>Withdraw</button> : ''}
-                    {this.state.isFunder ? <button className="btn clean" onClick={this.refund.bind(this)}>Refund</button> : ''}
+                    <WithdrawButton
+                      withdrawalDate={new Date(this.state.contract.nextWithdrawal*1000)} 
+                      visible={this.state.isBeneficiary}
+                      contract={this.state.contractInstance}>Withdraw</WithdrawButton>
+                    <RefundButton 
+                      visible={this.state.isFunder} 
+                      contract={this.state.contractInstance}>Refund</RefundButton>
                     {this.state.isFunder && this.state.contract.tokenized ? <button className="btn clean" onClick={this.claimTokens.bind(this)}>Claim Tokens</button> : ''}
                   </div>
                 </div>
