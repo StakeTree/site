@@ -8,6 +8,7 @@ import './ContractCard.css';
 
 //Components
 import Nav from './Nav.js';
+import RefundButton from './RefundButton.js';
 import EtherscanLink from './EtherscanLink.js';
 
 let contractInstance;
@@ -211,7 +212,12 @@ class ContractCard extends Component {
       // TODO: Figure out why estimated gas cost is wrong
       await contractInstance.refund({"from": accounts[0], "gas": 100000});
     });
-    
+  }
+
+  async claimTokens(e) {
+    window.web3.eth.getAccounts(async (error, accounts) => {
+      await contractInstance.claimTokens({"from": accounts[0], "gas": 100000});
+    });
   }
 
   async withdraw(e) {
@@ -292,9 +298,9 @@ class ContractCard extends Component {
                 <li>Next Withdrawal: {nextWithdrawal}</li>
                 <li>Fund Started: {fundStarted}</li>
                 <li>Sunset Period: {sunsetPeriodDays} days</li>
-                <li>Live: {this.state.contract.live ? '✅' : '🚫'}</li>
+                <li>Live: {this.state.contract.live ? '✔' : '🚫'}</li>
                 <li>Beneficiary: <code><EtherscanLink type={"address"} text={this.state.contract.beneficiary} id={this.state.contract.beneficiary} /></code></li>
-                <li>Contract:  <code><EtherscanLink type={"address"} text={this.props.match.params.address} id={this.props.match.params.address} /></code></li>
+                <li>Contract: <code><EtherscanLink type={"address"} text={this.props.match.params.address} id={this.props.match.params.address} /></code></li>
               </ul>
               <div className="contract-card-actions">
                 <div className="main-actions">
@@ -310,6 +316,7 @@ class ContractCard extends Component {
                     <div className="secondary-actions">
                       {this.state.isBeneficiary ? <button className="btn clean" onClick={this.withdraw.bind(this)}>Withdraw</button> : ''}
                       {this.state.isFunder ? <button className="btn clean" onClick={this.refund.bind(this)}>Refund</button> : ''}
+                      {this.state.isFunder && this.state.contract.tokenized ? <button className="btn clean" onClick={this.claimTokens.bind(this)}>Claim Tokens</button> : ''}
                     </div>
                   </div>
                 : "Are you a beneficiary or funder? Select your respective account in Metamask to interact with this contract."}
