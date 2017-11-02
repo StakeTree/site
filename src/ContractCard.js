@@ -27,7 +27,7 @@ class ContractCard extends Component {
       isFunder: false,
       isBeneficiary: false,
       customAmount: 0.1,
-      web3available: false,
+      web3available: true,
       contractAddress: this.props.match.params.address,
       contract: {
         totalCurrentFunders: 0,
@@ -57,6 +57,7 @@ class ContractCard extends Component {
         });
       });
 
+    let pollingCounter = 0;
     // Poll for account/web3 changes
     web3Polling = setInterval(async ()=> {
       if(typeof window.web3 !== 'undefined') {
@@ -157,6 +158,12 @@ class ContractCard extends Component {
           });
         }
       }
+      else {
+        pollingCounter++;
+        if(pollingCounter === 3) {
+          this.setState({loading: false, web3available: false});
+        }
+      }
     }, 1500);
   }
 
@@ -231,30 +238,9 @@ class ContractCard extends Component {
     return "";
   }
 
-  async refund(e) {
-    window.web3.eth.getAccounts(async (error, accounts) => {
-      // const gasRequired = await contractInstance.refund.estimateGas({from: accounts[0]});
-      // TODO: Figure out why estimated gas cost is wrong
-      await contractInstance.refund({"from": accounts[0], "gas": 100000});
-    });
-  }
-
   async claimTokens(e) {
     window.web3.eth.getAccounts(async (error, accounts) => {
       await contractInstance.claimTokens({"from": accounts[0], "gas": 150000});
-    });
-  }
-
-  async withdraw(e) {
-    if(!this.canWithdraw()) {
-      return false;
-    }
-    
-    window.web3.eth.getAccounts(async (error, accounts) => {
-      // const gasRequired = await contractInstance.withdraw.estimateGas({from: accounts[0]});
-      // console.log(gasRequired);
-      // TODO: Figure out why estimated gas cost is wrong
-      contractInstance.withdraw({"from": accounts[0], "gas": 100000});
     });
   }
 
@@ -317,14 +303,15 @@ class ContractCard extends Component {
     let totalStakedDollar = this.state.exchangeRate * (balance);
     totalStakedDollar = totalStakedDollar.toFixed(2);
 
-    const tokenHtml = !this.state.contract.tokenized && this.state.isBeneficiary ? <div className="token-action">You haven't add token claiming to the contract yet. Add it by clicking <a href="">here</a>.</div> : '';
-
-    const refundAction = this.refund.bind(this);
-    const withdrawAction = this.withdraw.bind(this);
-
-    const noContractHtml = this.state.contractInstance === '' ? <div className="six columns offset-by-three">
+    const noContractHtml = this.state.web3available && this.state.contractInstance === '' ? <div className="six columns offset-by-three">
                 <div className="contract-card">
                   <p>No staketree contract found at this address. Double check that you have the correct address.</p>
+                </div>
+              </div> : <span></span>;
+    
+    const noWeb3 = !this.state.web3available ? <div className="six columns offset-by-three">
+                <div className="contract-card">
+                  <p>It doesn't seem like you have <a href="https://metamask.io" target="_blank" rel="noopener noreferrer">MetaMask</a> installed. Try installing it and refreshing this page.</p>
                 </div>
               </div> : <span></span>;
 
@@ -338,6 +325,7 @@ class ContractCard extends Component {
             </div> 
           : 
             <span>
+            {noWeb3}
             {noContractHtml}
             {this.state.contractInstance ? 
               <span>
@@ -346,7 +334,7 @@ class ContractCard extends Component {
                   {this.state.isBeneficiary || this.state.isFunder ? 
                     <div className="contract-card-actions">
                       {this.state.isFunder ? <div>
-                        <h4>Hi, funder</h4>
+                        <h4>Hi there funder,</h4>
                         <ul>
                           <li>Currently staked: {funderBalance} ether.</li>
                           <li>Total contributed: {funderContribution} ether.</li>
