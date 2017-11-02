@@ -40,6 +40,7 @@ class ContractCard extends Component {
         minimumFundingAmount: 0
       },
       contractInstance: '',
+      loading: true,
       user: { // Fetch this information in the future
         title: 'StakeTree Development Fund',
       }
@@ -75,78 +76,86 @@ class ContractCard extends Component {
         const contract = TruffleContract(StakeTreeWithTokenization);
         contract.setProvider(window.web3.currentProvider);
 
-        contractInstance = await contract.at(this.state.contractAddress);
-        this.setState({contractInstance: contractInstance});
-        window.contractInstance = contractInstance; // debugging
-
-        contractInstance.totalCurrentFunders.call().then(result => {
-          this.setContractState('totalCurrentFunders', result.toNumber());
-        });
-        contractInstance.getContractBalance.call().then(result => {
-          this.setContractState('balance', result.toNumber());
-        });
-        contractInstance.contractStartTime.call().then(result => {
-          this.setContractState('contractStartTime', result.toNumber());
-        });
-        contractInstance.nextWithdrawal.call().then(result=>{
-          this.setContractState('nextWithdrawal', result.toNumber());
-        });
-        contractInstance.withdrawalPeriod.call().then(result=>{
-          this.setContractState('withdrawalPeriod', result.toNumber());
-        });
-        contractInstance.live.call().then(result=>{
-          this.setContractState('live', result);
-        });
-        contractInstance.sunsetWithdrawalPeriod.call().then(result=>{
-          this.setContractState('sunsetWithdrawalPeriod', result.toNumber());
-        });
-        contractInstance.minimumFundingAmount.call().then(result=>{
-          this.setContractState('minimumFundingAmount', result.toNumber());
-        });
-        contractInstance.tokenized.call().then(result=>{
-          this.setContractState('tokenized', result);
+        await contract.at(this.state.contractAddress).then(inst=> {
+          contractInstance = inst;
+          this.setState({contractInstance: contractInstance});
+          this.setState({loading: false});
+          window.contractInstance = contractInstance; // debugging
+        }).catch(err => {
+          this.setState({loading: false});
+          // No contract found
+          console.log("C");
         });
 
-        contractInstance.withdrawalCounter.call().then(result=>{
-          this.setContractState('withdrawalCounter', result.toNumber());
-        });
-
-        window.web3.eth.getAccounts(async (error, accounts) => {
-          if(this.state.currentEthAccount !== accounts[0]){
-            // RESET UI
-            this.setState({
-              currentEthAccount: accounts[0],
-              isFunder: false,
-              isBeneficiary: false
-            });
-          }
-
-          // Check again for new accounts
-          contractInstance.isFunder(this.state.currentEthAccount).then(async (isFunder) => {
-            const funderBalance = await contractInstance.getFunderBalance.call(this.state.currentEthAccount);
-            const funderContribution = await contractInstance.getFunderContribution.call(this.state.currentEthAccount);
-            const funderContributionClaimed = await contractInstance.getFunderContributionClaimed.call(this.state.currentEthAccount);
-
-            this.setState({
-              ...this.state,
-              isFunder: isFunder,
-              funder: {
-                contribution: funderContribution.toNumber(),
-                contributionClaimed: funderContributionClaimed.toNumber(),
-                balance: funderBalance.toNumber()
-              }
-            });
+        if(contractInstance) {
+          contractInstance.totalCurrentFunders.call().then(result => {
+            this.setContractState('totalCurrentFunders', result.toNumber());
+          });
+          contractInstance.getContractBalance.call().then(result => {
+            this.setContractState('balance', result.toNumber());
+          });
+          contractInstance.contractStartTime.call().then(result => {
+            this.setContractState('contractStartTime', result.toNumber());
+          });
+          contractInstance.nextWithdrawal.call().then(result=>{
+            this.setContractState('nextWithdrawal', result.toNumber());
+          });
+          contractInstance.withdrawalPeriod.call().then(result=>{
+            this.setContractState('withdrawalPeriod', result.toNumber());
+          });
+          contractInstance.live.call().then(result=>{
+            this.setContractState('live', result);
+          });
+          contractInstance.sunsetWithdrawalPeriod.call().then(result=>{
+            this.setContractState('sunsetWithdrawalPeriod', result.toNumber());
+          });
+          contractInstance.minimumFundingAmount.call().then(result=>{
+            this.setContractState('minimumFundingAmount', result.toNumber());
+          });
+          contractInstance.tokenized.call().then(result=>{
+            this.setContractState('tokenized', result);
           });
 
-          contractInstance.beneficiary.call().then((beneficiary) => {
-            this.setState({
-              ...this.state,
-              isBeneficiary: this.state.currentEthAccount === beneficiary
-            });
-            this.setContractState('beneficiary', beneficiary);
+          contractInstance.withdrawalCounter.call().then(result=>{
+            this.setContractState('withdrawalCounter', result.toNumber());
           });
-        });
 
+          window.web3.eth.getAccounts(async (error, accounts) => {
+            if(this.state.currentEthAccount !== accounts[0]){
+              // RESET UI
+              this.setState({
+                currentEthAccount: accounts[0],
+                isFunder: false,
+                isBeneficiary: false
+              });
+            }
+
+            // Check again for new accounts
+            contractInstance.isFunder(this.state.currentEthAccount).then(async (isFunder) => {
+              const funderBalance = await contractInstance.getFunderBalance.call(this.state.currentEthAccount);
+              const funderContribution = await contractInstance.getFunderContribution.call(this.state.currentEthAccount);
+              const funderContributionClaimed = await contractInstance.getFunderContributionClaimed.call(this.state.currentEthAccount);
+
+              this.setState({
+                ...this.state,
+                isFunder: isFunder,
+                funder: {
+                  contribution: funderContribution.toNumber(),
+                  contributionClaimed: funderContributionClaimed.toNumber(),
+                  balance: funderBalance.toNumber()
+                }
+              });
+            });
+
+            contractInstance.beneficiary.call().then((beneficiary) => {
+              this.setState({
+                ...this.state,
+                isBeneficiary: this.state.currentEthAccount === beneficiary
+              });
+              this.setContractState('beneficiary', beneficiary);
+            });
+          });
+        }
       }
     }, 1500);
   }
@@ -299,9 +308,6 @@ class ContractCard extends Component {
       funderClaimAmount = web3.utils.fromWei(this.state.funder.contribution-this.state.funder.contributionClaimed, 'ether');
     }
     
-    let withdrawTooltipClassNames = "tooltip";
-    if(this.state.showTooltip === "withdrawal") withdrawTooltipClassNames += ' visible';
-
     let fundTooltipClassNames = "tooltip";
     if(this.state.showTooltip === "fund") fundTooltipClassNames += ' visible';
 
@@ -316,67 +322,84 @@ class ContractCard extends Component {
     const refundAction = this.refund.bind(this);
     const withdrawAction = this.withdraw.bind(this);
 
+    const noContractHtml = this.state.contractInstance === '' ? <div className="six columns offset-by-three">
+                <div className="contract-card">
+                  <p>No staketree contract found at this address. Double check that you have the correct address.</p>
+                </div>
+              </div> : <span></span>;
+
     return (
       <div className="container">
         <Nav />
         <div className="row">
-          <div className="five columns">
-            <div className="contract-card">
-              {this.state.isBeneficiary || this.state.isFunder ? 
-                <div className="contract-card-actions">
-                  {this.state.isFunder ? <div>
-                    <h4>Hi, funder</h4>
-                    <ul>
-                      <li>Currently staked: {funderBalance} ether.</li>
-                      <li>Total contributed: {funderContribution} ether.</li>
-                      {this.state.contract.tokenized ? <li>You can claim {funderClaimAmount} tokens.</li> : '' }
-                    </ul>
-                  </div> : ''}
-                  {this.state.isBeneficiary ? <div>
-                    <h4>Hi, beneficiary</h4>
-                    <ul>
-                      <li><strong>Total $ staked</strong>: ±${totalStakedDollar}</li>
-                      <li><strong>Total withdrawals</strong>: {this.state.contract.withdrawalCounter}</li>
-                    </ul>
-                  </div> : ''}
-                  <div className="secondary-actions">
-                    <WithdrawButton
-                      withdrawalDate={new Date(this.state.contract.nextWithdrawal*1000)} 
-                      visible={this.state.isBeneficiary}
-                      contract={this.state.contractInstance}>Withdraw</WithdrawButton>
-                    <RefundButton 
-                      visible={this.state.isFunder} 
-                      contract={this.state.contractInstance}>Refund</RefundButton>
-                    {this.state.isFunder && this.state.contract.tokenized ? <button className="btn clean" onClick={this.claimTokens.bind(this)}>Claim Tokens</button> : ''}
-                  </div>
-                </div>
-              : "Are you a beneficiary or funder? Select your respective account in Metamask to interact with this contract."}
-            </div>
-          </div>
-
-          <div className="seven columns">
-            <div className="contract-card">
-              <h4>Contract details</h4>
-              <ul>
-                <li>Total staked: {balance} ether</li>
-                <li>Total funders: {this.state.contract.totalCurrentFunders}</li>
-                <li>Next Withdrawal Amount: ±${withdrawalAmount}</li>
-                <li>Withdrawal Period: {withdrawalPeriodDays} days</li>
-                <li>Next Withdrawal: {nextWithdrawal}</li>
-                <li>Fund Started: {fundStarted}</li>
-                <li>Sunset Period: {sunsetPeriodDays} days</li>
-                <li>Live: {this.state.contract.live ? '✔' : '🚫'}</li>
-                <li>Beneficiary: <code><EtherscanLink type={"address"} text={this.state.contract.beneficiary} id={this.state.contract.beneficiary} /></code></li>
-                <li>Contract: <code><EtherscanLink type={"address"} text={this.props.match.params.address} id={this.props.match.params.address} /></code></li>
-              </ul>
-              <div className="contract-card-actions">
-                <div className="main-actions">
-                  <input step="0.1" placeholder="Custom amount?" className="custom-value-input" type="number" onChange={this.handleCustomAmount.bind(this)} />
-                  <button className="btn stake-btn" onMouseOver={this.checkTooltip.bind(this, 'fund')} onMouseLeave={this.hideTooltip.bind(this)} onClick={this.fund.bind(this, customAmount)}>Stake {customAmount} Ether</button>
+          {this.state.loading ? 
+            <div className="twelve columns">
+              Loading...
+            </div> 
+          : 
+            <span>
+            {noContractHtml}
+            {this.state.contractInstance ? 
+              <span>
+              <div className="five columns">
+                <div className="contract-card">
+                  {this.state.isBeneficiary || this.state.isFunder ? 
+                    <div className="contract-card-actions">
+                      {this.state.isFunder ? <div>
+                        <h4>Hi, funder</h4>
+                        <ul>
+                          <li>Currently staked: {funderBalance} ether.</li>
+                          <li>Total contributed: {funderContribution} ether.</li>
+                          {this.state.contract.tokenized ? <li>You can claim {funderClaimAmount} tokens.</li> : '' }
+                        </ul>
+                      </div> : ''}
+                      {this.state.isBeneficiary ? <div>
+                        <h4>Hi, beneficiary</h4>
+                        <ul>
+                          <li><strong>Total $ staked</strong>: ±${totalStakedDollar}</li>
+                          <li><strong>Total withdrawals</strong>: {this.state.contract.withdrawalCounter}</li>
+                        </ul>
+                      </div> : ''}
+                      <div className="secondary-actions">
+                        <WithdrawButton
+                          withdrawalDate={new Date(this.state.contract.nextWithdrawal*1000)} 
+                          visible={this.state.isBeneficiary}
+                          contract={this.state.contractInstance}>Withdraw</WithdrawButton>
+                        <RefundButton 
+                          visible={this.state.isFunder} 
+                          contract={this.state.contractInstance}>Refund</RefundButton>
+                        {this.state.isFunder && this.state.contract.tokenized ? <button className="btn clean" onClick={this.claimTokens.bind(this)}>Claim Tokens</button> : ''}
+                      </div>
+                    </div>
+                  : "Are you a beneficiary or funder? Select your respective account in Metamask to interact with this contract."}
                 </div>
               </div>
-            </div>              
-          </div>
+
+              <div className="seven columns">
+                <div className="contract-card">
+                  <h4>Contract details</h4>
+                  <ul>
+                    <li>Total staked: {balance} ether</li>
+                    <li>Total funders: {this.state.contract.totalCurrentFunders}</li>
+                    <li>Next Withdrawal Amount: ±${withdrawalAmount}</li>
+                    <li>Withdrawal Period: {withdrawalPeriodDays} days</li>
+                    <li>Next Withdrawal: {nextWithdrawal}</li>
+                    <li>Fund Started: {fundStarted}</li>
+                    <li>Sunset Period: {sunsetPeriodDays} days</li>
+                    <li>Live: {this.state.contract.live ? '✔' : '🚫'}</li>
+                    <li>Beneficiary: <code><EtherscanLink type={"address"} text={this.state.contract.beneficiary} id={this.state.contract.beneficiary} /></code></li>
+                    <li>Contract: <code><EtherscanLink type={"address"} text={this.props.match.params.address} id={this.props.match.params.address} /></code></li>
+                  </ul>
+                  <div className="contract-card-actions">
+                    <div className="main-actions">
+                      <input step="0.1" placeholder="Custom amount?" className="custom-value-input" type="number" onChange={this.handleCustomAmount.bind(this)} />
+                      <button className="btn stake-btn" onMouseOver={this.checkTooltip.bind(this, 'fund')} onMouseLeave={this.hideTooltip.bind(this)} onClick={this.fund.bind(this, customAmount)}>Stake {customAmount} Ether</button>
+                    </div>
+                  </div>
+                </div>              
+              </div></span> : ''}              
+            </span>
+          }
         </div>
       </div>
     );
