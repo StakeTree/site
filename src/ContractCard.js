@@ -9,6 +9,7 @@ import './ContractCard.css';
 //Components
 import Nav from './Nav.js';
 import RefundButton from './RefundButton.js';
+import FundButton from './FundButton.js';
 import WithdrawButton from './WithdrawButton.js';
 import EtherscanLink from './EtherscanLink.js';
 
@@ -303,6 +304,8 @@ class ContractCard extends Component {
     let totalStakedDollar = this.state.exchangeRate * (balance);
     totalStakedDollar = totalStakedDollar.toFixed(2);
 
+    const minAmount = web3.utils.fromWei(this.state.contract.minimumFundingAmount, 'ether');
+
     const noContractHtml = this.state.web3available && this.state.contractInstance === '' ? <div className="six columns offset-by-three">
                 <div className="contract-card">
                   <p>No staketree contract found at this address. Double check that you have the correct address.</p>
@@ -381,7 +384,7 @@ class ContractCard extends Component {
                   <div className="contract-card-actions">
                     <div className="main-actions">
                       <input step="0.1" placeholder="Custom amount?" className="custom-value-input" type="number" onChange={this.handleCustomAmount.bind(this)} />
-                      <button className="btn stake-btn" onMouseOver={this.checkTooltip.bind(this, 'fund')} onMouseLeave={this.hideTooltip.bind(this)} onClick={this.fund.bind(this, customAmount)}>Stake {customAmount} Ether</button>
+                      <FundButton toAddress={this.state.contractAddress} amount={customAmount} minAmount={minAmount} >Stake {customAmount} Ether</FundButton>
                     </div>
                   </div>
                 </div>              
