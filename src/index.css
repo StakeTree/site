@@ -1,8 +1,8 @@
-@import url('https://fonts.googleapis.com/css?family=Source+Code+Pro:300|600');
+@import url('https://fonts.googleapis.com/css?family=Raleway|Source+Code+Pro');
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Source Code Pro', sans-serif !important;
+  font-family: 'Raleway', sans-serif !important;
   color: #444;
   margin-bottom: 50px;
   background: #fefefe;
@@ -38,7 +38,7 @@ input:focus {
   font-family: 'Source Code Pro', sans-serif;
   transition: box-shadow 0.3s, border 0.3s, background 0s;
   box-shadow: 0px 4px 10px #dcdada;
-  font-weight: 800;
+  font-weight: 300;
   font-size: 1.2rem;
   border: 1px solid #fff !important;
   border-radius: 8px;
