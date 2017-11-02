@@ -216,7 +216,7 @@ class ContractCard extends Component {
 
   async claimTokens(e) {
     window.web3.eth.getAccounts(async (error, accounts) => {
-      await contractInstance.claimTokens({"from": accounts[0], "gas": 100000});
+      await contractInstance.claimTokens({"from": accounts[0], "gas": 150000});
     });
   }
 
