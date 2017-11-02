@@ -104,6 +104,10 @@ class ContractCard extends Component {
           this.setContractState('tokenized', result);
         });
 
+        contractInstance.withdrawalCounter.call().then(result=>{
+          this.setContractState('withdrawalCounter', result.toNumber());
+        });
+
         window.web3.eth.getAccounts(async (error, accounts) => {
           if(this.state.currentEthAccount !== accounts[0]){
             // RESET UI
@@ -289,7 +293,7 @@ class ContractCard extends Component {
     if(isFunder) {
       funderBalance = web3.utils.fromWei(this.state.funder.balance, 'ether');
       funderContribution = web3.utils.fromWei(this.state.funder.contribution, 'ether');
-      funderClaimAmount = web3.utils.fromWei(this.state.funder.contributionClaimed-this.state.funder.contribution, 'ether');
+      funderClaimAmount = web3.utils.fromWei(this.state.funder.contribution-this.state.funder.contributionClaimed, 'ether');
     }
     
     
@@ -302,14 +306,47 @@ class ContractCard extends Component {
     let withdrawalAmount = this.state.exchangeRate * (balance * 0.1);
     withdrawalAmount = withdrawalAmount.toFixed(2);
 
+    let totalStakedDollar = this.state.exchangeRate * (balance);
+    totalStakedDollar = totalStakedDollar.toFixed(2);
+
     const tokenHtml = !this.state.contract.tokenized && this.state.isBeneficiary ? <div className="token-action">You haven't add token claiming to the contract yet. Add it by clicking <a href="">here</a>.</div> : '';
 
     return (
       <div className="container">
         <Nav />
         <div className="row">
-          <div className="six columns offset-by-three">
+          <div className="five columns">
             <div className="contract-card">
+              {this.state.isBeneficiary || this.state.isFunder ? 
+                <div className="contract-card-actions">
+                  {this.state.isFunder ? <div>
+                    <h4>Hi, funder</h4>
+                    <ul>
+                      <li>Currently staked: {funderBalance} ether.</li>
+                      <li>Total contributed: {funderContribution} ether.</li>
+                      {this.state.contract.tokenized ? <li>You can claim {funderClaimAmount} tokens.</li> : '' }
+                    </ul>
+                  </div> : ''}
+                  {this.state.isBeneficiary ? <div>
+                    <h4>Hi, beneficiary</h4>
+                    <ul>
+                      <li><strong>Total $ staked</strong>: ±${totalStakedDollar}</li>
+                      <li><strong>Total withdrawals</strong>: {this.state.contract.withdrawalCounter}</li>
+                    </ul>
+                  </div> : ''}
+                  <div className="secondary-actions">
+                    {this.state.isBeneficiary ? <button className="btn clean" onClick={this.withdraw.bind(this)}>Withdraw</button> : ''}
+                    {this.state.isFunder ? <button className="btn clean" onClick={this.refund.bind(this)}>Refund</button> : ''}
+                    {this.state.isFunder && this.state.contract.tokenized ? <button className="btn clean" onClick={this.claimTokens.bind(this)}>Claim Tokens</button> : ''}
+                  </div>
+                </div>
+              : "Are you a beneficiary or funder? Select your respective account in Metamask to interact with this contract."}
+            </div>
+          </div>
+
+          <div className="seven columns">
+            <div className="contract-card">
+              <h4>Contract details</h4>
               <ul>
                 <li>Total staked: {balance} ether</li>
                 <li>Total funders: {this.state.contract.totalCurrentFunders}</li>
@@ -328,28 +365,7 @@ class ContractCard extends Component {
                   <button className="btn stake-btn" onMouseOver={this.checkTooltip.bind(this, 'fund')} onMouseLeave={this.hideTooltip.bind(this)} onClick={this.fund.bind(this, customAmount)}>Stake {customAmount} Ether</button>
                 </div>
               </div>
-            </div>
-            
-              <div className="contract-card">
-                {this.state.isBeneficiary || this.state.isFunder ? 
-                  <div className="contract-card-actions">
-                    {this.state.isFunder ? <div>
-                      <h4>Hi, funder</h4>
-                      <ul>
-                        <li>You currently have {funderBalance} ether staked to this contract.</li>
-                        <li>You have contributed {funderContribution} ether to the beneficiary.</li>
-                        {this.state.contract.tokenized ? <li>You can claim {funderClaimAmount} tokens.</li> : '' }
-                      </ul>
-                    </div> : ''}
-                    <div className="secondary-actions">
-                      {this.state.isBeneficiary ? <button className="btn clean" onClick={this.withdraw.bind(this)}>Withdraw</button> : ''}
-                      {this.state.isFunder ? <button className="btn clean" onClick={this.refund.bind(this)}>Refund</button> : ''}
-                      {this.state.isFunder && this.state.contract.tokenized ? <button className="btn clean" onClick={this.claimTokens.bind(this)}>Claim Tokens</button> : ''}
-                    </div>
-                  </div>
-                : "Are you a beneficiary or funder? Select your respective account in Metamask to interact with this contract."}
-              </div> 
-              
+            </div>              
           </div>
         </div>
       </div>
