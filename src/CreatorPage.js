@@ -7,9 +7,12 @@ import StakeTreeWithTokenization from 'staketree-contracts/build/contracts/Stake
 // Styling
 import './CreatorPage.css';
 
+
+
 //Components
 import Nav from './Nav.js';
 import EtherscanLink from './EtherscanLink.js';
+import RefundButton from './RefundButton.js';
 
 let contractInstance;
 let contractInstanceMVP;
@@ -39,6 +42,7 @@ class CreatorPage extends Component {
         sunsetPeriod: "...",
         minimumFundingAmount: 0
       },
+      contractInstance: '',
       user: { // Fetch this information in the future
         title: 'StakeTree Development Fund',
       }
@@ -96,6 +100,8 @@ class CreatorPage extends Component {
 
         contractInstanceMVP = await contractMVP.at("0xa899495d47B6a575c830Ffc330BC83318Df46a44");
         window.contractInstanceMVP = contractInstanceMVP; // debugging
+
+        this.setState({contractInstance: contractInstance});
       
         window.web3.eth.getAccounts(async (error, accounts) => {
           if(this.state.currentEthAccount !== accounts[0]){
@@ -313,7 +319,9 @@ class CreatorPage extends Component {
                   <button onMouseOver={this.checkTooltip.bind(this, 'withdrawal')} onMouseLeave={this.hideTooltip.bind(this)} className="btn clean" onClick={this.withdraw.bind(this)}>Withdraw from fund</button> 
                 </span>
               : ''}
-              {this.state.isFunder ? <button className="btn clean" onClick={this.refund.bind(this)}>Refund my ether</button> : ''}
+              <RefundButton 
+                visible={this.state.isFunder} 
+                contract={this.state.contractInstance}>Refund</RefundButton>
             </div>
           </div>
           <div className="eight columns">
