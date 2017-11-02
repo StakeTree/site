@@ -115,10 +115,19 @@ class ContractCard extends Component {
           }
 
           // Check again for new accounts
-          contractInstance.isFunder(this.state.currentEthAccount).then((isFunder) => {
+          contractInstance.isFunder(this.state.currentEthAccount).then(async (isFunder) => {
+            const funderBalance = await contractInstance.getFunderBalance.call(this.state.currentEthAccount);
+            const funderContribution = await contractInstance.getFunderContribution.call(this.state.currentEthAccount);
+            const funderContributionClaimed = await contractInstance.getFunderContributionClaimed.call(this.state.currentEthAccount);
+
             this.setState({
               ...this.state,
-              isFunder: isFunder
+              isFunder: isFunder,
+              funder: {
+                contribution: funderContribution.toNumber(),
+                contributionClaimed: funderContributionClaimed.toNumber(),
+                balance: funderBalance.toNumber()
+              }
             });
           });
 
@@ -272,6 +281,17 @@ class ContractCard extends Component {
     const withdrawalPeriodDays = Math.floor((this.state.contract.withdrawalPeriod % 31536000) / 86400);
 
     const balance = web3.utils.fromWei(this.state.contract.balance, 'ether');
+
+    const isFunder = this.state.isFunder;
+    let funderBalance = 0;
+    let funderContribution = 0;
+    let funderClaimAmount = 0;
+    if(isFunder) {
+      funderBalance = web3.utils.fromWei(this.state.funder.balance, 'ether');
+      funderContribution = web3.utils.fromWei(this.state.funder.contribution, 'ether');
+      funderClaimAmount = web3.utils.fromWei(this.state.funder.contributionClaimed-this.state.funder.contribution, 'ether');
+    }
+    
     
     let withdrawTooltipClassNames = "tooltip";
     if(this.state.showTooltip === "withdrawal") withdrawTooltipClassNames += ' visible';
@@ -313,6 +333,14 @@ class ContractCard extends Component {
               <div className="contract-card">
                 {this.state.isBeneficiary || this.state.isFunder ? 
                   <div className="contract-card-actions">
+                    {this.state.isFunder ? <div>
+                      <h4>Hi, funder</h4>
+                      <ul>
+                        <li>You currently have {funderBalance} ether staked to this contract.</li>
+                        <li>You have contributed {funderContribution} ether to the beneficiary.</li>
+                        {this.state.contract.tokenized ? <li>You can claim {funderClaimAmount} tokens.</li> : '' }
+                      </ul>
+                    </div> : ''}
                     <div className="secondary-actions">
                       {this.state.isBeneficiary ? <button className="btn clean" onClick={this.withdraw.bind(this)}>Withdraw</button> : ''}
                       {this.state.isFunder ? <button className="btn clean" onClick={this.refund.bind(this)}>Refund</button> : ''}
