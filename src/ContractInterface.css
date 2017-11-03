@@ -20,11 +20,7 @@
 }
 
 .contract-card .custom-value-input {
-	width: 47%;
-}
-
-.contract-card .stake-btn {
-	width: 47%;
+	width: 100%;
 }
 
 .contract-card-actions .btn {

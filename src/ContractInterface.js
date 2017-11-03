@@ -392,8 +392,8 @@ class ContractInterface extends Component {
                   </ul>
                   <div className="contract-card-actions">
                     <div className="main-actions">
-                      <input step="0.1" placeholder="Custom amount?" className="custom-value-input" type="number" onChange={this.handleCustomAmount.bind(this)} />
                       <FundButton toAddress={this.state.contractAddress} amount={customAmount} minAmount={minAmount} >Stake {customAmount} Ether</FundButton>
+                      <input step="0.1" placeholder="Custom amount?" className="custom-value-input" type="number" onChange={this.handleCustomAmount.bind(this)} />
                     </div>
                   </div>
                 </div>              
