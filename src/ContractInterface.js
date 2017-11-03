@@ -4,7 +4,7 @@ import TruffleContract from 'truffle-contract';
 import StakeTreeWithTokenization from 'staketree-contracts/build/contracts/StakeTreeWithTokenization.json';
 
 // Styling
-import './ContractCard.css';
+import './ContractInterface.css';
 
 //Components
 import Nav from './Nav.js';
@@ -18,7 +18,7 @@ let contractInstance;
 let web3Polling;
 const web3 = new Web3();
 
-class ContractCard extends Component {
+class ContractInterface extends Component {
   constructor(props) {
     super(props);
     
@@ -406,4 +406,4 @@ class ContractCard extends Component {
   }
 }
 
-export default ContractCard;
+export default ContractInterface;
