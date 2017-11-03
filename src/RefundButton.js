@@ -36,7 +36,7 @@ class RefundButton extends Component {
           <button className="btn" onClick={this.refund.bind(this)}>Continue</button>
           <button className="btn clean right" onClick={this.closeModal.bind(this)}>Cancel</button>
         </Modal>
-        <button className="btn clean" onClick={this.showModal.bind(this)}>{this.props.children}</button>
+        <button className="btn clean full-width" onClick={this.showModal.bind(this)}>{this.props.children}</button>
       </span> : <span></span>;
     return buttonHtml;
   }

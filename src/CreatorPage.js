@@ -13,6 +13,9 @@ import './CreatorPage.css';
 import Nav from './Nav.js';
 import EtherscanLink from './EtherscanLink.js';
 import RefundButton from './RefundButton.js';
+import FundButton from './FundButton.js';
+import WithdrawButton from './WithdrawButton.js';
+import ClaimTokensButton from './ClaimTokensButton.js';
 
 let contractInstance;
 let contractInstanceMVP;
@@ -40,7 +43,9 @@ class CreatorPage extends Component {
         withdrawalPeriod: "...",
         live: true,
         sunsetPeriod: "...",
-        minimumFundingAmount: 0
+        minimumFundingAmount: 0,
+        tokenized: false,
+        withdrawalCounter: 0
       },
       contractInstance: '',
       user: { // Fetch this information in the future
@@ -114,10 +119,24 @@ class CreatorPage extends Component {
           }
 
           // Check again for new accounts
-          contractInstance.isFunder(this.state.currentEthAccount).then((isFunder) => {
+          contractInstance.isFunder(this.state.currentEthAccount).then(async (isFunder) => {
+            if(isFunder) {
+              const funderBalance = await contractInstance.getFunderBalance.call(this.state.currentEthAccount);
+              const funderContribution = await contractInstance.getFunderContribution.call(this.state.currentEthAccount);
+              const funderContributionClaimed = await contractInstance.getFunderContributionClaimed.call(this.state.currentEthAccount);
+              this.setState({
+                ...this.state,
+                funder: {
+                  contribution: funderContribution.toNumber(),
+                  contributionClaimed: funderContributionClaimed.toNumber(),
+                  balance: funderBalance.toNumber()
+                }
+              });
+            }
+
             this.setState({
               ...this.state,
-              isFunder: isFunder
+              isFunder: isFunder,
             });
           });
 
@@ -262,18 +281,26 @@ class CreatorPage extends Component {
     const withdrawalPeriodDays = Math.floor((this.state.contract.withdrawalPeriod % 31536000) / 86400);
 
     const balance = web3.utils.fromWei(this.state.contract.balance, 'ether');
-    
-    let withdrawTooltipClassNames = "tooltip";
-    if(this.state.showTooltip === "withdrawal") withdrawTooltipClassNames += ' visible';
-
-    let fundTooltipClassNames = "tooltip";
-    if(this.state.showTooltip === "fund") fundTooltipClassNames += ' visible';
 
     let withdrawalAmount = this.state.exchangeRate * (balance * 0.1);
     withdrawalAmount = withdrawalAmount.toFixed(2);
 
+    const minAmount = web3.utils.fromWei(this.state.contract.minimumFundingAmount, 'ether');
+
+    let funderBalance = 0;
+    let funderContribution = 0;
+    let funderClaimAmount = 0;
+    if(this.state.isFunder) {
+      funderBalance = web3.utils.fromWei(this.state.funder.balance, 'ether');
+      funderContribution = web3.utils.fromWei(this.state.funder.contribution, 'ether');
+      funderClaimAmount = web3.utils.fromWei(this.state.funder.contribution-this.state.funder.contributionClaimed, 'ether');
+    }
+
+    let totalStakedDollar = this.state.exchangeRate * (balance);
+    totalStakedDollar = totalStakedDollar.toFixed(2);
+
     return (
-      <div className="container">
+      <div className="container creator-page">
         <Nav />
         <div className="row">
           <div className="twelve columns">
@@ -292,10 +319,7 @@ class CreatorPage extends Component {
           <div className="four columns sidebar">
             <div className="sidebar">
               <span className="creatorpage-avatar"><img alt="Niel's face" src="ava.jpg" /></span>
-              <span className="tooltip-button">
-                <div className={fundTooltipClassNames}>{this.state.tooltipText}</div>
-                <button className="btn" onMouseOver={this.checkTooltip.bind(this, 'fund')} onMouseLeave={this.hideTooltip.bind(this)} onClick={this.fund.bind(this, customAmount)}>Stake {customAmount} Ether</button>
-              </span>
+              <FundButton toAddress={this.state.contractAddress} amount={customAmount} minAmount={minAmount} >Stake {customAmount} Ether</FundButton>
               <input step="0.1" placeholder="Custom amount?" className="custom-value-input" type="number" onChange={this.handleCustomAmount.bind(this)} />
               <div className="sidebar-key-info">
                 <div className="sidebar-key-info-heading">Fund Details</div>
@@ -312,16 +336,39 @@ class CreatorPage extends Component {
                 Contract Source: <a href={`https://etherscan.io/address/${this.state.contractAddress}`} target="_blank" rel="noopener noreferrer">View on Etherscan</a>
               </div>
             </div>
-            <div className="sidebar-actions">
-              {this.state.isBeneficiary ? 
-                <span className="tooltip-button">
-                  <div className={withdrawTooltipClassNames}>{this.state.tooltipText}</div>
-                  <button onMouseOver={this.checkTooltip.bind(this, 'withdrawal')} onMouseLeave={this.hideTooltip.bind(this)} className="btn clean" onClick={this.withdraw.bind(this)}>Withdraw from fund</button> 
-                </span>
-              : ''}
-              <RefundButton 
-                visible={this.state.isFunder} 
-                contract={this.state.contractInstance}>Refund</RefundButton>
+            <div className="contract-card">
+              {this.state.isBeneficiary || this.state.isFunder ? 
+                <div className="contract-card-actions">
+                  {this.state.isFunder ? <div>
+                    <h4>Hi there funder,</h4>
+                    <ul>
+                      <li>Currently staked: {funderBalance} ether.</li>
+                      <li>Total contributed: {funderContribution} ether.</li>
+                      {this.state.contract.tokenized ? <li>You can claim {funderClaimAmount} tokens.</li> : '' }
+                    </ul>
+                  </div> : ''}
+                  {this.state.isBeneficiary ? <div>
+                    <h4>Hi, beneficiary</h4>
+                    <ul>
+                      <li><strong>Total $ staked</strong>: ±${totalStakedDollar}</li>
+                      <li><strong>Total withdrawals</strong>: {this.state.contract.withdrawalCounter}</li>
+                    </ul>
+                  </div> : ''}
+                  <div className="secondary-actions">
+                    <WithdrawButton
+                      withdrawalDate={new Date(this.state.contract.nextWithdrawal*1000)} 
+                      visible={this.state.isBeneficiary}
+                      contract={this.state.contractInstance}>Withdraw</WithdrawButton>
+                    <ClaimTokensButton
+                      claimAmount={funderClaimAmount} 
+                      visible={this.state.isFunder && this.state.contract.tokenized}
+                      contract={this.state.contractInstance}>Claim Tokens</ClaimTokensButton>
+                    <RefundButton 
+                      visible={this.state.isFunder} 
+                      contract={this.state.contractInstance}>Refund</RefundButton>
+                  </div>
+                </div>
+              : "Are you a beneficiary or funder? Select your respective account in Metamask to interact with this contract."}
             </div>
           </div>
           <div className="eight columns">

@@ -30,7 +30,7 @@ class WithdrawButton extends Component {
 
     let buttonHtml = this.props.visible ? <span className="tooltip-button">
       <div className={withdrawTooltipClassNames}>{`You can only withdraw after ${this.props.withdrawalDate.toLocaleString()}.`}</div>
-      <button onMouseOver={this.showTooltip.bind(this)} onMouseLeave={this.hideTooltip.bind(this)} className="btn clean" onClick={this.withdraw.bind(this)}>{this.props.children}</button> 
+      <button onMouseOver={this.showTooltip.bind(this)} onMouseLeave={this.hideTooltip.bind(this)} className="btn clean full-width" onClick={this.withdraw.bind(this)}>{this.props.children}</button> 
     </span> : <span></span>;
     
     return buttonHtml;

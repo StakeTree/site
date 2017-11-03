@@ -3,16 +3,16 @@ const path = require('path');
 const app = express();
 const Web3 = require('web3');
 const TruffleContract = require('truffle-contract');
-const MVPContractABI = require('staketree-contracts/build/contracts/StakeTreeMVP.json');
+const StakeTreeWithTokenization = require('staketree-contracts/build/contracts/StakeTreeWithTokenization.json');
 
 const isLocal = process.env.PORT ? false : true;
 let web3;
-if(isLocal){
-  web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-}
-else {
+// if(isLocal){
+//   web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+// }
+// else {
 web3 = new Web3(new Web3.providers.HttpProvider("https://mainnet.infura.io"));
-}
+// }
 
 
 if(isLocal){
@@ -28,7 +28,7 @@ if(isLocal){
 app.use(express.static(path.join(__dirname, 'build')));
 
 app.get('/contract/:address', async (req, res, next) => {
-  const contract = TruffleContract(MVPContractABI);
+  const contract = TruffleContract(StakeTreeWithTokenization);
   contract.setProvider(web3.currentProvider);
 
   // dirty hack for web3@1.0.0 support for localhost testrpc, 
@@ -54,6 +54,8 @@ app.get('/contract/:address', async (req, res, next) => {
   const live = await instance.live.call();
   const sunsetPeriod = await instance.sunsetWithdrawalPeriod.call();
   const minimumFundingAmount = await instance.minimumFundingAmount.call();
+  const tokenized = await instance.tokenized.call();
+  const withdrawalCounter = await instance.withdrawalCounter.call();
 
   res.json({
     "balance": balance,
@@ -63,7 +65,9 @@ app.get('/contract/:address', async (req, res, next) => {
     "withdrawalPeriod": withdrawalPeriod,
     "live": live,
     "sunsetPeriod": sunsetPeriod,
-    "minimumFundingAmount": minimumFundingAmount
+    "minimumFundingAmount": minimumFundingAmount,
+    "tokenized": tokenized,
+    "withdrawalCounter": withdrawalCounter
   });
 });
 

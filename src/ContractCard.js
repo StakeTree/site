@@ -135,18 +135,23 @@ class ContractCard extends Component {
 
             // Check again for new accounts
             contractInstance.isFunder(this.state.currentEthAccount).then(async (isFunder) => {
-              const funderBalance = await contractInstance.getFunderBalance.call(this.state.currentEthAccount);
-              const funderContribution = await contractInstance.getFunderContribution.call(this.state.currentEthAccount);
-              const funderContributionClaimed = await contractInstance.getFunderContributionClaimed.call(this.state.currentEthAccount);
+              if(isFunder) {
+                const funderBalance = await contractInstance.getFunderBalance.call(this.state.currentEthAccount);
+                const funderContribution = await contractInstance.getFunderContribution.call(this.state.currentEthAccount);
+                const funderContributionClaimed = await contractInstance.getFunderContributionClaimed.call(this.state.currentEthAccount);
+                this.setState({
+                  ...this.state,
+                  funder: {
+                    contribution: funderContribution.toNumber(),
+                    contributionClaimed: funderContributionClaimed.toNumber(),
+                    balance: funderBalance.toNumber()
+                  }
+                });
+              }
 
               this.setState({
                 ...this.state,
                 isFunder: isFunder,
-                funder: {
-                  contribution: funderContribution.toNumber(),
-                  contributionClaimed: funderContributionClaimed.toNumber(),
-                  balance: funderBalance.toNumber()
-                }
               });
             });
 
@@ -357,13 +362,13 @@ class ContractCard extends Component {
                           withdrawalDate={new Date(this.state.contract.nextWithdrawal*1000)} 
                           visible={this.state.isBeneficiary}
                           contract={this.state.contractInstance}>Withdraw</WithdrawButton>
-                        <RefundButton 
-                          visible={this.state.isFunder} 
-                          contract={this.state.contractInstance}>Refund</RefundButton>
                         <ClaimTokensButton
                           claimAmount={funderClaimAmount} 
                           visible={this.state.isFunder && this.state.contract.tokenized}
                           contract={this.state.contractInstance}>Claim Tokens</ClaimTokensButton>
+                        <RefundButton 
+                          visible={this.state.isFunder} 
+                          contract={this.state.contractInstance}>Refund</RefundButton>
                       </div>
                     </div>
                   : "Are you a beneficiary or funder? Select your respective account in Metamask to interact with this contract."}

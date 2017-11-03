@@ -50,11 +50,16 @@
 
 .sidebar-other-info {
   font-size: 1rem;
-  margin-bottom: 20px;
   padding-bottom: 10px;
   border-bottom: 1px solid #ddd;
 }
 
 .sidebar-actions {
   position: relative;
+}
+
+.creator-page .contract-card {
+  width: initial;
+  margin: 0px;
+  margin-top: 16px;
 }
