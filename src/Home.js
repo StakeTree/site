@@ -4,7 +4,7 @@ import './Home.css';
 import Nav from './Nav.js';
 import Modal from 'react-modal';
 
-const contractAddress = "0xa899495d47B6a575c830Ffc330BC83318Df46a44";
+const contractAddress = "0x8c79ec3f260b067157b0a7db0bb465f90b87f8f1";
 
 class Home extends Component {
   constructor(props) {
