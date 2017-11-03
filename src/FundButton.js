@@ -38,7 +38,7 @@ class FundButton extends Component {
     if(this.state.showTooltip) tooltipClassNames += ' visible';
 
     let buttonHtml = <span className="tooltip-button">
-      <div className={tooltipClassNames}>{`Unfortunately, the minimum funding amount is ${this.props.minAmount}.`}</div>
+      <div className={tooltipClassNames}>{`The minimum funding amount is ${this.props.minAmount} ether.`}</div>
       <button onMouseOver={this.showTooltip.bind(this)} onMouseLeave={this.hideTooltip.bind(this)} className="btn stake-btn" onClick={this.fund.bind(this)}>{this.props.children}</button> 
     </span>;
     
