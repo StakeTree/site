@@ -7,7 +7,6 @@ import './Deploy.css';
 
 //Components
 import Nav from './Nav.js';
-import EtherscanLink from './EtherscanLink.js';
 import { Link } from 'react-router-dom';
 
 let contractInstance;

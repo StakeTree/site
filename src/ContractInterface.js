@@ -8,11 +8,10 @@ import './ContractInterface.css';
 
 //Components
 import Nav from './Nav.js';
-import RefundButton from './RefundButton.js';
 import FundButton from './FundButton.js';
-import WithdrawButton from './WithdrawButton.js';
-import ClaimTokensButton from './ClaimTokensButton.js';
 import EtherscanLink from './EtherscanLink.js';
+import FunderCard from './FunderCard.js';
+import BeneficiaryCard from './BeneficiaryCard.js';
 
 let contractInstance;
 let web3Polling;
@@ -290,20 +289,7 @@ class ContractInterface extends Component {
     const withdrawalPeriodDays = Math.floor((this.state.contract.withdrawalPeriod % 31536000) / 86400);
 
     const balance = web3.utils.fromWei(this.state.contract.balance, 'ether');
-
-    const isFunder = this.state.isFunder;
-    let funderBalance = 0;
-    let funderContribution = 0;
-    let funderClaimAmount = 0;
-    if(isFunder) {
-      funderBalance = web3.utils.fromWei(this.state.funder.balance, 'ether');
-      funderContribution = web3.utils.fromWei(this.state.funder.contribution, 'ether');
-      funderClaimAmount = web3.utils.fromWei(this.state.funder.contribution-this.state.funder.contributionClaimed, 'ether');
-    }
     
-    let fundTooltipClassNames = "tooltip";
-    if(this.state.showTooltip === "fund") fundTooltipClassNames += ' visible';
-
     let withdrawalAmount = this.state.exchangeRate * (balance * 0.1);
     withdrawalAmount = withdrawalAmount.toFixed(2);
 
@@ -339,40 +325,18 @@ class ContractInterface extends Component {
             {this.state.contractInstance ? 
               <span>
               <div className="five columns">
-                <div className="contract-card">
-                  {this.state.isBeneficiary || this.state.isFunder ? 
-                    <div className="contract-card-actions">
-                      {this.state.isFunder ? <div>
-                        <h4>Hi there funder,</h4>
-                        <ul>
-                          <li>Currently staked: {funderBalance} ether.</li>
-                          <li>Total contributed: {funderContribution} ether.</li>
-                          {this.state.contract.tokenized ? <li>You can claim {funderClaimAmount} tokens.</li> : '' }
-                        </ul>
-                      </div> : ''}
-                      {this.state.isBeneficiary ? <div>
-                        <h4>Hi, beneficiary</h4>
-                        <ul>
-                          <li><strong>Total $ staked</strong>: ±${totalStakedDollar}</li>
-                          <li><strong>Total withdrawals</strong>: {this.state.contract.withdrawalCounter}</li>
-                        </ul>
-                      </div> : ''}
-                      <div className="secondary-actions">
-                        <WithdrawButton
-                          withdrawalDate={new Date(this.state.contract.nextWithdrawal*1000)} 
-                          visible={this.state.isBeneficiary}
-                          contract={this.state.contractInstance}>Withdraw</WithdrawButton>
-                        <ClaimTokensButton
-                          claimAmount={funderClaimAmount} 
-                          visible={this.state.isFunder && this.state.contract.tokenized}
-                          contract={this.state.contractInstance}>Claim Tokens</ClaimTokensButton>
-                        <RefundButton 
-                          visible={this.state.isFunder} 
-                          contract={this.state.contractInstance}>Refund</RefundButton>
-                      </div>
-                    </div>
-                  : "Are you a beneficiary or funder? Select your respective account in Metamask to interact with this contract."}
-                </div>
+                {this.state.isFunder ? <FunderCard 
+                  funder={this.state.funder} 
+                  contract={this.state.contractInstance} 
+                  tokenized={this.state.contract.tokenized} /> : ''}
+                {this.state.isBeneficiary ? <BeneficiaryCard 
+                  nextWithdrawal={this.state.contract.nextWithdrawal}
+                  withdrawalCounter={this.state.contract.withdrawalCounter}
+                  totalStakedDollar={totalStakedDollar} 
+                  contract={this.state.contractInstance} /> : ''}
+                {!this.state.isBeneficiary && !this.state.isFunder ? <div className='contract-card'>
+                Are you a beneficiary or funder? Select your respective account in Metamask to interact with this contract.
+                </div> : ''}
               </div>
 
               <div className="seven columns">
