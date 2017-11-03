@@ -7,7 +7,7 @@ import './Deploy.css';
 
 //Components
 import Nav from './Nav.js';
-import EtherscanLink from './EtherscanLink.js';
+import { Link } from 'react-router-dom';
 
 let contractInstance;
 let contractInstanceWeb3;
@@ -139,7 +139,7 @@ class Deploy extends Component {
               <h4>Deployed contracts</h4>
               <ol> 
                 {this.state.deployedAddresses.map(address => {
-                  return <li key={`addr-${address}`}><code><EtherscanLink type="address" text={address} id={address}/></code></li>
+                  return <li key={`addr-${address}`}><Link to={`/c/${address}`}>{address}</Link></li>
                 })}
               </ol>
             </div>

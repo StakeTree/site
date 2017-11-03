@@ -7,9 +7,14 @@ import StakeTreeWithTokenization from 'staketree-contracts/build/contracts/Stake
 // Styling
 import './CreatorPage.css';
 
+
+
 //Components
 import Nav from './Nav.js';
 import EtherscanLink from './EtherscanLink.js';
+import FundButton from './FundButton.js';
+import FunderCard from './FunderCard.js';
+import BeneficiaryCard from './BeneficiaryCard.js';
 
 let contractInstance;
 let contractInstanceMVP;
@@ -37,8 +42,11 @@ class CreatorPage extends Component {
         withdrawalPeriod: "...",
         live: true,
         sunsetPeriod: "...",
-        minimumFundingAmount: 0
+        minimumFundingAmount: 0,
+        tokenized: false,
+        withdrawalCounter: 0
       },
+      contractInstance: '',
       user: { // Fetch this information in the future
         title: 'StakeTree Development Fund',
       }
@@ -96,6 +104,8 @@ class CreatorPage extends Component {
 
         contractInstanceMVP = await contractMVP.at("0xa899495d47B6a575c830Ffc330BC83318Df46a44");
         window.contractInstanceMVP = contractInstanceMVP; // debugging
+
+        this.setState({contractInstance: contractInstance});
       
         window.web3.eth.getAccounts(async (error, accounts) => {
           if(this.state.currentEthAccount !== accounts[0]){
@@ -108,10 +118,24 @@ class CreatorPage extends Component {
           }
 
           // Check again for new accounts
-          contractInstance.isFunder(this.state.currentEthAccount).then((isFunder) => {
+          contractInstance.isFunder(this.state.currentEthAccount).then(async (isFunder) => {
+            if(isFunder) {
+              const funderBalance = await contractInstance.getFunderBalance.call(this.state.currentEthAccount);
+              const funderContribution = await contractInstance.getFunderContribution.call(this.state.currentEthAccount);
+              const funderContributionClaimed = await contractInstance.getFunderContributionClaimed.call(this.state.currentEthAccount);
+              this.setState({
+                ...this.state,
+                funder: {
+                  contribution: funderContribution.toNumber(),
+                  contributionClaimed: funderContributionClaimed.toNumber(),
+                  balance: funderBalance.toNumber()
+                }
+              });
+            }
+
             this.setState({
               ...this.state,
-              isFunder: isFunder
+              isFunder: isFunder,
             });
           });
 
@@ -130,49 +154,6 @@ class CreatorPage extends Component {
     clearInterval(web3Polling);
   }
 
-  canFund(etherAmount) {
-    let web3 = window.web3; // Uses web3 from metamask
-    const minAmount = web3.fromWei(this.state.contract.minimumFundingAmount, 'ether');
-    if(etherAmount < minAmount) {
-      return false;
-    }
-    else{
-      return true;
-    } 
-  }
-
-  canWithdraw() {
-    const withdrawalDate = new Date(this.state.contract.nextWithdrawal*1000);
-    if(new Date() <= withdrawalDate) {
-      return false;
-    }
-    else {
-      return true;
-    }
-  }
-
-  fund(etherAmount) {
-    if(!this.canFund(etherAmount)){ return false;}
-
-    let web3 = window.web3; // Uses web3 from metamask
-    web3.eth.getAccounts((error, accounts) => {
-      if(accounts.length > 0){
-        this.setState({web3available: true});
-        const account = accounts[0];
-
-        web3.eth.sendTransaction(
-          {"from": account, "to": this.state.contractAddress, "value": web3.toWei(etherAmount, "ether")}, 
-          (err, transactionHash) => {
-            console.log(transactionHash);
-          }
-        );
-      }
-      else {
-        this.setState({web3available: false});
-      }
-    });
-  }
-
   handleCustomAmount(e) {
     let value = e.target.value;
     if(e.target.value === "") value = 0.1;
@@ -186,15 +167,6 @@ class CreatorPage extends Component {
     return "";
   }
 
-  async refund(e) {
-    window.web3.eth.getAccounts(async (error, accounts) => {
-      // const gasRequired = await contractInstance.refund.estimateGas({from: accounts[0]});
-      // TODO: Figure out why estimated gas cost is wrong
-      await contractInstance.refund({"from": accounts[0], "gas": 100000});
-    });
-    
-  }
-
   async refundOld(e) {
     e.preventDefault();
     window.web3.eth.getAccounts(async (error, accounts) => {
@@ -202,48 +174,6 @@ class CreatorPage extends Component {
       // TODO: Figure out why estimated gas cost is wrong
       await contractInstanceMVP.refund({"from": accounts[0], "gas": 100000});
     });
-  }
-
-  async withdraw(e) {
-    if(!this.canWithdraw()) {
-      return false;
-    }
-    
-    window.web3.eth.getAccounts(async (error, accounts) => {
-      // const gasRequired = await contractInstance.withdraw.estimateGas({from: accounts[0]});
-      // console.log(gasRequired);
-      // TODO: Figure out why estimated gas cost is wrong
-      contractInstance.withdraw({"from": accounts[0], "gas": 100000});
-    });
-  }
-
-  hideTooltip() {
-    this.setState({showTooltip: ""});
-  }
-
-  checkTooltip(tooltipId) {
-    switch(tooltipId){
-      case "withdrawal":
-        if(!this.canWithdraw()) {
-          const withdrawalDate = new Date(this.state.contract.nextWithdrawal*1000);
-          this.setState({
-            showTooltip: tooltipId,
-            tooltipText: `Unfortunately, you can only withdraw after ${withdrawalDate.toLocaleString()}.`
-          });
-        }
-        break;
-      case "fund":
-        if(!this.canFund(this.state.customAmount)) {
-          const minAmount = web3.utils.fromWei(this.state.contract.minimumFundingAmount, 'ether');
-          this.setState({
-            showTooltip: tooltipId,
-            tooltipText: `The minimum funding amount is ${minAmount} ether. Try a bigger amount.`
-          });
-        }
-        break;
-      default:
-        return false;
-    }
   }
 
   render() {
@@ -256,18 +186,17 @@ class CreatorPage extends Component {
     const withdrawalPeriodDays = Math.floor((this.state.contract.withdrawalPeriod % 31536000) / 86400);
 
     const balance = web3.utils.fromWei(this.state.contract.balance, 'ether');
-    
-    let withdrawTooltipClassNames = "tooltip";
-    if(this.state.showTooltip === "withdrawal") withdrawTooltipClassNames += ' visible';
-
-    let fundTooltipClassNames = "tooltip";
-    if(this.state.showTooltip === "fund") fundTooltipClassNames += ' visible';
 
     let withdrawalAmount = this.state.exchangeRate * (balance * 0.1);
     withdrawalAmount = withdrawalAmount.toFixed(2);
 
+    const minAmount = web3.utils.fromWei(this.state.contract.minimumFundingAmount, 'ether');
+
+    let totalStakedDollar = this.state.exchangeRate * (balance);
+    totalStakedDollar = totalStakedDollar.toFixed(2);
+
     return (
-      <div className="container">
+      <div className="container creator-page">
         <Nav />
         <div className="row">
           <div className="twelve columns">
@@ -286,10 +215,7 @@ class CreatorPage extends Component {
           <div className="four columns sidebar">
             <div className="sidebar">
               <span className="creatorpage-avatar"><img alt="Niel's face" src="ava.jpg" /></span>
-              <span className="tooltip-button">
-                <div className={fundTooltipClassNames}>{this.state.tooltipText}</div>
-                <button className="btn" onMouseOver={this.checkTooltip.bind(this, 'fund')} onMouseLeave={this.hideTooltip.bind(this)} onClick={this.fund.bind(this, customAmount)}>Stake {customAmount} Ether</button>
-              </span>
+              <FundButton toAddress={this.state.contractAddress} amount={customAmount} minAmount={minAmount} >Stake {customAmount} Ether</FundButton>
               <input step="0.1" placeholder="Custom amount?" className="custom-value-input" type="number" onChange={this.handleCustomAmount.bind(this)} />
               <div className="sidebar-key-info">
                 <div className="sidebar-key-info-heading">Fund Details</div>
@@ -306,15 +232,22 @@ class CreatorPage extends Component {
                 Contract Source: <a href={`https://etherscan.io/address/${this.state.contractAddress}`} target="_blank" rel="noopener noreferrer">View on Etherscan</a>
               </div>
             </div>
-            <div className="sidebar-actions">
-              {this.state.isBeneficiary ? 
-                <span className="tooltip-button">
-                  <div className={withdrawTooltipClassNames}>{this.state.tooltipText}</div>
-                  <button onMouseOver={this.checkTooltip.bind(this, 'withdrawal')} onMouseLeave={this.hideTooltip.bind(this)} className="btn clean" onClick={this.withdraw.bind(this)}>Withdraw from fund</button> 
-                </span>
-              : ''}
-              {this.state.isFunder ? <button className="btn clean" onClick={this.refund.bind(this)}>Refund my ether</button> : ''}
-            </div>
+            {this.state.isFunder ? 
+              <FunderCard 
+              funder={this.state.funder} 
+              contract={this.state.contractInstance} 
+              tokenized={this.state.contract.tokenized} /> : ''}
+            {this.state.isBeneficiary ? 
+              <BeneficiaryCard 
+              nextWithdrawal={this.state.contract.nextWithdrawal}
+              withdrawalCounter={this.state.contract.withdrawalCounter}
+              totalStakedDollar={totalStakedDollar} 
+              contract={this.state.contractInstance} /> : ''}
+            {!this.state.isBeneficiary && !this.state.isFunder ? 
+              <div className='contract-card'>
+              Are you a beneficiary or funder? Select your respective account in Metamask to interact with this contract.
+              </div> 
+            : ''}
           </div>
           <div className="eight columns">
             <p>

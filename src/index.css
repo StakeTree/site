@@ -1,8 +1,8 @@
-@import url('https://fonts.googleapis.com/css?family=Source+Code+Pro:300|600');
+@import url('https://fonts.googleapis.com/css?family=Raleway|Source+Code+Pro');
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Source Code Pro', sans-serif !important;
+  font-family: 'Raleway', sans-serif !important;
   color: #444;
   margin-bottom: 50px;
   background: #fefefe;
@@ -38,7 +38,7 @@ input:focus {
   font-family: 'Source Code Pro', sans-serif;
   transition: box-shadow 0.3s, border 0.3s, background 0s;
   box-shadow: 0px 4px 10px #dcdada;
-  font-weight: 800;
+  font-weight: 300;
   font-size: 1.2rem;
   border: 1px solid #fff !important;
   border-radius: 8px;
@@ -76,7 +76,7 @@ input:focus {
 .modal {
   position: fixed;
   transform: translate(-50%, -50%);
-  top: 50%;
+  top: 25%;
   left: 50%;
   box-shadow: 0px 0px 15px #ddd;
   border: 1px solid #bbb;
@@ -90,13 +90,14 @@ input:focus {
 .tooltip {
   display: none;
   position: absolute;
-  bottom: 50px;
-  left: -15%;
+  bottom: 55px;
+  left: 0px;
+  width: 100%;
   border-radius: 5px;
   background-color: #444;
-  width: 120%;
   color: #fff;
   padding: 10px;
+  box-sizing: border-box;
 }
 .tooltip-button {
   position: relative;
@@ -111,6 +112,9 @@ input:focus {
   margin-bottom: 10px;
   padding: 10px;
   border-radius: 5px;
+}
+.right {
+  float: right;
 }
 code {
   padding: 8px;
