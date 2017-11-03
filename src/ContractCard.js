@@ -11,6 +11,7 @@ import Nav from './Nav.js';
 import RefundButton from './RefundButton.js';
 import FundButton from './FundButton.js';
 import WithdrawButton from './WithdrawButton.js';
+import ClaimTokensButton from './ClaimTokensButton.js';
 import EtherscanLink from './EtherscanLink.js';
 
 let contractInstance;
@@ -359,7 +360,10 @@ class ContractCard extends Component {
                         <RefundButton 
                           visible={this.state.isFunder} 
                           contract={this.state.contractInstance}>Refund</RefundButton>
-                        {this.state.isFunder && this.state.contract.tokenized ? <button className="btn clean" onClick={this.claimTokens.bind(this)}>Claim Tokens</button> : ''}
+                        <ClaimTokensButton
+                          claimAmount={funderClaimAmount} 
+                          visible={this.state.isFunder && this.state.contract.tokenized}
+                          contract={this.state.contractInstance}>Claim Tokens</ClaimTokensButton>
                       </div>
                     </div>
                   : "Are you a beneficiary or funder? Select your respective account in Metamask to interact with this contract."}
