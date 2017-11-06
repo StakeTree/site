@@ -1,0 +1,26 @@
+.web3-hub {
+	padding: 0px 8px;
+	float: right;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	margin-left: 8px;
+}
+
+.web3-hub.connected {
+	color: green;
+	border-color: green;
+}
+
+.web3-hub.not-connected {
+	color: red;
+	border-color: red;
+}
+
+/*.web3-hub.connected.not-main {
+	border-color: yellow;
+}*/
+
+.web3-hub .connect-string {
+	display: inline-block;
+	margin-right: 4px;
+}

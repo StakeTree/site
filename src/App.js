@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import './skeleton.css';
+import './font-awesome/css/font-awesome.css';
 
 import Home from './Home.js';
 import CreatorPage from './CreatorPage.js';

@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import './Nav.css';
+import Web3Hub from './Web3Hub.js';
 
 const Nav = () => {
 	return (
@@ -10,6 +11,7 @@ const Nav = () => {
       <div className="right-nav-links">
         <Link to="/faq">FAQ</Link> | 
         <Link to="/dev">Dev Fund</Link>
+        <Web3Hub />
       </div>
 		</div>
 	);
