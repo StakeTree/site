@@ -49,3 +49,8 @@
     border-radius: 0px 0px 4px 4px;
     background-color: #fff;
 }
+
+.web3-drawer li{
+	overflow: hidden;
+	list-style: none;
+}

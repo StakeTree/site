@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import web3store from "./Web3Store.js";
+
 class FundButton extends Component {
   constructor(props) {
     super(props);
@@ -24,9 +26,12 @@ class FundButton extends Component {
       if(accounts.length > 0){
         const account = accounts[0];
 
-        web3.eth.sendTransaction(
+        const tx = web3.eth.sendTransaction(
           {"from": account, "to": this.props.toAddress, "value": web3.toWei(this.props.amount, "ether")}, 
           (err, transactionHash) => {
+            if(!err) {
+              web3store.addTransaction({type: 'stake', hash: transactionHash, mined: false});
+            }
             console.log(transactionHash);
           }
         );

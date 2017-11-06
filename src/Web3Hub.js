@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
+import _ from 'lodash';
 
 import './Web3Hub.css';
+import web3store from "./Web3Store.js";
 
+import EtherscanLink from './EtherscanLink.js';
 let web3Polling;
 
 class Web3Hub extends Component {
@@ -10,7 +13,9 @@ class Web3Hub extends Component {
     this.state = {
       network: "Unknown",
       connected: false,
-      showDrawer: false
+      transacting: false,
+      showDrawer: false,
+      transactions: web3store.getState().transactions
     };
 
     let pollingCounter = 0;
@@ -55,7 +60,23 @@ class Web3Hub extends Component {
         });
 
         this.setState({connected: true});
-        
+
+        // Poll transactions
+        const txKeys = Object.keys(this.state.transactions);
+        const unminedTransactions = _.filter(this.state.transactions, function(tx) { return !tx.mined; });
+        if(unminedTransactions.length>0) {
+          for(var i=0; i<unminedTransactions.length; i++){
+            const tx = unminedTransactions[i];
+            window.web3.eth.getTransactionReceipt(tx.hash, (err, result)=>{
+              if(result && (result.blockNumber || result.status)) {
+                web3store.setTransactionAsMined(tx.hash);
+              }
+            });
+          }
+        }
+        else {
+          this.setState({transacting: false});
+        } 
       }
       else {
         pollingCounter++;
@@ -64,6 +85,11 @@ class Web3Hub extends Component {
         }
       }
     }, 1500);
+
+    web3store.subscribe((newState)=>{
+      this.setState({transactions: newState.transactions});
+      this.setState({transacting: true});
+    });
   }
  
   toggleDrawer() {
@@ -79,15 +105,21 @@ class Web3Hub extends Component {
     if(this.state.connected && this.state.network !== 'Main') web3classnames += ' not-main';
 
     if(this.state.showDrawer) web3classnames += ' opened';
+
     return (
       <div className={web3classnames} onClick={this.toggleDrawer.bind(this)} >
         <span className="web3-status">
           <span className="connect-string">{connectString}</span>
-          {this.state.connected ? <i className="fa fa-check-square-o"></i> : <i className="fa fa-exclamation-circle"></i>}
+          {this.state.connected ? <span>{this.state.transacting ? <i className="fa fa-spinner fa-spin"></i> : <i className="fa fa-check-square-o"></i>}</span> : <i className="fa fa-exclamation-circle"></i>}
         </span>
         {this.state.showDrawer ?
           <div className="web3-drawer">
-            Hi
+            <ul>
+            {Object.keys(this.state.transactions).map((key)=>{
+              const tx = this.state.transactions[key];
+              return <li key={`tx-${tx.hash}`}>{tx.mined ? "Mined" : "Mining..."} - {tx.hash}</li>
+            })}
+            </ul>
           </div>
         :''  }
        
