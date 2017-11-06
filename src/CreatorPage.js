@@ -234,6 +234,8 @@ class CreatorPage extends Component {
             </div>
             {this.state.isFunder ? 
               <FunderCard 
+              toAddress={this.state.contractAddress}
+              minAmount={minAmount}
               funder={this.state.funder} 
               contract={this.state.contractInstance} 
               tokenized={this.state.contract.tokenized} /> : ''}
