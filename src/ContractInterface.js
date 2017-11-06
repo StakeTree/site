@@ -7,7 +7,6 @@ import StakeTreeWithTokenization from 'staketree-contracts/build/contracts/Stake
 import './ContractInterface.css';
 
 //Components
-import Nav from './Nav.js';
 import FundButton from './FundButton.js';
 import EtherscanLink from './EtherscanLink.js';
 import FunderCard from './FunderCard.js';
@@ -312,7 +311,6 @@ class ContractInterface extends Component {
 
     return (
       <div className="container">
-        <Nav />
         <div className="row">
           {this.state.loading ? 
             <div className="twelve columns">

@@ -3,14 +3,10 @@ import React, { Component } from 'react';
 // Styling
 import './FAQ.css';
 
-//Components
-import Nav from './Nav.js';
-
 class FAQ extends Component {
   render() {
     return (
       <div className="faq container">
-        <Nav />
         <div className="row">
           <div className="eight columns offset-by-two">
             <h3>FAQ</h3>

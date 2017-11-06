@@ -7,10 +7,7 @@ import StakeTreeWithTokenization from 'staketree-contracts/build/contracts/Stake
 // Styling
 import './CreatorPage.css';
 
-
-
 //Components
-import Nav from './Nav.js';
 import EtherscanLink from './EtherscanLink.js';
 import FundButton from './FundButton.js';
 import FunderCard from './FunderCard.js';
@@ -197,7 +194,6 @@ class CreatorPage extends Component {
 
     return (
       <div className="container creator-page">
-        <Nav />
         <div className="row">
           <div className="twelve columns">
             <h3 className="creatorpage-project-name">{this.state.user.title}</h3>

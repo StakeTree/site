@@ -6,6 +6,7 @@ import Web3Hub from './Web3Hub.js';
 
 const Nav = () => {
 	return (
+    <div className="container">
 		<div className="row nav-header">
 			<Link to="/"><span className="nav-logo" role="img" aria-label="StakeTree Logo">🌲</span><span className="nav-logo-text">StakeTree</span></Link>
       <div className="right-nav-links">
@@ -14,6 +15,7 @@ const Nav = () => {
         <Web3Hub />
       </div>
 		</div>
+    </div>
 	);
 };
 

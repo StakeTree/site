@@ -10,10 +10,7 @@ class Web3Hub extends Component {
     this.state = {
       network: "Unknown",
       connected: false
-    }
-  }
- 
-  async componentWillMount() {
+    };
 
     let pollingCounter = 0;
     // Poll for account/web3 changes
@@ -66,6 +63,11 @@ class Web3Hub extends Component {
         }
       }
     }, 1500);
+  }
+ 
+  async componentWillMount() {
+
+    
   }
 
   render() {
