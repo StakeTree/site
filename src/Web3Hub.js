@@ -9,7 +9,8 @@ class Web3Hub extends Component {
     super(props);
     this.state = {
       network: "Unknown",
-      connected: false
+      connected: false,
+      showDrawer: false
     };
 
     let pollingCounter = 0;
@@ -65,9 +66,8 @@ class Web3Hub extends Component {
     }, 1500);
   }
  
-  async componentWillMount() {
-
-    
+  toggleDrawer() {
+    this.setState({showDrawer: !this.state.showDrawer});
   }
 
   render() {
@@ -78,10 +78,19 @@ class Web3Hub extends Component {
 
     if(this.state.connected && this.state.network !== 'Main') web3classnames += ' not-main';
 
+    if(this.state.showDrawer) web3classnames += ' opened';
     return (
-      <div className={web3classnames} >
-        <span className="connect-string">{connectString}</span>
-        {this.state.connected ? <i className="fa fa-check-square-o"></i> : <i className="fa fa-exclamation-circle"></i>}
+      <div className={web3classnames} onClick={this.toggleDrawer.bind(this)} >
+        <span className="web3-status">
+          <span className="connect-string">{connectString}</span>
+          {this.state.connected ? <i className="fa fa-check-square-o"></i> : <i className="fa fa-exclamation-circle"></i>}
+        </span>
+        {this.state.showDrawer ?
+          <div className="web3-drawer">
+            Hi
+          </div>
+        :''  }
+       
       </div>
       )
       
