@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import web3store from "./Web3Store.js";
+
 class WithdrawButton extends Component {
   constructor(props) {
     super(props);
@@ -21,15 +23,19 @@ class WithdrawButton extends Component {
     }
     
     window.web3.eth.getAccounts(async (error, accounts) => {
-      this.props.contract.withdraw({"from": accounts[0], "gas": 100000});
+      this.props.contract.withdraw({"from": accounts[0], "gas": 100000}, (err, txHash)=>{
+        if(!err) {
+          web3store.addTransaction({type: 'withdraw', hash: txHash, mined: false});
+        }
+      });
     });
   }
   render() {
-    let withdrawTooltipClassNames = "tooltip";
-    if(this.state.showTooltip) withdrawTooltipClassNames += ' visible';
+    let tooltipClassNames = "tooltip";
+    if(this.state.showTooltip) tooltipClassNames += ' visible';
 
     let buttonHtml = this.props.visible ? <span className="tooltip-button">
-      <div className={withdrawTooltipClassNames}>{`You can only withdraw after ${this.props.withdrawalDate.toLocaleString()}.`}</div>
+      <div className={tooltipClassNames}>{`You can only withdraw after ${this.props.withdrawalDate.toLocaleString()}.`}</div>
       <button onMouseOver={this.showTooltip.bind(this)} onMouseLeave={this.hideTooltip.bind(this)} className="btn clean full-width" onClick={this.withdraw.bind(this)}>{this.props.children}</button> 
     </span> : <span></span>;
     

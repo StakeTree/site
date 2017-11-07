@@ -4,6 +4,7 @@
 }
 .nav-header {
   border-bottom: 1px dashed #444;
+  height: 45px;
 }
 .nav-logo {
 	font-size: 2.5rem;

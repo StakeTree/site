@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import './Home.css';
 
-import Nav from './Nav.js';
 import Modal from 'react-modal';
+
+import web3store from "./Web3Store.js";
 
 const contractAddress = "0x8c79ec3f260b067157b0a7db0bb465f90b87f8f1";
 
@@ -35,7 +36,7 @@ class Home extends Component {
         web3.eth.sendTransaction(
           {"from": account, "to": contractAddress, "value": web3.toWei(etherAmount, "ether")}, 
           (err, transactionHash) => {
-            console.log(transactionHash);
+            web3store.addTransaction({type: 'stake', hash: transactionHash, mined: false});
           }
         );
       }
@@ -78,7 +79,6 @@ class Home extends Component {
           <h2>So sorry!</h2>
           <p>The minimum funding amount is set to 0.01 ether at present. Try a bigger amount.</p>
         </Modal>
-        <Nav />
         <div className="row header">
           <div className="four columns logo">
             <h1 className="tree-logo"><span role='img' aria-label="Tree logo">🙌</span></h1>

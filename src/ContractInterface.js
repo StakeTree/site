@@ -1,19 +1,17 @@
 import React, { Component } from 'react';
 import Web3 from 'web3'; // TODO: follow up on how to use web3 when pulled in vs metamask
-import TruffleContract from 'truffle-contract';
 import StakeTreeWithTokenization from 'staketree-contracts/build/contracts/StakeTreeWithTokenization.json';
 
 // Styling
 import './ContractInterface.css';
 
 //Components
-import Nav from './Nav.js';
 import FundButton from './FundButton.js';
 import EtherscanLink from './EtherscanLink.js';
 import FunderCard from './FunderCard.js';
 import BeneficiaryCard from './BeneficiaryCard.js';
 
-let contractInstance;
+let contractInstanceWeb3;
 let web3Polling;
 const web3 = new Web3();
 
@@ -39,6 +37,11 @@ class ContractInterface extends Component {
         live: true,
         sunsetPeriod: "...",
         minimumFundingAmount: 0
+      },
+      funder: {
+        balance: 0,
+        contribution: 0,
+        contributionClaimed: 0
       },
       contractInstance: '',
       loading: true,
@@ -75,50 +78,52 @@ class ContractInterface extends Component {
           };
         }
 
-        const contract = TruffleContract(StakeTreeWithTokenization);
-        contract.setProvider(window.web3.currentProvider);
+        const contractWeb3 = window.web3.eth.contract(StakeTreeWithTokenization.abi);
+        contractInstanceWeb3 = contractWeb3.at(this.state.contractAddress);
+        window.contractInstanceWeb3 = contractInstanceWeb3; // debugging
 
-        await contract.at(this.state.contractAddress).then(inst=> {
-          contractInstance = inst;
-          this.setState({contractInstance: contractInstance});
-          this.setState({loading: false});
-          window.contractInstance = contractInstance; // debugging
-        }).catch(err => {
-          this.setState({loading: false});
-          // No contract found
-          console.log("C");
+        // Determine is this is the right contract
+        contractInstanceWeb3.version.call({}, (err, result)=>{
+          if(result && result.c && result.c[0] && result.c[0] === 2) {
+            this.setState({contractInstance: contractInstanceWeb3});
+            this.setState({loading: false});
+          }
+          else {
+            // No contract found
+            this.setState({loading: false});
+          }
         });
 
-        if(contractInstance) {
-          contractInstance.totalCurrentFunders.call().then(result => {
+        if(contractInstanceWeb3) {
+          contractInstanceWeb3.totalCurrentFunders.call({}, (err, result) => {
             this.setContractState('totalCurrentFunders', result.toNumber());
           });
-          contractInstance.getContractBalance.call().then(result => {
+          contractInstanceWeb3.getContractBalance.call({}, (err, result) => {
             this.setContractState('balance', result.toNumber());
           });
-          contractInstance.contractStartTime.call().then(result => {
+          contractInstanceWeb3.contractStartTime.call({}, (err, result) => {
             this.setContractState('contractStartTime', result.toNumber());
           });
-          contractInstance.nextWithdrawal.call().then(result=>{
+          contractInstanceWeb3.nextWithdrawal.call({}, (err, result)=>{
             this.setContractState('nextWithdrawal', result.toNumber());
           });
-          contractInstance.withdrawalPeriod.call().then(result=>{
+          contractInstanceWeb3.withdrawalPeriod.call({}, (err, result)=>{
             this.setContractState('withdrawalPeriod', result.toNumber());
           });
-          contractInstance.live.call().then(result=>{
+          contractInstanceWeb3.live.call({}, (err, result)=>{
             this.setContractState('live', result);
           });
-          contractInstance.sunsetWithdrawalPeriod.call().then(result=>{
+          contractInstanceWeb3.sunsetWithdrawalPeriod.call({}, (err, result)=>{
             this.setContractState('sunsetWithdrawalPeriod', result.toNumber());
           });
-          contractInstance.minimumFundingAmount.call().then(result=>{
+          contractInstanceWeb3.minimumFundingAmount.call({}, (err, result)=>{
             this.setContractState('minimumFundingAmount', result.toNumber());
           });
-          contractInstance.tokenized.call().then(result=>{
+          contractInstanceWeb3.tokenized.call({}, (err, result)=>{
             this.setContractState('tokenized', result);
           });
 
-          contractInstance.withdrawalCounter.call().then(result=>{
+          contractInstanceWeb3.withdrawalCounter.call({}, (err, result)=>{
             this.setContractState('withdrawalCounter', result.toNumber());
           });
 
@@ -133,18 +138,34 @@ class ContractInterface extends Component {
             }
 
             // Check again for new accounts
-            contractInstance.isFunder(this.state.currentEthAccount).then(async (isFunder) => {
+            contractInstanceWeb3.isFunder(this.state.currentEthAccount, (err, isFunder) => {
               if(isFunder) {
-                const funderBalance = await contractInstance.getFunderBalance.call(this.state.currentEthAccount);
-                const funderContribution = await contractInstance.getFunderContribution.call(this.state.currentEthAccount);
-                const funderContributionClaimed = await contractInstance.getFunderContributionClaimed.call(this.state.currentEthAccount);
-                this.setState({
-                  ...this.state,
-                  funder: {
-                    contribution: funderContribution.toNumber(),
-                    contributionClaimed: funderContributionClaimed.toNumber(),
-                    balance: funderBalance.toNumber()
-                  }
+                contractInstanceWeb3.getFunderBalance.call(this.state.currentEthAccount, (err, result)=>{
+                  this.setState({
+                    ...this.state,
+                    funder: {
+                      ...this.state.funder,
+                      balance: result.toNumber()
+                    }
+                  });
+                });
+                contractInstanceWeb3.getFunderContribution.call(this.state.currentEthAccount, (err, result)=>{
+                  this.setState({
+                    ...this.state,
+                    funder: {
+                      ...this.state.funder,
+                      contribution: result.toNumber()
+                    }
+                  });
+                });
+                contractInstanceWeb3.getFunderContributionClaimed.call(this.state.currentEthAccount, (err, result)=>{
+                  this.setState({
+                    ...this.state,
+                    funder: {
+                      ...this.state.funder,
+                      contributionClaimed: result.toNumber()
+                    }
+                  });
                 });
               }
 
@@ -154,7 +175,7 @@ class ContractInterface extends Component {
               });
             });
 
-            contractInstance.beneficiary.call().then((beneficiary) => {
+            contractInstanceWeb3.beneficiary.call({}, (err, beneficiary) => {
               this.setState({
                 ...this.state,
                 isBeneficiary: this.state.currentEthAccount === beneficiary
@@ -188,49 +209,6 @@ class ContractInterface extends Component {
     });
   }
 
-  canFund(etherAmount) {
-    let web3 = window.web3; // Uses web3 from metamask
-    const minAmount = web3.fromWei(this.state.contract.minimumFundingAmount, 'ether');
-    if(etherAmount < minAmount) {
-      return false;
-    }
-    else{
-      return true;
-    } 
-  }
-
-  canWithdraw() {
-    const withdrawalDate = new Date(this.state.contract.nextWithdrawal*1000);
-    if(new Date() <= withdrawalDate) {
-      return false;
-    }
-    else {
-      return true;
-    }
-  }
-
-  fund(etherAmount) {
-    if(!this.canFund(etherAmount)){ return false;}
-
-    let web3 = window.web3; // Uses web3 from metamask
-    web3.eth.getAccounts((error, accounts) => {
-      if(accounts.length > 0){
-        this.setState({web3available: true});
-        const account = accounts[0];
-
-        web3.eth.sendTransaction(
-          {"from": account, "to": this.state.contractAddress, "value": web3.toWei(etherAmount, "ether")}, 
-          (err, transactionHash) => {
-            console.log(transactionHash);
-          }
-        );
-      }
-      else {
-        this.setState({web3available: false});
-      }
-    });
-  }
-
   handleCustomAmount(e) {
     let value = e.target.value;
     if(e.target.value === "") value = 0.1;
@@ -244,40 +222,6 @@ class ContractInterface extends Component {
     return "";
   }
 
-  async claimTokens(e) {
-    window.web3.eth.getAccounts(async (error, accounts) => {
-      await contractInstance.claimTokens({"from": accounts[0], "gas": 150000});
-    });
-  }
-
-  hideTooltip() {
-    this.setState({showTooltip: ""});
-  }
-
-  checkTooltip(tooltipId) {
-    switch(tooltipId){
-      case "withdrawal":
-        if(!this.canWithdraw()) {
-          const withdrawalDate = new Date(this.state.contract.nextWithdrawal*1000);
-          this.setState({
-            showTooltip: tooltipId,
-            tooltipText: `Unfortunately, you can only withdraw after ${withdrawalDate.toLocaleString()}.`
-          });
-        }
-        break;
-      case "fund":
-        if(!this.canFund(this.state.customAmount)) {
-          const minAmount = web3.utils.fromWei(this.state.contract.minimumFundingAmount, 'ether');
-          this.setState({
-            showTooltip: tooltipId,
-            tooltipText: `The minimum funding amount is ${minAmount} ether. Try a bigger amount.`
-          });
-        }
-        break;
-      default:
-        return false;
-    }
-  }
 
   render() {
 
@@ -312,7 +256,6 @@ class ContractInterface extends Component {
 
     return (
       <div className="container">
-        <Nav />
         <div className="row">
           {this.state.loading ? 
             <div className="twelve columns">
@@ -326,6 +269,8 @@ class ContractInterface extends Component {
               <span>
               <div className="five columns">
                 {this.state.isFunder ? <FunderCard 
+                  toAddress={this.state.contractAddress}
+                  minAmount={minAmount}
                   funder={this.state.funder} 
                   contract={this.state.contractInstance} 
                   tokenized={this.state.contract.tokenized} /> : ''}

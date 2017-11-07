@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Modal from 'react-modal';
 
+import web3store from "./Web3Store.js";
+
 class RefundButton extends Component {
   constructor(props) {
     super(props);
@@ -17,7 +19,11 @@ class RefundButton extends Component {
   refund(e) {
     this.closeModal();
     window.web3.eth.getAccounts(async (error, accounts) => {
-      this.props.contract.refund({"from": accounts[0], "gas": 100000});
+      this.props.contract.refund({"from": accounts[0], "gas": 100000}, (err, txHash)=>{
+        if(!err) {
+          web3store.addTransaction({type: 'refund', hash: txHash, mined: false});
+        }
+      });
     });
   }
   render() {
