@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Web3 from 'web3'; // TODO: follow up on how to use web3 when pulled in vs metamask
-import TruffleContract from 'truffle-contract';
 import StakeTreeWithTokenization from 'staketree-contracts/build/contracts/StakeTreeWithTokenization.json';
 
 // Styling
@@ -78,9 +77,6 @@ class ContractInterface extends Component {
             );
           };
         }
-
-        const contract = TruffleContract(StakeTreeWithTokenization);
-        contract.setProvider(window.web3.currentProvider);
 
         const contractWeb3 = window.web3.eth.contract(StakeTreeWithTokenization.abi);
         contractInstanceWeb3 = contractWeb3.at(this.state.contractAddress);
