@@ -3,6 +3,8 @@ import './Home.css';
 
 import Modal from 'react-modal';
 
+import web3store from "./Web3Store.js";
+
 const contractAddress = "0x8c79ec3f260b067157b0a7db0bb465f90b87f8f1";
 
 class Home extends Component {
@@ -34,7 +36,7 @@ class Home extends Component {
         web3.eth.sendTransaction(
           {"from": account, "to": contractAddress, "value": web3.toWei(etherAmount, "ether")}, 
           (err, transactionHash) => {
-            console.log(transactionHash);
+            web3store.addTransaction({type: 'stake', hash: transactionHash, mined: false});
           }
         );
       }
