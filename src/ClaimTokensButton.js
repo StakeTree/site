@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import web3store from "./Web3Store.js";
+
 class ClaimTokensButton extends Component {
   constructor(props) {
     super(props);
@@ -21,7 +23,11 @@ class ClaimTokensButton extends Component {
     }
     
     window.web3.eth.getAccounts(async (error, accounts) => {
-      this.props.contract.claimTokens({"from": accounts[0], "gas": 150000});
+      this.props.contract.claimTokens({"from": accounts[0], "gas": 150000}, (err, txHash)=>{
+        if(!err) {
+          web3store.addTransaction({type: 'claim_tokens', hash: txHash, mined: false});
+        }
+      });
     });
   }
   render() {
