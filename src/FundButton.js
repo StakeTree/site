@@ -26,7 +26,7 @@ class FundButton extends Component {
       if(accounts.length > 0){
         const account = accounts[0];
 
-        const tx = web3.eth.sendTransaction(
+        web3.eth.sendTransaction(
           {"from": account, "to": this.props.toAddress, "value": web3.toWei(this.props.amount, "ether")}, 
           (err, transactionHash) => {
             if(!err) {

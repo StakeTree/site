@@ -38,9 +38,9 @@
 
 .web3-drawer {
 	position: absolute;
-	padding: 8px 0px;
+	padding: 8px 8px;
 	margin-top: 10px;
-	width: 100%;
+	width: 101%;
     border: 1px solid green;
     border-top: none;
     top: 12px;
@@ -48,9 +48,28 @@
     padding-top: 16px;
     border-radius: 0px 0px 4px 4px;
     background-color: #fff;
+    box-sizing: border-box;
 }
 
 .web3-drawer li{
 	overflow: hidden;
 	list-style: none;
+	border-top: 1px solid #ddd;
+	
+    padding: 4px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 1.3rem;
+
+    margin: 0px;
+    top: -4px;
+    position: relative;
+}
+
+.web3-drawer li:last-child {
+	border-bottom: 1px solid #ddd;
+}
+
+.web3-drawer li i {
+	padding: 0px 4px;
 }

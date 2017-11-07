@@ -20,7 +20,7 @@ class Web3Hub extends Component {
 
     let pollingCounter = 0;
     // Poll for account/web3 changes
-    web3Polling = setInterval(async ()=> {
+    setInterval(async ()=> {
       if(typeof window.web3 !== 'undefined') {
 
         // dirty hack for web3@1.0.0 support for localhost testrpc, 
@@ -62,7 +62,6 @@ class Web3Hub extends Component {
         this.setState({connected: true});
 
         // Poll transactions
-        const txKeys = Object.keys(this.state.transactions);
         const unminedTransactions = _.filter(this.state.transactions, function(tx) { return !tx.mined; });
         if(unminedTransactions.length>0) {
           for(var i=0; i<unminedTransactions.length; i++){
@@ -96,6 +95,23 @@ class Web3Hub extends Component {
     this.setState({showDrawer: !this.state.showDrawer});
   }
 
+  getFriendlyTransactionText(type, mined) { 
+    let friendlyText = '';
+    if(mined) return "Confirmed";
+    switch (type) {
+      case "stake":
+        friendlyText = "Staking...";
+        break;
+      case "refund":
+        friendlyText = "Refunding...";
+       break;
+      default:
+        friendlyText = "Pending...";
+    }
+
+    return friendlyText;
+  }
+
   render() {
     const connectString = this.state.connected ? `Connected to ${this.state.network}` : `Not connected`; 
     let web3classnames = "web3-hub";
@@ -106,6 +122,7 @@ class Web3Hub extends Component {
 
     if(this.state.showDrawer) web3classnames += ' opened';
 
+    const txKeys = Object.keys(this.state.transactions).reverse();
     return (
       <div className={web3classnames} onClick={this.toggleDrawer.bind(this)} >
         <span className="web3-status">
@@ -114,12 +131,18 @@ class Web3Hub extends Component {
         </span>
         {this.state.showDrawer ?
           <div className="web3-drawer">
-            <ul>
-            {Object.keys(this.state.transactions).map((key)=>{
-              const tx = this.state.transactions[key];
-              return <li key={`tx-${tx.hash}`}>{tx.mined ? "Mined" : "Mining..."} - {tx.hash}</li>
-            })}
-            </ul>
+            {txKeys.length ? 
+              <ul>
+              {txKeys.map((key)=>{
+                const tx = this.state.transactions[key];
+                return <li key={`tx-${tx.hash}`}>
+                  {tx.mined ? <i className="fa fa-check-circle-o"></i> : <i className="fa fa-spinner fa-spin"></i>} <EtherscanLink type="tx" id={tx.hash} text={tx.mined ? "Transaction confirmed" : "Transaction pending..."} />
+                </li>
+              })}
+              </ul>
+            : "No new transactions."
+            }
+            
           </div>
         :''  }
        
