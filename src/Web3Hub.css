@@ -73,3 +73,8 @@
 .web3-drawer li i {
 	padding: 0px 4px;
 }
+
+.web3-hub.not-connected .web3-drawer {
+	color: red;
+	border-color: red;
+}

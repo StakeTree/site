@@ -131,18 +131,22 @@ class Web3Hub extends Component {
         </span>
         {this.state.showDrawer ?
           <div className="web3-drawer">
-            {txKeys.length ? 
-              <ul>
-              {txKeys.map((key)=>{
-                const tx = this.state.transactions[key];
-                return <li key={`tx-${tx.hash}`}>
-                  {tx.mined ? <i className="fa fa-check-circle-o"></i> : <i className="fa fa-spinner fa-spin"></i>} <EtherscanLink type="tx" id={tx.hash} text={tx.mined ? "Transaction confirmed" : "Transaction pending..."} />
-                </li>
-              })}
-              </ul>
-            : "No new transactions."
-            }
-            
+            {this.state.connected ? 
+              <span>
+              {txKeys.length ? 
+                <ul>
+                {txKeys.map((key)=>{
+                  const tx = this.state.transactions[key];
+                  return <li key={`tx-${tx.hash}`}>
+                    {tx.mined ? <i className="fa fa-check-circle-o"></i> : <i className="fa fa-spinner fa-spin"></i>} <EtherscanLink type="tx" id={tx.hash} text={tx.mined ? "Transaction confirmed" : "Transaction pending..."} />
+                  </li>
+                })}
+                </ul>
+              : "No new transactions."
+              }
+              </span>
+              : <span>Install <a href="https://metamask.io" target="_blank" rel="noopener noreferrer">MetaMask</a> to improve your StakeTree experience.</span> }
+
           </div>
         :''  }
        
