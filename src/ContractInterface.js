@@ -209,49 +209,6 @@ class ContractInterface extends Component {
     });
   }
 
-  canFund(etherAmount) {
-    let web3 = window.web3; // Uses web3 from metamask
-    const minAmount = web3.fromWei(this.state.contract.minimumFundingAmount, 'ether');
-    if(etherAmount < minAmount) {
-      return false;
-    }
-    else{
-      return true;
-    } 
-  }
-
-  canWithdraw() {
-    const withdrawalDate = new Date(this.state.contract.nextWithdrawal*1000);
-    if(new Date() <= withdrawalDate) {
-      return false;
-    }
-    else {
-      return true;
-    }
-  }
-
-  fund(etherAmount) {
-    if(!this.canFund(etherAmount)){ return false;}
-
-    let web3 = window.web3; // Uses web3 from metamask
-    web3.eth.getAccounts((error, accounts) => {
-      if(accounts.length > 0){
-        this.setState({web3available: true});
-        const account = accounts[0];
-
-        web3.eth.sendTransaction(
-          {"from": account, "to": this.state.contractAddress, "value": web3.toWei(etherAmount, "ether")}, 
-          (err, transactionHash) => {
-            console.log(transactionHash);
-          }
-        );
-      }
-      else {
-        this.setState({web3available: false});
-      }
-    });
-  }
-
   handleCustomAmount(e) {
     let value = e.target.value;
     if(e.target.value === "") value = 0.1;
@@ -265,40 +222,6 @@ class ContractInterface extends Component {
     return "";
   }
 
-  async claimTokens(e) {
-    window.web3.eth.getAccounts(async (error, accounts) => {
-      await contractInstanceWeb3.claimTokens({"from": accounts[0], "gas": 150000});
-    });
-  }
-
-  hideTooltip() {
-    this.setState({showTooltip: ""});
-  }
-
-  checkTooltip(tooltipId) {
-    switch(tooltipId){
-      case "withdrawal":
-        if(!this.canWithdraw()) {
-          const withdrawalDate = new Date(this.state.contract.nextWithdrawal*1000);
-          this.setState({
-            showTooltip: tooltipId,
-            tooltipText: `Unfortunately, you can only withdraw after ${withdrawalDate.toLocaleString()}.`
-          });
-        }
-        break;
-      case "fund":
-        if(!this.canFund(this.state.customAmount)) {
-          const minAmount = web3.utils.fromWei(this.state.contract.minimumFundingAmount, 'ether');
-          this.setState({
-            showTooltip: tooltipId,
-            tooltipText: `The minimum funding amount is ${minAmount} ether. Try a bigger amount.`
-          });
-        }
-        break;
-      default:
-        return false;
-    }
-  }
 
   render() {
 
