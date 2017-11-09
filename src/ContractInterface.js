@@ -128,7 +128,6 @@ class ContractInterface extends Component {
         'minimumFundingAmount', 'tokenized', 'withdrawalCounter', 'tokenContract'
       ]
     }, (key, value) => {
-      console.log(key, value);
       if(key === "getContractBalance") key = "balance";
       this.setContractState(key, value);
     });
