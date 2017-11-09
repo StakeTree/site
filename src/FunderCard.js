@@ -6,14 +6,85 @@ import ClaimTokensButton from './ClaimTokensButton.js';
 
 import './FunderCard.css';
 
+import Web3Controller from './Web3Controller.js';
+
 class FunderCard extends Component {
   constructor(props) {
     super(props);
     this.state = {
       customAmount: 0.1,
-      stakeMore: false
+      stakeMore: false,
+      funder: {
+        balance: 0,
+        contribution: 0,
+        contributionClaimed: 0
+      },
+      tokens: {
+        balance: 0,
+        symbol: '',
+        decimals: 18
+      }
     }
   }
+
+  componentWillMount() {
+    Web3Controller.getContractDetails({
+      id: 'funder-card-details',
+      instance: this.props.contract,
+      functions: [
+        {name: 'getFunderBalance', arg: this.props.currentAccount},
+        {name: 'getFunderContribution', arg: this.props.currentAccount},
+        {name: 'getFunderContributionClaimed', arg: this.props.currentAccount}
+      ]
+    }, (key, value) => {
+      switch(key) {
+        case 'getFunderBalance':
+          key = 'balance';
+          break;
+        case 'getFunderContribution':
+          key = 'contribution';
+          break;
+        case 'getFunderContributionClaimed':
+          key = 'contributionClaimed';
+          break;
+        default:
+          break;
+      }
+      const newFunderState = {...this.state.funder};
+      newFunderState[key] = value;
+      this.setState({
+        ...this.state,
+        funder: newFunderState
+      });
+    });
+
+    if(this.props.tokenized && this.props.tokenContract !== "0x0000000000000000000000000000000000000000") {
+      const instance = Web3Controller.newInstance({
+        which: "TokenContract", 
+        at: this.props.tokenContract
+      });
+
+      Web3Controller.getContractDetails({
+        id: 'tokens',
+        instance: instance,
+        variables: [
+          'decimals', 'symbol'
+        ],
+        functions: [
+          { name: 'balanceOf', arg: this.props.currentAccount }
+        ]
+      }, (key, value) => {
+        const newTokens = {...this.state.tokens};
+        if(key ==='balanceOf') key = 'balance';
+        newTokens[key] = value;
+        this.setState({
+          ...this.state,
+          tokens: newTokens
+        });
+      });
+    }
+  }
+
   toggleStakingOptions() {
     this.setState({stakeMore: !this.state.stakeMore});
   }
@@ -23,9 +94,9 @@ class FunderCard extends Component {
     this.setState({customAmount: value});
   }
   render() {
-    const funderBalance = window.web3.fromWei(this.props.funder.balance, 'ether');
-    const funderContribution = window.web3.fromWei(this.props.funder.contribution, 'ether');
-    const funderClaimAmount = window.web3.fromWei(this.props.funder.contribution-this.props.funder.contributionClaimed, 'ether');
+    const funderBalance = window.web3.fromWei(this.state.funder.balance, 'ether');
+    const funderContribution = window.web3.fromWei(this.state.funder.contribution, 'ether');
+    const funderClaimAmount = window.web3.fromWei(this.state.funder.contribution-this.state.funder.contributionClaimed, 'ether');
     
     const customAmount = this.state.customAmount > 0 ? this.state.customAmount : 0.1;
 
@@ -38,6 +109,7 @@ class FunderCard extends Component {
           <ul>
             <li>Currently staked: {funderBalance} ether.</li>
             <li>Total contributed: {funderContribution} ether.</li>
+            {this.props.tokenized ? <li>Current token balance: {this.state.tokens.balance/Math.pow(10, this.state.tokens.decimals)} {this.state.tokens.symbol} tokens.</li> : ''}
             {this.props.tokenized ? <li>You can claim {funderClaimAmount} tokens.</li> : '' }
           </ul>
           <div className="secondary-actions">
