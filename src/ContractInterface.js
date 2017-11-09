@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import Web3 from 'web3'; // TODO: follow up on how to use web3 when pulled in vs metamask
 import StakeTreeWithTokenization from 'staketree-contracts/build/contracts/StakeTreeWithTokenization.json';
+import TokenContract from 'staketree-contracts/build/contracts/MiniMeToken.json';
+
+// Styling
 
 // Styling
 import './ContractInterface.css';
@@ -12,6 +15,7 @@ import FunderCard from './FunderCard.js';
 import BeneficiaryCard from './BeneficiaryCard.js';
 
 let contractInstanceWeb3;
+let tokenContractInstance;
 let web3Polling;
 const web3 = new Web3();
 
@@ -43,6 +47,12 @@ class ContractInterface extends Component {
         contribution: 0,
         contributionClaimed: 0
       },
+      tokens: {
+        balance: 0,
+        symbol: '',
+        decimals: 18
+      },
+      tokenContractInstance: '',
       contractInstance: '',
       loading: true,
       user: { // Fetch this information in the future
@@ -167,6 +177,48 @@ class ContractInterface extends Component {
                     }
                   });
                 });
+
+                contractInstanceWeb3.tokenContract.call({}, (err, result) => {
+                  if(result !== '0x0000000000000000000000000000000000000000') {
+                    const tokenContract = window.web3.eth.contract(TokenContract.abi);
+                    tokenContractInstance = tokenContract.at(result);
+                    window.tokenContractInstance = tokenContractInstance; // debugging
+                    this.setState({
+                      ...this.state,
+                      tokenContractInstance: tokenContractInstance
+                    });
+
+                    tokenContractInstance.decimals.call({}, (err, result) => {
+                      this.setState({
+                        ...this.state,
+                        tokens: {
+                          ...this.state.tokens,
+                          decimals: result.toNumber()
+                        }
+                      });
+                    });
+
+                    tokenContractInstance.balanceOf.call(this.state.currentEthAccount, (err, result) => {
+                      this.setState({
+                        ...this.state,
+                        tokens: {
+                          ...this.state.tokens,
+                          balance: result.toNumber()
+                        }
+                      });
+                    });
+
+                    tokenContractInstance.symbol.call({}, (err, result) => {
+                      this.setState({
+                        ...this.state,
+                        tokens: {
+                          ...this.state.tokens,
+                          symbol: result
+                        }
+                      });
+                    });
+                  }
+                });
               }
 
               this.setState({
@@ -269,6 +321,7 @@ class ContractInterface extends Component {
               <span>
               <div className="five columns">
                 {this.state.isFunder ? <FunderCard 
+                  tokens={this.state.tokens}
                   toAddress={this.state.contractAddress}
                   minAmount={minAmount}
                   funder={this.state.funder} 
