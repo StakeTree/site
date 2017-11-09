@@ -59,7 +59,6 @@ class CreatorPage extends Component {
     fetch(fetchUrl)
       .then((res) => {return res.json()})
       .then(data => {
-        console.log("DATA", data);
         this.setState({
           ...this.state,
           contract: data
@@ -69,70 +68,65 @@ class CreatorPage extends Component {
     fetch("https://api.coinmarketcap.com/v1/ticker/ethereum/?convert=USD")
       .then(res => {return res.json()})
       .then(data => {
-        console.log("DATA", data);
         this.setState({
           exchangeRate: parseInt(data[0].price_usd, 10)
         });
       });
 
-    window.addEventListener('load', ()=>{
-      const instance = Web3Controller.newInstance({
-        which: "StakeTreeWithTokenization", 
-        at: this.state.contractAddress
-      });
-
-      // Verify contract
-      instance.version.call({}, async (err, result)=>{
-        if(result && result.c && result.c[0] && result.c[0] === 2) {
-          this.setState({contractInstance: instance});
-          this.setState({loading: false});
-
-          Web3Controller.getCurrentAccount((currentAccount)=>{
-            this.setState({currentEthAccount: currentAccount});
-            this.getContractDetails();
-
-            // All set, now lets poll for values we are looking for
-            Web3Controller.subscribeToAccountChange((newAccount) => {
-              this.setState({
-                currentEthAccount: newAccount,
-                isFunder: false,
-                isBeneficiary: false
-              });
-              this.getContractDetails();
-            });
-          });
+    if(typeof window.web3 !== 'undefined') {
+      this.hydrate();
+    }
+    else {
+      // Poll for web3 availability
+      web3Polling = setInterval(async ()=> {
+        if(typeof window.web3 !== 'undefined') {
+          clearInterval(web3Polling);
+          this.setState({"web3available": true});
+          this.hydrate();
         }
-        else {
-          // No contract found
-          this.setState({loading: false});
-        }
-      });
+      }, 1500);
+    }
+  }
+
+  async hydrate() {
+    const instance = Web3Controller.newInstance({
+      which: "StakeTreeWithTokenization", 
+      at: this.state.contractAddress
     });
 
-    // Poll for web3 availability
-    web3Polling = setInterval(async ()=> {
-      if(typeof window.web3 !== 'undefined') {
-        this.setState({"web3available": true});
+    // Verify contract
+    instance.version.call({}, async (err, result)=>{
+      if(result && result.c && result.c[0] && result.c[0] === 2) {
+        this.setState({contractInstance: instance});
+        this.setState({loading: false});
 
-        // dirty hack for web3@1.0.0 support for localhost testrpc, 
-        // see https://github.com/trufflesuite/truffle-contract/issues/56#issuecomment-331084530
-        if (typeof window.web3.currentProvider.sendAsync !== "function") {
-          window.web3.currentProvider.sendAsync = function() {
-            return window.web3.currentProvider.send.apply(
-              window.web3.currentProvider,
-                  arguments
-            );
-          };
-        }
+        Web3Controller.getCurrentAccount((currentAccount)=>{
+          this.setState({currentEthAccount: currentAccount});
+          this.getContractDetails();
 
-        // OLD MVP for refunding backwards compatible
-        const contractMVP = TruffleContract(StakeTreeMVP);
-        contractMVP.setProvider(window.web3.currentProvider);
-        contractInstanceMVP = await contractMVP.at("0xa899495d47B6a575c830Ffc330BC83318Df46a44");
-        window.contractInstanceMVP = contractInstanceMVP; // debugging
-        // OLD MVP for refunding backwards compatible
+          // All set, now lets poll for values we are looking for
+          Web3Controller.subscribeToAccountChange((newAccount) => {
+            this.setState({
+              currentEthAccount: newAccount,
+              isFunder: false,
+              isBeneficiary: false
+            });
+            this.getContractDetails();
+          });
+        });
       }
-    }, 1500);
+      else {
+        // No contract found
+        this.setState({loading: false});
+      }
+    });
+
+    // OLD MVP for refunding backwards compatible
+    const contractMVP = TruffleContract(StakeTreeMVP);
+    contractMVP.setProvider(window.web3.currentProvider);
+    contractInstanceMVP = await contractMVP.at("0xa899495d47B6a575c830Ffc330BC83318Df46a44");
+    window.contractInstanceMVP = contractInstanceMVP; // debugging
+    // OLD MVP for refunding backwards compatible
   }
 
   getContractDetails() {
@@ -190,6 +184,7 @@ class CreatorPage extends Component {
 
   componentWillUnmount() {
     clearInterval(web3Polling);
+    Web3Controller.unsubscribeFromAccountChange();
   }
 
   handleCustomAmount(e) {

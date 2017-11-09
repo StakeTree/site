@@ -25,6 +25,7 @@ class ContractController {
 
     this.contractInstances = {};
     this.subscriptions = {};
+    this.accountChangeSubscription = '';
   }
 
   newInstance(params) {
@@ -47,6 +48,11 @@ class ContractController {
         }
       })
     }, 1500);
+    this.accountChangeSubscription = interval;
+  }
+
+  unsubscribeFromAccountChange() {
+    clearInterval(this.accountChangeSubscription);
   }
 
   getContractDetails(params, cb) {

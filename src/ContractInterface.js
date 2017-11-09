@@ -49,40 +49,6 @@ class ContractInterface extends Component {
   }
 
   async componentWillMount() {
-    window.addEventListener('load', ()=>{
-      const instance = Web3Controller.newInstance({
-        which: "StakeTreeWithTokenization", 
-        at: this.state.contractAddress
-      });
-
-      // Verify contract
-      instance.version.call({}, async (err, result)=>{
-        if(result && result.c && result.c[0] && result.c[0] === 2) {
-          this.setState({contractInstance: instance});
-          this.setState({loading: false});
-
-          Web3Controller.getCurrentAccount((currentAccount)=>{
-            this.setState({currentEthAccount: currentAccount});
-            this.getContractDetails();
-            // All set, now lets poll for values we are looking for
-            Web3Controller.subscribeToAccountChange((newAccount) => {
-              this.setState({
-                currentEthAccount: newAccount,
-                isFunder: false,
-                isBeneficiary: false
-              });
-
-              this.getContractDetails();
-            });
-          });
-        }
-        else {
-          // No contract found
-          this.setState({loading: false});
-        }
-      });
-    });
-    
     fetch("https://api.coinmarketcap.com/v1/ticker/ethereum/?convert=USD")
       .then(res => {return res.json()})
       .then(data => {
@@ -92,23 +58,64 @@ class ContractInterface extends Component {
       });
 
     // Poll web3 availability
-    let pollingCounter = 0;
-    
-    web3Polling = setInterval(async ()=> {
-      if(typeof window.web3 !== 'undefined') {
-        this.setState({"web3available": true});
-      }
-      else {
-        pollingCounter++;
-        if(pollingCounter === 3) {
-          this.setState({loading: false, web3available: false});
+    if(typeof window.web3 !== 'undefined') {
+      this.hydrate();
+    }
+    else{
+      let pollingCounter = 0;
+      web3Polling = setInterval(async ()=> {
+        if(typeof window.web3 !== 'undefined') {
+          clearInterval(web3Polling);
+          this.setState({"web3available": true});
+          this.hydrate();
         }
-      }
-    }, 1500);
+        else {
+          pollingCounter++;
+          if(pollingCounter === 3) {
+            this.setState({loading: false, web3available: false});
+          }
+        }
+      }, 1500);
+    }
   }
 
   componentWillUnmount() {
     clearInterval(web3Polling);
+    Web3Controller.unsubscribeFromAccountChange();
+  }
+
+  async hydrate() {
+    const instance = Web3Controller.newInstance({
+      which: "StakeTreeWithTokenization", 
+      at: this.state.contractAddress
+    });
+
+    // Verify contract
+    instance.version.call({}, async (err, result)=>{
+      if(result && result.c && result.c[0] && result.c[0] === 2) {
+        this.setState({contractInstance: instance});
+        this.setState({loading: false});
+
+        Web3Controller.getCurrentAccount((currentAccount)=>{
+          this.setState({currentEthAccount: currentAccount});
+          this.getContractDetails();
+
+          // All set, now lets poll for values we are looking for
+          Web3Controller.subscribeToAccountChange((newAccount) => {
+            this.setState({
+              currentEthAccount: newAccount,
+              isFunder: false,
+              isBeneficiary: false
+            });
+            this.getContractDetails();
+          });
+        });
+      }
+      else {
+        // No contract found
+        this.setState({loading: false});
+      }
+    });
   }
 
   getContractDetails() {
