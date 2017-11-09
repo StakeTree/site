@@ -109,7 +109,7 @@ class FunderCard extends Component {
           <ul>
             <li>Currently staked: {funderBalance} ether.</li>
             <li>Total contributed: {funderContribution} ether.</li>
-            <li>Current token balance: {this.state.tokens.balance/Math.pow(10, this.state.tokens.decimals)} {this.state.tokens.symbol} tokens.</li>
+            {this.props.tokenized ? <li>Current token balance: {this.state.tokens.balance/Math.pow(10, this.state.tokens.decimals)} {this.state.tokens.symbol} tokens.</li> : ''}
             {this.props.tokenized ? <li>You can claim {funderClaimAmount} tokens.</li> : '' }
           </ul>
           <div className="secondary-actions">
