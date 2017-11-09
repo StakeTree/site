@@ -134,13 +134,10 @@ class CreatorPage extends Component {
       id: 'main-contract-details',
       instance: this.state.contractInstance,
       variables: [
-        'totalCurrentFunders', 'contractStartTime', 'beneficiary',
+        'totalCurrentFunders', 'contractStartTime', 'beneficiary', 'getContractBalance',
         'nextWithdrawal', 'withdrawalPeriod', 'live', 'sunsetWithdrawalPeriod',
         'minimumFundingAmount', 'tokenized', 'withdrawalCounter', 'tokenContract'
       ],
-      functions: [
-        {name: 'getContractBalance', arg: ''}
-      ]
     }, (key, value) => {
       if(key === "getContractBalance") key = "balance";
       this.setContractState(key, value);
