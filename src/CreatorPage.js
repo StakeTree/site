@@ -31,9 +31,9 @@ class CreatorPage extends Component {
       isBeneficiary: false,
       customAmount: 0.1,
       web3available: false,
-      // contractAddress: "0x8c79ec3f260b067157b0a7db0bb465f90b87f8f1",
+      contractAddress: "0x8c79ec3f260b067157b0a7db0bb465f90b87f8f1",
       // contractAddress: "0x34ef16c1f5f864a6b8de05205966b53e9fb0aaca", // Rinkeby test contract
-      contractAddress: "0x04379bdf85818109c8e17d57af3a18f27a261c7e", // local
+      // contractAddress: "0x04379bdf85818109c8e17d57af3a18f27a261c7e", // local
       contract: {
         totalCurrentFunders: 0,
         balance: 0,
