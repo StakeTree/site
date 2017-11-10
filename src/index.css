@@ -98,8 +98,14 @@ input.full-width {
   width: 300px;
 }
 .modal.add-tokens {
-  top: 35%;
+  top: 45%;
   width: 350px;
+}
+
+.modal .modal-notice {
+  margin: 10px 0px 0px 0px;
+  font-size: 1.3rem;
+  color: #666;
 }
 .tooltip {
   display: none;

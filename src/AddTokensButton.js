@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Modal from 'react-modal';
 
+import { HashLink as Link } from 'react-router-hash-link';
+
 import web3store from "./Web3Store.js";
 
 class AddTokensButton extends Component {
@@ -29,11 +31,15 @@ class AddTokensButton extends Component {
     this.setState({showModalForm: false});
   }
   addTokenization(e) {
-    this.closeModal();
     window.web3.eth.getAccounts(async (error, accounts) => {
-      this.props.contract.refund({"from": accounts[0], "gas": 100000}, (err, txHash)=>{
+      this.props.contract.addTokenization(
+        this.state.tokenName,
+        this.state.tokenSymbol,
+        this.state.tokenDecimals,
+        {"from": accounts[0], gas: 3200000, gasPrice: window.web3.toWei(1, 'gwei')}, (err, txHash)=>{
         if(!err) {
-          web3store.addTransaction({type: 'refund', hash: txHash, mined: false});
+          this.closeModalForm();
+          web3store.addTransaction({type: 'add-tokens', hash: txHash, mined: false});
         }
       });
     });
@@ -53,7 +59,6 @@ class AddTokensButton extends Component {
   }
 
   validateTokenDetails() {
-    console.log(this.state.tokenName, " " , this.state.tokenSymbol)
     if(this.state.tokenName.length === 0) return this.setState({disabledTokenButton: true});
     if(this.state.tokenSymbol.length === 0) return this.setState({disabledTokenButton: true});
     if(this.state.tokenDecimals > 18) return this.setState({disabledTokenButton: true});
@@ -74,10 +79,8 @@ class AddTokensButton extends Component {
           onRequestClose={this.closeModal.bind(this)}
         >
           <h4>Are you sure?</h4>
-          <p> 
-            When you add tokenization to contract you won't be able to reverse this. <br />
-            You will however be able to toggle whether funders can claim tokens.
-          </p>
+          <p>When you add tokenization to contract you won't be able to reverse this.</p>
+          <p>Unsure about what this means? <Link to="/faq#tokenization">Read more here first</Link>.</p>
           <button className="btn" onClick={this.showModalForm.bind(this)}>Continue</button>
           <button className="btn clean right" onClick={this.closeModal.bind(this)}>Cancel</button>
         </Modal>
@@ -93,6 +96,9 @@ class AddTokensButton extends Component {
         >
           <h4>Token details</h4>
           <div>
+              <p>Fill in the details of your token. These details can't be changed 
+              once you added tokenization to your contract.</p>
+              <p>Unsure of what these mean? <Link to="/faq#tokenization">Read more here first</Link></p>
               <label htmlFor={'token-name'}>Token Name: </label>
               <input onChange={this.handleTokenName.bind(this)} 
                 className='full-width' 
@@ -117,6 +123,7 @@ class AddTokensButton extends Component {
           
           <button className={addTokenizationButtonClassNames} disabled={this.state.disabledTokenButton} onClick={this.addTokenization.bind(this)}>Add Tokenization</button>
           <button className="btn clean right" onClick={this.closeModalForm.bind(this)}>Cancel</button>
+          <p className="modal-notice">Note: this transaction might take a while to be confirmed.</p>
         </Modal>
         
         <button className="btn clean full-width" onClick={this.showModal.bind(this)}>{this.props.children}</button>
