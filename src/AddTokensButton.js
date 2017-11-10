@@ -79,7 +79,7 @@ class AddTokensButton extends Component {
           onRequestClose={this.closeModal.bind(this)}
         >
           <h4>Are you sure?</h4>
-          <p>When you add tokenization to contract you won't be able to reverse this.</p>
+          <p>When you add tokenization to your contract you won't be able to reverse this.</p>
           <p>Unsure about what this means? <Link to="/faq#tokenization">Read more here first</Link>.</p>
           <button className="btn" onClick={this.showModalForm.bind(this)}>Continue</button>
           <button className="btn clean right" onClick={this.closeModal.bind(this)}>Cancel</button>
