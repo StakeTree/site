@@ -2,8 +2,24 @@ import React, { Component } from 'react';
 
 import WithdrawButton from './WithdrawButton.js';
 import AddTokensButton from './AddTokensButton.js';
+import SetMinAmountButton from './SetMinAmountButton.js';
 
 class BeneficiaryCard extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      newMinAmount: this.props.minAmount,
+      showMinAmountOptions: false
+    };
+  }
+  handleCustomAmount(e) {
+    let value = e.target.value;
+    this.setState({newMinAmount: value});
+  }
+  toggleSetMinAmountOptions() {
+    this.setState({showMinAmountOptions: !this.state.showMinAmountOptions});
+  }
   render() {    
     return (
       <div className="contract-card">
@@ -19,12 +35,25 @@ class BeneficiaryCard extends Component {
               visible={true}
               contract={this.props.contract}>Withdraw</WithdrawButton>
             <hr />
-            {!this.props.tokenized ? <AddTokensButton
+            <button className="btn clean full-width" onClick={this.toggleSetMinAmountOptions.bind(this)}>Update minimum funding amount</button>
+            {this.state.showMinAmountOptions ? 
+              <div className="stake-more-options">
+                <input step="0.1" value={this.state.newMinAmount} className="custom-value-input" type="number" onChange={this.handleCustomAmount.bind(this)} /> 
+                <SetMinAmountButton 
+                  visible={true}
+                  newMinAmount={this.state.newMinAmount}
+                  contract={this.props.contract}
+                  >Set minimum funding amount</SetMinAmountButton>
+              </div>
+            : 
+            ''}
+
+            {!this.props.tokenized ? 
+              <AddTokensButton
               visible={true}
               contract={this.props.contract}
               >Add Tokenization</AddTokensButton>
             : ''}
-            
           </div>
         </div>
       </div>

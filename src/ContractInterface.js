@@ -235,6 +235,7 @@ class ContractInterface extends Component {
                   tokenized={this.state.contract.tokenized}
                   tokenContract={this.state.contract.tokenContract} /> : ''}
                 {this.state.isBeneficiary ? <BeneficiaryCard 
+                  minAmount={minAmount}
                   nextWithdrawal={this.state.contract.nextWithdrawal}
                   withdrawalCounter={this.state.contract.withdrawalCounter}
                   totalStakedDollar={totalStakedDollar} 
