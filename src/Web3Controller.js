@@ -4,19 +4,6 @@ import TokenContract from 'staketree-contracts/build/contracts/MiniMeToken.json'
 
 class ContractController {
   constructor() {
-    this.web3 = window.web3;
-
-    // dirty hack for web3@1.0.0 support for localhost testrpc, 
-    // see https://github.com/trufflesuite/truffle-contract/issues/56#issuecomment-331084530
-    if (typeof window.web3.currentProvider.sendAsync !== "function") {
-      window.web3.currentProvider.sendAsync = function() {
-        return window.web3.currentProvider.send.apply(
-          window.web3.currentProvider,
-              arguments
-        );
-      };
-    }
-
     this.contractABIs = {
       StakeTreeWithTokenization: StakeTreeWithTokenization.abi,
       StakeTreeMVP: StakeTreeMVP.abi,
@@ -26,17 +13,33 @@ class ContractController {
     this.contractInstances = {};
     this.subscriptions = {};
     this.accountChangeSubscription = '';
+
+    window.addEventListener('load', ()=>{
+      if(typeof window.web3 !== 'undefined') {
+
+        // dirty hack for web3@1.0.0 support for localhost testrpc, 
+        // see https://github.com/trufflesuite/truffle-contract/issues/56#issuecomment-331084530
+        if (typeof window.web3.currentProvider.sendAsync !== "function") {
+          window.web3.currentProvider.sendAsync = function() {
+            return window.web3.currentProvider.send.apply(
+              window.web3.currentProvider,
+                  arguments
+            );
+          };
+        }
+      }
+    });
   }
 
   newInstance(params) {
-    const contract = this.web3.eth.contract(this.contractABIs[params.which]);
+    const contract = window.web3.eth.contract(this.contractABIs[params.which]);
     return contract.at(params.at);
   }
 
   subscribeToAccountChange(cb) {
     let currentAccount;
     const interval = setInterval(()=>{
-      this.web3.eth.getAccounts((error, accounts)=>{
+      window.web3.eth.getAccounts((error, accounts)=>{
         if(!currentAccount){
           currentAccount = accounts[0];
           cb(currentAccount);
@@ -135,13 +138,13 @@ class ContractController {
   }
 
   getCurrentAccount(cb) {
-    this.web3.eth.getAccounts((error, accounts)=>{
+    window.web3.eth.getAccounts((error, accounts)=>{
       cb(accounts[0]);
     });
   }
 
   getWeb3() {
-    return this.web3;
+    return window.web3;
   }
 }
 
