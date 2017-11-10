@@ -33,7 +33,7 @@ class CreatorPage extends Component {
       web3available: false,
       // contractAddress: "0x8c79ec3f260b067157b0a7db0bb465f90b87f8f1",
       // contractAddress: "0x34ef16c1f5f864a6b8de05205966b53e9fb0aaca", // Rinkeby test contract
-      contractAddress: "0x4ca3e0f44aacb3b0cc68e76a6cb94cb19afc3307", // local
+      contractAddress: "0x04379bdf85818109c8e17d57af3a18f27a261c7e", // local
       contract: {
         totalCurrentFunders: 0,
         balance: 0,
@@ -271,6 +271,7 @@ class CreatorPage extends Component {
                 tokenContract={this.state.contract.tokenContract} /> : ''}
             {this.state.isBeneficiary ? 
               <BeneficiaryCard 
+                minAmount={minAmount}
                 nextWithdrawal={this.state.contract.nextWithdrawal}
                 withdrawalCounter={this.state.contract.withdrawalCounter}
                 totalStakedDollar={totalStakedDollar} 

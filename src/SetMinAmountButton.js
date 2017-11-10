@@ -32,7 +32,7 @@ class ClaimTokensButton extends Component {
 
     let buttonHtml = this.props.visible ? <span className="tooltip-button">
       <div className={tooltipClassNames}>{`You don't have any tokens to claim.`}</div>
-      <button className="btn clean full-width" onClick={this.setMinAmount.bind(this)}>{this.props.children}</button> 
+      <button className="btn clean full-width min-amount-btn" onClick={this.setMinAmount.bind(this)}>{this.props.children}</button> 
     </span> : <span></span>;
     
     return buttonHtml;

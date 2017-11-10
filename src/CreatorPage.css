@@ -63,3 +63,12 @@
   margin: 0px;
   margin-top: 16px;
 }
+
+.creator-page .min-amount-btn {
+  font-size: .95rem;
+}
+
+.creator-page .more-options .min-amount-btn {
+  padding-left: 16px;
+  font-size: 0.8rem;
+}

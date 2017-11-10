@@ -4,7 +4,7 @@ import RefundButton from './RefundButton.js';
 import FundButton from './FundButton.js';
 import ClaimTokensButton from './ClaimTokensButton.js';
 
-import './FunderCard.css';
+import './ContractCard.css';
 
 import Web3Controller from './Web3Controller.js';
 
@@ -115,7 +115,7 @@ class FunderCard extends Component {
           <div className="secondary-actions">
             <button className="btn clean full-width" onClick={this.toggleStakingOptions.bind(this)}>Stake more</button>
             {this.state.stakeMore ? 
-              <div className="stake-more-options">
+              <div className="more-options">
                 <input step="0.1" placeholder="Custom amount?" className="custom-value-input" type="number" onChange={this.handleCustomAmount.bind(this)} /> 
                 <FundButton toAddress={this.props.toAddress} amount={customAmount} minAmount={this.props.minAmount} >Stake {customAmount} Ether</FundButton>
               </div>

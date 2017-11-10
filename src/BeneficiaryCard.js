@@ -4,6 +4,8 @@ import WithdrawButton from './WithdrawButton.js';
 import AddTokensButton from './AddTokensButton.js';
 import SetMinAmountButton from './SetMinAmountButton.js';
 
+import './ContractCard.css';
+
 class BeneficiaryCard extends Component {
   constructor(props) {
     super(props);
@@ -35,9 +37,9 @@ class BeneficiaryCard extends Component {
               visible={true}
               contract={this.props.contract}>Withdraw</WithdrawButton>
             <hr />
-            <button className="btn clean full-width" onClick={this.toggleSetMinAmountOptions.bind(this)}>Update minimum funding amount</button>
+            <button className="btn clean full-width min-amount-btn" onClick={this.toggleSetMinAmountOptions.bind(this)}>Update minimum funding amount</button>
             {this.state.showMinAmountOptions ? 
-              <div className="stake-more-options">
+              <div className="more-options">
                 <input step="0.1" value={this.state.newMinAmount} className="custom-value-input" type="number" onChange={this.handleCustomAmount.bind(this)} /> 
                 <SetMinAmountButton 
                   visible={true}
