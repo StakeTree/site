@@ -46,7 +46,7 @@ app.get('/contract/:address', async (req, res, next) => {
 
   const instance = await contract.at(req.params.address);
   const balance = await instance.getContractBalance.call();
-  const totalContributors = await instance.getCurrentTotalFunders.call();
+  const totalCurrentFunders = await instance.getCurrentTotalFunders.call();
   const contractStartTime = await instance.contractStartTime.call();
   const nextWithdrawal = await instance.nextWithdrawal.call();
   const withdrawalPeriod = await instance.withdrawalPeriod.call();
@@ -59,7 +59,7 @@ app.get('/contract/:address', async (req, res, next) => {
 
   res.json({
     "balance": balance,
-    "totalContributors": totalContributors,
+    "totalCurrentFunders": totalCurrentFunders,
     "contractStartTime": contractStartTime,
     "nextWithdrawal": nextWithdrawal,
     "withdrawalPeriod": withdrawalPeriod,
