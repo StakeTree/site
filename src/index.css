@@ -66,6 +66,16 @@ input:focus {
   width: 100%;
 }
 
+.btn.disabled-btn {
+  cursor: not-allowed;
+  background-color: #eee;
+  color: #888;
+}
+
+input.full-width {
+  width: 100%;
+}
+
 #mc_embed_signup .btn:hover, #mc_embed_signup .btn:active, #mc_embed_signup .btn:focus,
 .btn:hover, .btn:active, .btn:focus {
   color: #fff;
@@ -86,6 +96,10 @@ input:focus {
   outline: none;
   padding: 20px;
   width: 300px;
+}
+.modal.add-tokens {
+  top: 35%;
+  width: 350px;
 }
 .tooltip {
   display: none;

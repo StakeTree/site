@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import WithdrawButton from './WithdrawButton.js';
+import AddTokensButton from './AddTokensButton.js';
 
 class BeneficiaryCard extends Component {
   render() {    
@@ -17,6 +18,13 @@ class BeneficiaryCard extends Component {
               withdrawalDate={new Date(this.props.nextWithdrawal*1000)} 
               visible={true}
               contract={this.props.contract}>Withdraw</WithdrawButton>
+            <hr />
+            {!this.props.tokenized ? <AddTokensButton
+              visible={true}
+              contract={this.props.contract}
+              >Add Tokenization</AddTokensButton>
+            : ''}
+            
           </div>
         </div>
       </div>
