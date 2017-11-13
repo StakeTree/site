@@ -235,9 +235,11 @@ class ContractInterface extends Component {
                   tokenized={this.state.contract.tokenized}
                   tokenContract={this.state.contract.tokenContract} /> : ''}
                 {this.state.isBeneficiary ? <BeneficiaryCard 
+                  minAmount={minAmount}
                   nextWithdrawal={this.state.contract.nextWithdrawal}
                   withdrawalCounter={this.state.contract.withdrawalCounter}
                   totalStakedDollar={totalStakedDollar} 
+                  tokenized={this.state.contract.tokenized}
                   contract={this.state.contractInstance} /> : ''}
                 {!this.state.isBeneficiary && !this.state.isFunder ? <div className='contract-card'>
                 Are you a beneficiary or funder? Select your respective account in Metamask to interact with this contract.

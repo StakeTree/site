@@ -26,6 +26,9 @@ class FAQ extends Component {
             <h4>How much can the beneficiary withdraw?</h4>
             <p>The beneficiary can only withdraw 10% from their pool each week.</p>
 
+            <h4 id="tokenization">What happens when I tokenize my contract?</h4>
+            <p>LOREM.</p>
+
             <h4>I really like this project and have some ideas, how do I share this?</h4>
             <p>You can contact the founder, Niel, directly: nieldlr@gmail.com.</p>
           </div>
