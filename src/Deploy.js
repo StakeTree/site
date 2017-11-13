@@ -120,7 +120,6 @@ class Deploy extends Component {
   render() {
     return (
       <div className="faq container">
-        <Nav />
         <div className="row">
           <div className="eight columns offset-by-two">
             <h3>Deploy Contract</h3>
