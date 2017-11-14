@@ -85,7 +85,7 @@ class Web3Hub extends Component {
       }
     }, 1500);
 
-    web3store.subscribe((newState)=>{
+    web3store.subscribe('web3-hub', (newState)=>{
       this.setState({transactions: newState.transactions});
       this.setState({transacting: true});
     });

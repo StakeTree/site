@@ -7,6 +7,7 @@ import ClaimTokensButton from './ClaimTokensButton.js';
 import './ContractCard.css';
 
 import Web3Controller from './Web3Controller.js';
+import web3store from './Web3Store.js';
 
 class FunderCard extends Component {
   constructor(props) {
@@ -28,6 +29,16 @@ class FunderCard extends Component {
   }
 
   componentWillMount() {
+    this.getContractDetails();
+    web3store.subscribe('funder-card', (newState)=>{
+      setTimeout(()=>{this.getContractDetails()}, 5000);
+    });
+  }
+  componentWillUnmount() {
+    web3store.unsubscribe('funder-card');
+  }
+
+  getContractDetails() {
     Web3Controller.getContractDetails({
       id: 'funder-card-details',
       instance: this.props.contract,
