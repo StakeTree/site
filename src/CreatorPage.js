@@ -8,6 +8,7 @@ import './CreatorPage.css';
 
 // Other
 import Web3Controller from './Web3Controller.js';
+import web3store from './Web3Store.js';
 
 //Components
 import EtherscanLink from './EtherscanLink.js';
@@ -33,7 +34,7 @@ class CreatorPage extends Component {
       web3available: false,
       contractAddress: "0x8c79ec3f260b067157b0a7db0bb465f90b87f8f1",
       // contractAddress: "0x34ef16c1f5f864a6b8de05205966b53e9fb0aaca", // Rinkeby test contract
-      // contractAddress: "0x04379bdf85818109c8e17d57af3a18f27a261c7e", // local
+      // contractAddress: "0x4ca3e0f44aacb3b0cc68e76a6cb94cb19afc3307", // local
       contract: {
         totalCurrentFunders: 0,
         balance: 0,
@@ -114,6 +115,10 @@ class CreatorPage extends Component {
             this.getContractDetails();
           });
         });
+
+        web3store.subscribe('creator-page', (newState)=>{
+          setTimeout(()=>{this.getContractDetails()}, 5000);
+        });
       }
       else {
         // No contract found
@@ -181,6 +186,7 @@ class CreatorPage extends Component {
 
   componentWillUnmount() {
     clearInterval(web3Polling);
+    web3store.unsubscribe('creator-page');
     Web3Controller.unsubscribeFromAccountChange();
   }
 
