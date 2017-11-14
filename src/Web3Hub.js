@@ -38,7 +38,7 @@ class Web3Hub extends Component {
           let networkName;
           switch (result) {
             case "1":
-              networkName = "Main";
+              networkName = "Main Net";
               break;
             case "2":
              networkName = "Morden";
@@ -85,7 +85,7 @@ class Web3Hub extends Component {
       }
     }, 1500);
 
-    web3store.subscribe((newState)=>{
+    web3store.subscribe('web3-hub', (newState)=>{
       this.setState({transactions: newState.transactions});
       this.setState({transacting: true});
     });
@@ -118,7 +118,7 @@ class Web3Hub extends Component {
     if(this.state.connected) web3classnames += ' connected';
     if(!this.state.connected) web3classnames += ' not-connected';
 
-    if(this.state.connected && this.state.network !== 'Main') web3classnames += ' not-main';
+    if(this.state.connected && this.state.network !== 'Main Net') web3classnames += ' not-main';
 
     if(this.state.showDrawer) web3classnames += ' opened';
 

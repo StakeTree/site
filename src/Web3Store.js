@@ -3,6 +3,7 @@ import _ from 'lodash';
 class Web3Store {
   constructor() {
     this.subFunctions = [];
+    this.funcIndex = {};
     this.state = {
       transactions: {}
     }
@@ -12,13 +13,21 @@ class Web3Store {
     return this.state;
   }
 
-  subscribe(listenerFunc) {
-    this.subFunctions.push(listenerFunc);
+  subscribe(id, listenerFunc) {
+    if(typeof this.funcIndex[id] === 'undefined'){
+      this.funcIndex[id] = listenerFunc;
+    }
+  }
+
+  unsubscribe(id){
+    delete this.funcIndex[id];
   }
 
   pushCallbacks() {
-    for(var i=0; i<this.subFunctions.length; i++) {
-      this.subFunctions[i](this.getState());
+    const funcIds = Object.keys(this.funcIndex);
+    for(var i=0; i<funcIds.length; i++) {
+      const funcKey = funcIds[i];
+      this.funcIndex[funcKey](this.getState());
     }
   }
 

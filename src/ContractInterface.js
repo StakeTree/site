@@ -6,6 +6,7 @@ import './ContractInterface.css';
 
 // Other
 import Web3Controller from './Web3Controller.js';
+import web3store from './Web3Store.js';
 
 //Components
 import FundButton from './FundButton.js';
@@ -38,7 +39,8 @@ class ContractInterface extends Component {
         live: true,
         sunsetPeriod: "...",
         minimumFundingAmount: 0,
-        tokenContract: "0x0000000000000000000000000000000000000000"
+        tokenContract: "0x0000000000000000000000000000000000000000",
+        withdrawalCounter: 0
       },
       contractInstance: '',
       loading: true,
@@ -81,6 +83,7 @@ class ContractInterface extends Component {
 
   componentWillUnmount() {
     clearInterval(web3Polling);
+    web3store.unsubscribe('contract-dashboard');
     Web3Controller.unsubscribeFromAccountChange();
   }
 
@@ -109,6 +112,10 @@ class ContractInterface extends Component {
             });
             this.getContractDetails();
           });
+        });
+
+        web3store.subscribe('contract-dashboard', (newState)=>{
+          setTimeout(()=>{this.getContractDetails()}, 5000);
         });
       }
       else {
