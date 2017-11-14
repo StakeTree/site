@@ -36,7 +36,9 @@ class Home extends Component {
         web3.eth.sendTransaction(
           {"from": account, "to": contractAddress, "value": web3.toWei(etherAmount, "ether")}, 
           (err, transactionHash) => {
-            web3store.addTransaction({type: 'stake', hash: transactionHash, mined: false});
+            if(!err) {
+              web3store.addTransaction({type: 'stake', hash: transactionHash, mined: false});
+            }
           }
         );
       }
