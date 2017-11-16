@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './skeleton.css';
 import './font-awesome/css/font-awesome.css';
 
@@ -18,11 +18,13 @@ class App extends Component {
       <Router>
         <div>
           <Nav />
-          <Route exact path="/" component={Home} />
-          <Route path="/deploy" component={Deploy} />
-          <Route path="/faq" component={FAQ} />
-          <Route path="/dev" component={CreatorPage} />
-          <Route path="/c/:address" component={ContractInterface} />
+          <Switch >
+            <Route exact path="/" component={Home} />
+            <Route path="/deploy" component={Deploy} />
+            <Route path="/faq" component={FAQ} />
+            <Route path="/c/:address" component={ContractInterface} />
+            <Route path="/*" component={CreatorPage} />
+          </Switch>
         </div>
       </Router>
     );
