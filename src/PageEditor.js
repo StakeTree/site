@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { EditorState, convertToRaw } from 'draft-js';
 import Editor from 'draft-js-plugins-editor';
 import createToolbarPlugin from 'draft-js-static-toolbar-plugin';
+import createLinkPlugin from 'draft-js-anchor-plugin';
 
 import {
   ItalicButton,
@@ -61,6 +62,7 @@ class HeadlinesButton extends Component {
     );
   }
 }
+const linkPlugin = createLinkPlugin();
 
 const toolbarPlugin = createToolbarPlugin({
   structure: [
@@ -70,12 +72,13 @@ const toolbarPlugin = createToolbarPlugin({
     CodeButton,
     HeadlinesButton,
     UnorderedListButton,
-    OrderedListButton
+    OrderedListButton,
+    linkPlugin.LinkButton
   ]
 });
 
 const { Toolbar } = toolbarPlugin;
-const plugins = [toolbarPlugin];
+const plugins = [toolbarPlugin, linkPlugin];
 
 class PageEditor extends Component {
 
