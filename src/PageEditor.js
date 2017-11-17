@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { EditorState } from 'draft-js';
+import { EditorState, convertToRaw } from 'draft-js';
 import Editor from 'draft-js-plugins-editor';
 import createToolbarPlugin from 'draft-js-static-toolbar-plugin';
 
@@ -92,6 +92,11 @@ class PageEditor extends Component {
   focus = () => {
     this.editor.focus();
   };
+
+  convert() {
+    const data = convertToRaw(this.state.editorState.getCurrentContent());
+    console.log(data);
+  }
 
   render() {
     return (
