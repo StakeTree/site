@@ -139,3 +139,19 @@ input.full-width {
 code {
   padding: 8px;
 }
+
+/* Skeleton.css Overrides */
+ul {
+  list-style: circle !important;
+  margin-bottom: 1.5rem !important;
+}
+
+ol {
+  list-style: decimal !important;
+  margin-bottom: 1.5rem !important;
+}
+
+li {
+  margin-left: 1.7rem !important;
+
+}

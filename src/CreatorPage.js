@@ -17,6 +17,7 @@ import EtherscanLink from './EtherscanLink.js';
 import FundButton from './FundButton.js';
 import FunderCard from './FunderCard.js';
 import BeneficiaryCard from './BeneficiaryCard.js';
+import PageEditor from './PageEditor.js';
 
 let contractInstanceMVP;
 let web3Polling;
@@ -324,8 +325,10 @@ class CreatorPage extends Component {
               <p><strong>But I need your help to build StakeTree.</strong></p>
               <p>In true dogfooding fashion, I'll be building StakeTree using StakeTree itself.</p>
               <p>For updates, follow me on <a href="https://twitter.com/staketree" target="_blank" rel="noopener noreferrer">Twitter</a> & <a href="https://github.com/StakeTree" target="_blank" rel="noopener noreferrer">Github</a>.</p>
+              <PageEditor />
             </div>
           </div>
+
           </span>
         }
       </div>
