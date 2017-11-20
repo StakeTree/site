@@ -28,6 +28,7 @@ class CreatorPage extends Component {
     super(props);
 
     this.state = {
+      isEditing: false,
       userLoading: true,
       contractLoading: true,
       exchangeRate: 0,
@@ -325,7 +326,9 @@ class CreatorPage extends Component {
               <p><strong>But I need your help to build StakeTree.</strong></p>
               <p>In true dogfooding fashion, I'll be building StakeTree using StakeTree itself.</p>
               <p>For updates, follow me on <a href="https://twitter.com/staketree" target="_blank" rel="noopener noreferrer">Twitter</a> & <a href="https://github.com/StakeTree" target="_blank" rel="noopener noreferrer">Github</a>.</p>
-              <PageEditor />
+            
+              <PageEditor content={this.state.creator.description} />
+            
             </div>
           </div>
 

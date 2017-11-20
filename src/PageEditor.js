@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { EditorState, convertToRaw } from 'draft-js';
+import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 import Editor from 'draft-js-plugins-editor';
 import createToolbarPlugin from 'draft-js-static-toolbar-plugin';
 import createLinkPlugin from 'draft-js-anchor-plugin';
@@ -81,10 +81,12 @@ const { Toolbar } = toolbarPlugin;
 const plugins = [toolbarPlugin, linkPlugin];
 
 class PageEditor extends Component {
-
-  state = {
-    editorState: EditorState.createEmpty()
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      editorState: EditorState.createWithContent(convertFromRaw(this.props.content))
+    }
+  }
 
   onChange = (editorState) => {
     this.setState({
