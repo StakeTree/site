@@ -85,7 +85,7 @@ class PageEditor extends Component {
     super(props);
     this.state = {
       editorState: EditorState.createWithContent(convertFromRaw(this.props.content))
-    }
+    };
   }
 
   onChange = (editorState) => {
@@ -106,14 +106,15 @@ class PageEditor extends Component {
   render() {
     return (
       <div>
-        <div className={'editor'} onClick={this.focus}>
+        <div className={!this.props.readOnly ? 'editor' : '' } onClick={this.focus}>
           <Editor
+            readOnly={this.props.readOnly}
             editorState={this.state.editorState}
             onChange={this.onChange}
             plugins={plugins}
             ref={(element) => { this.editor = element; }}
           />
-          <Toolbar />
+          {!this.props.readOnly ? <Toolbar /> : ''}
         </div>
       </div>
     );

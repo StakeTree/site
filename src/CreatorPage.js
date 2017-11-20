@@ -308,27 +308,7 @@ class CreatorPage extends Component {
               : ''}
             </div>
             <div className="eight columns">
-              <p>
-              Hi everyone. I'm <a href="https://twitter.com/nieldlr" target="_blank" rel="noopener noreferrer">Niel</a>, the founder of StakeTree.<br />
-              This dev fund is my only source of funding right now. I would really appreciate any help with bringing this ecosystem to the world.
-              </p>
-              <p>StakeTree uses smart contracts on Ethereum, where creators & funders can back projects with no intermediaries, fees and instant settlement.</p>
-              <p>There's lots more planned for StakeTree:</p>
-              <ul>
-                <li><strong>Creating a simple UI</strong> for funders & creators to create, fund & withdraw from contracts.</li>
-                <li><strong>Develop funding tiers</strong>. This is where creators can reward dedicated backers with special rewards/access. Think tiers like Kickstarter & Patreon.</li> 
-                <li><strong>Fund contracts with any ERC-20 token.</strong></li>
-                <li><strong>Tokenization for funders & creators</strong>. When the creator withdraws ether, it mints tokens for all parties. These tokens can then be used for many things: voting, curation, special access, discounts and more. The creativity of the creator is the limit here.</li>
-                <li><strong>Create funding buckets</strong>. For example fund many Ethereum dev related projects using a single payment.</li>
-                <li><strong>Build a platform</strong>. Make it easy for creators to communicate with and build their communities.</li>
-              </ul>
-              <p>Plus many more ideas to come! Check out the <a href="https://trello.com/b/ThPpLwFm/staketree-transparent-roadmap" target="_blank" rel="noopener noreferrer">transparent roadmap</a> here.</p>
-              <p><strong>But I need your help to build StakeTree.</strong></p>
-              <p>In true dogfooding fashion, I'll be building StakeTree using StakeTree itself.</p>
-              <p>For updates, follow me on <a href="https://twitter.com/staketree" target="_blank" rel="noopener noreferrer">Twitter</a> & <a href="https://github.com/StakeTree" target="_blank" rel="noopener noreferrer">Github</a>.</p>
-            
-              <PageEditor content={this.state.creator.description} />
-            
+              <PageEditor content={this.state.creator.description} readOnly={!this.state.isEditing} />
             </div>
           </div>
 
