@@ -116,7 +116,7 @@ class Home extends Component {
           
           <div className="ten columns offset-by-one">
             <h4>More on StakeTree</h4>
-            <img className="avatar" alt="Niel's face" src="ava.jpg" />
+            <img className="avatar" alt="Niel's face" src="niel.jpg" />
             <p>
             Hi everyone. <a href="https://twitter.com/nieldlr" target="_blank" rel="noopener noreferrer">Niel de la Rouviere</a> here. Welcome to StakeTree! I'm excited to introduce this project. I believe that to grow the crypto ecosystem
             (and hopefully much more in the future!) we need sustainable ways to fund projects & creators. ICOs are all the rage, but sometimes it just doesn't make
