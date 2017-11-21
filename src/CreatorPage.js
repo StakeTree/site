@@ -57,7 +57,53 @@ class CreatorPage extends Component {
     };
   }
 
-  async componentWillMount() {    
+  componentWillReceiveProps(nextProps) {
+    // We've changed to a new creator page. Let's refetch things
+    if(nextProps.match.url !== this.props.match.url) {
+      this.setState({userLoading: true});
+      this.setState({contractLoading: true});
+
+      setTimeout(()=> {
+        if(typeof Creators[this.props.match.url] !== 'undefined') {
+          this.setState({creator: Creators[this.props.match.url]});
+          this.setState({userLoading: false});
+
+          const fetchHost = window.location.hostname === "localhost" ? "http://localhost:3000" : ''; 
+          const fetchUrl = `${fetchHost}/contract/${this.state.creator.contractAddress}`;
+          // TODO: Polyfill fetch for back suport
+          fetch(fetchUrl)
+            .then((res) => {return res.json()})
+            .then(data => {
+              this.setState({
+                ...this.state,
+                contract: data
+              });
+            });
+
+          if(typeof window.web3 !== 'undefined') {
+            this.hydrate();
+          }
+          else {
+            // Poll for web3 availability
+            web3Polling = setInterval(async ()=> {
+              if(typeof window.web3 !== 'undefined') {
+                clearInterval(web3Polling);
+                this.setState({"web3available": true});
+                this.hydrate();
+              }
+            }, 1500);
+          }
+        }
+        else {
+          // NO USER
+          console.log("NO SUER AT THIS ADDESS");
+        }
+      }, 1000);
+    }
+  }
+
+  async componentWillMount() {  
+    console.log("CMOUNT");  
     fetch("https://api.coinmarketcap.com/v1/ticker/ethereum/?convert=USD")
       .then(res => {return res.json()})
       .then(data => {
@@ -256,18 +302,23 @@ class CreatorPage extends Component {
               <h3 className="creatorpage-project-name">{this.state.creator.title}</h3>
             </div>
           </div>
-          <div className="row">
-            <div className="twelve columns">
-              <div style={{"marginBottom": "25px"}}className="well">
-              The <EtherscanLink text={"MVP contract"} type={"address"} id={"0xa899495d47B6a575c830Ffc330BC83318Df46a44"} /> has been put into sunset mode. Click <a href="" onClick={this.refundOld.bind(this)}>here</a> to refund your ether.<br />
-              Read more on <a target="_blank" rel="noopener noreferrer" href="https://medium.com/@StakeTree/sunsetting-the-mvp-now-with-tokenization-4b4be1339b71">what's changed</a> in the new contract. I hope to see you fund the new contract below!
+
+          {this.props.match.url === "/dev" ? 
+            <div className="row">
+              <div className="twelve columns">
+                <div style={{"marginBottom": "25px"}}className="well">
+                The <EtherscanLink text={"MVP contract"} type={"address"} id={"0xa899495d47B6a575c830Ffc330BC83318Df46a44"} /> has been put into sunset mode. Click <a href="" onClick={this.refundOld.bind(this)}>here</a> to refund your ether.<br />
+                Read more on <a target="_blank" rel="noopener noreferrer" href="https://medium.com/@StakeTree/sunsetting-the-mvp-now-with-tokenization-4b4be1339b71">what's changed</a> in the new contract. I hope to see you fund the new contract below!
+                </div>
               </div>
             </div>
-          </div>
+            : ''
+          }
+          
           <div className="row">
             <div className="four columns sidebar">
               <div className="sidebar">
-                <span className="creatorpage-avatar"><img alt="Niel's face" src="ava.jpg" /></span>
+                <span className="creatorpage-avatar"><img alt="Niel's face" src={this.state.creator.avatar} /></span>
                 <FundButton toAddress={this.state.creator.contractAddress} amount={customAmount} minAmount={minAmount} >Stake {customAmount} Ether</FundButton>
                 <input step="0.1" placeholder="Custom amount?" className="custom-value-input" type="number" onChange={this.handleCustomAmount.bind(this)} />
                 <div className="sidebar-key-info">
