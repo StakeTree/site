@@ -114,8 +114,10 @@ class PageEditor extends Component {
             plugins={plugins}
             ref={(element) => { this.editor = element; }}
           />
+
           {!this.props.readOnly ? <Toolbar /> : ''}
         </div>
+        {!this.props.readOnly ? <button onClick={this.convert.bind(this)}>Convert</button> : ''}
       </div>
     );
   }
