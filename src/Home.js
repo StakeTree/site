@@ -13,7 +13,7 @@ class Home extends Component {
     super(props);
 
     this.state = {
-      customAmount: 10,
+      customAmount: 5,
       showValueModal: false,
       web3available: typeof web3 !== 'undefined'
     };
@@ -138,8 +138,8 @@ class Home extends Component {
             <p>In true dogfooding fashion, I'll be funding StakeTree using <Link to="/dev">StakeTree</Link> itself. You can help fund development using the buttons below. If at any time you want to take back what's left of your ether, you can do this at any time.</p>
             {noWeb3}
             <div className="cta-buttons">
+              <button className="btn" onClick={this.fund.bind(this, 0.1)}>Stake 0.1 ether towards StakeTree</button><br />
               <button className="btn" onClick={this.fund.bind(this, 1)}>Stake 1 ether towards StakeTree</button><br />
-              <button className="btn" onClick={this.fund.bind(this, 5)}>Stake 5 ether towards StakeTree</button><br />
               <input step="0.1" min="0.01" placeholder="Custom amount?" className="custom-value-input" type="number" onChange={this.handleCustomAmount.bind(this)} />
               <button className="btn custom-value-button" onClick={this.fund.bind(this, customAmount)}>Stake {customAmount} ether</button>
       
