@@ -40,15 +40,23 @@ class ContractController {
     let currentAccount;
     const interval = setInterval(()=>{
       window.web3.eth.getAccounts((error, accounts)=>{
-        if(!currentAccount){
-          currentAccount = accounts[0];
-          cb(currentAccount);
-        }
+        if(!error) {
+          if(accounts.length) { // Check for locked Metamask
+            if(!currentAccount){
+              currentAccount = accounts[0];
+              cb(currentAccount);
+            }
 
-        if(currentAccount !== accounts[0]) {
-          currentAccount = accounts[0];
-          cb(currentAccount);
+            if(currentAccount !== accounts[0]) {
+              currentAccount = accounts[0];
+              cb(currentAccount);
+            }
+          }
+          else {
+            cb("0x0000000000000000000000000000000000000000")
+          }
         }
+        
       })
     }, 1500);
     this.accountChangeSubscription = interval;
@@ -139,7 +147,15 @@ class ContractController {
 
   getCurrentAccount(cb) {
     window.web3.eth.getAccounts((error, accounts)=>{
-      cb(accounts[0]);
+      if(!error) {
+        if(accounts.length > 0) {
+          cb(accounts[0]);
+        } // Check if Metamask isn't locked
+        else {
+          cb("0x0000000000000000000000000000000000000000");
+        }
+      }
+      
     });
   }
 
