@@ -11,6 +11,7 @@
     "draft-js-plugins-editor": "^2.0.3",
     "draft-js-static-toolbar-plugin": "^2.0.1",
     "express": "^4.15.4",
+    "ipfs-api": "^17.2.4",
     "lodash": "^4.17.4",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
