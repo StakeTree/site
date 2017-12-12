@@ -55,6 +55,8 @@ class CreatorPage extends Component {
       contractInstance: '',
       creator: {title: ''}
     };
+
+    window.CreatorPage = this;
   }
 
   componentWillReceiveProps(nextProps) {
