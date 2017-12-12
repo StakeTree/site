@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './Home.css';
+import { Link } from 'react-router-dom';
 
 import Modal from 'react-modal';
 
@@ -12,7 +13,7 @@ class Home extends Component {
     super(props);
 
     this.state = {
-      customAmount: 10,
+      customAmount: 5,
       showValueModal: false,
       web3available: typeof web3 !== 'undefined'
     };
@@ -116,7 +117,7 @@ class Home extends Component {
           
           <div className="ten columns offset-by-one">
             <h4>More on StakeTree</h4>
-            <img className="avatar" alt="Niel's face" src="ava.jpg" />
+            <img className="avatar" alt="Niel's face" src="niel.jpg" />
             <p>
             Hi everyone. <a href="https://twitter.com/nieldlr" target="_blank" rel="noopener noreferrer">Niel de la Rouviere</a> here. Welcome to StakeTree! I'm excited to introduce this project. I believe that to grow the crypto ecosystem
             (and hopefully much more in the future!) we need sustainable ways to fund projects & creators. ICOs are all the rage, but sometimes it just doesn't make
@@ -134,11 +135,11 @@ class Home extends Component {
             </ul>
             <p>Plus many more ideas to come. But...</p>
             <p><strong>I need your help to build StakeTree.</strong></p>
-            <p>In true dogfooding fashion, I'll be funding StakeTree using the <a href="https://etherscan.io/address/0xa899495d47b6a575c830ffc330bc83318df46a44" target="_blank" rel="noopener noreferrer">MVP StakeTree contract</a> myself. You can help fund development using the buttons below. If at any time you want to take back what's left of your ether, you can do this at any time. The UI to make that easy is coming very soon!</p>
+            <p>In true dogfooding fashion, I'll be funding StakeTree using <Link to="/dev">StakeTree</Link> itself. You can help fund development using the buttons below. If at any time you want to take back what's left of your ether, you can do this at any time.</p>
             {noWeb3}
             <div className="cta-buttons">
+              <button className="btn" onClick={this.fund.bind(this, 0.5)}>Stake 0.5 ether towards StakeTree</button><br />
               <button className="btn" onClick={this.fund.bind(this, 1)}>Stake 1 ether towards StakeTree</button><br />
-              <button className="btn" onClick={this.fund.bind(this, 5)}>Stake 5 ether towards StakeTree</button><br />
               <input step="0.1" min="0.01" placeholder="Custom amount?" className="custom-value-input" type="number" onChange={this.handleCustomAmount.bind(this)} />
               <button className="btn custom-value-button" onClick={this.fund.bind(this, customAmount)}>Stake {customAmount} ether</button>
       
