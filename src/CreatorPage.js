@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Web3 from 'web3'; // TODO: follow up on how to use web3 when pulled in vs metamask
 import TruffleContract from 'truffle-contract';
 import StakeTreeMVP from 'staketree-contracts/build/contracts/StakeTreeMVP.json';
+import { Link } from 'react-router-dom';
 
 import Creators from './creatorsToIPFSMap.json';
 
@@ -15,8 +16,6 @@ import web3store from './Web3Store.js';
 //Components
 import EtherscanLink from './EtherscanLink.js';
 import FundButton from './FundButton.js';
-import FunderCard from './FunderCard.js';
-import BeneficiaryCard from './BeneficiaryCard.js';
 import PageEditor from './PageEditor.js';
 
 let contractInstanceMVP;
@@ -334,9 +333,6 @@ class CreatorPage extends Component {
 
     const minAmount = web3.utils.fromWei(this.state.contract.minimumFundingAmount, 'ether');
 
-    let totalStakedDollar = this.state.exchangeRate * (balance);
-    totalStakedDollar = totalStakedDollar.toFixed(2);
-
     return (
       <div className="container creator-page">
         {this.state.userLoading ? 'Loading...' :
@@ -380,27 +376,10 @@ class CreatorPage extends Component {
                   Contract Source: <a href={`https://etherscan.io/address/${this.state.creator.contractAddress}`} target="_blank" rel="noopener noreferrer">View on Etherscan</a>
                 </div>
               </div>
-              {this.state.isFunder ? 
-                <FunderCard 
-                  currentAccount={this.state.currentEthAccount}
-                  toAddress={this.state.creator.contractAddress}
-                  minAmount={minAmount}
-                  contract={this.state.contractInstance} 
-                  tokenized={this.state.contract.tokenized}
-                  tokenContract={this.state.contract.tokenContract} /> : ''}
-              {this.state.isBeneficiary ? 
-                <BeneficiaryCard 
-                  minAmount={minAmount}
-                  nextWithdrawal={this.state.contract.nextWithdrawal}
-                  withdrawalCounter={this.state.contract.withdrawalCounter}
-                  totalStakedDollar={totalStakedDollar} 
-                  tokenized={this.state.contract.tokenized}
-                  contract={this.state.contractInstance} /> : ''}
-              {!this.state.isBeneficiary && !this.state.isFunder ? 
-                <div className='contract-card'>
-                Are you a beneficiary or funder? Select your respective account in Metamask to interact with this contract.
-                </div> 
-              : ''}
+             
+              <div className='contract-card'>
+                Are you a beneficiary or funder? Head to the <Link to={`/c/${this.state.creator.contractAddress}`}>contract dashboard</Link> to interact with this contract.
+              </div>
             </div>
             <div className="eight columns">
               <PageEditor content={this.state.creator.description} readOnly={!this.state.isEditing} />
