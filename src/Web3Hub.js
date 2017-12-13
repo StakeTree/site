@@ -5,7 +5,6 @@ import './Web3Hub.css';
 import web3store from "./Web3Store.js";
 
 import EtherscanLink from './EtherscanLink.js';
-let web3Polling;
 
 class Web3Hub extends Component {
   constructor(props) {

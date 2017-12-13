@@ -6,7 +6,6 @@ import StakeTreeWithTokenizationFactory from 'staketree-contracts/build/contract
 import './Deploy.css';
 
 //Components
-import Nav from './Nav.js';
 import { Link } from 'react-router-dom';
 
 let contractInstance;
