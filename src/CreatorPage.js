@@ -3,7 +3,7 @@ import Web3 from 'web3'; // TODO: follow up on how to use web3 when pulled in vs
 import TruffleContract from 'truffle-contract';
 import StakeTreeMVP from 'staketree-contracts/build/contracts/StakeTreeMVP.json';
 
-import Creators from './creators.json';
+import Creators from './creatorsToIPFSMap.json';
 
 // Styling
 import './CreatorPage.css';
@@ -65,9 +65,63 @@ class CreatorPage extends Component {
       this.setState({userLoading: true});
       this.setState({contractLoading: true});
 
-      setTimeout(()=> {
-        if(typeof Creators[this.props.match.url] !== 'undefined') {
-          this.setState({creator: Creators[this.props.match.url]});
+      if(typeof Creators[nextProps.match.url] !== 'undefined'){
+        const ipfsHash = Creators[nextProps.match.url];
+        fetch(`https://ipfs.infura.io/ipfs/${ipfsHash}`)
+          .then((res) => {return res.json()})
+          .then(data => {
+            this.setState({creator: data});
+            this.setState({userLoading: false});
+
+            const fetchHost = window.location.hostname === "localhost" ? "http://localhost:3000" : ''; 
+            const fetchUrl = `${fetchHost}/contract/${this.state.creator.contractAddress}`;
+            // TODO: Polyfill fetch for back suport
+            fetch(fetchUrl)
+              .then((res) => {return res.json()})
+              .then(data => {
+                this.setState({
+                  ...this.state,
+                  contract: data
+                });
+              });
+
+            if(typeof window.web3 !== 'undefined') {
+              this.hydrate();
+            }
+            else {
+              // Poll for web3 availability
+              web3Polling = setInterval(async ()=> {
+                if(typeof window.web3 !== 'undefined') {
+                  clearInterval(web3Polling);
+                  this.setState({"web3available": true});
+                  this.hydrate();
+                }
+              }, 1500);
+            }
+          });
+      }
+      else {
+        // NO USER
+        console.log("NO SUER AT THIS ADDESS");
+      }
+    }
+  }
+
+  async componentWillMount() {  
+    fetch("https://api.coinmarketcap.com/v1/ticker/ethereum/?convert=USD")
+      .then(res => {return res.json()})
+      .then(data => {
+        this.setState({
+          exchangeRate: parseInt(data[0].price_usd, 10)
+        });
+      });
+
+    if(typeof Creators[this.props.match.url] !== 'undefined'){
+      const ipfsHash = Creators[this.props.match.url];
+      fetch(`https://ipfs.infura.io/ipfs/${ipfsHash}`)
+        .then((res) => {return res.json()})
+        .then(data => {
+          this.setState({creator: data});
           this.setState({userLoading: false});
 
           const fetchHost = window.location.hostname === "localhost" ? "http://localhost:3000" : ''; 
@@ -95,62 +149,50 @@ class CreatorPage extends Component {
               }
             }, 1500);
           }
-        }
-        else {
-          // NO USER
-          console.log("NO SUER AT THIS ADDESS");
-        }
-      }, 1000);
-    }
-  }
-
-  async componentWillMount() {  
-    console.log("CMOUNT");  
-    fetch("https://api.coinmarketcap.com/v1/ticker/ethereum/?convert=USD")
-      .then(res => {return res.json()})
-      .then(data => {
-        this.setState({
-          exchangeRate: parseInt(data[0].price_usd, 10)
         });
-      });
+    }
+    else {
+      // NO USER
+      console.log("NO SUER AT THIS ADDESS");
+    }
 
-    // Simulate async fetching user info
-    setTimeout(()=> {
-      if(typeof Creators[this.props.match.url] !== 'undefined') {
-        this.setState({creator: Creators[this.props.match.url]});
-        this.setState({userLoading: false});
+    // // Simulate async fetching user info
+    // setTimeout(()=> {
+    //   if(typeof Creators[this.props.match.url] !== 'undefined') {
+    //     this.setState({creator: Creators[this.props.match.url]});
+    //     this.setState({userLoading: false});
 
-        const fetchHost = window.location.hostname === "localhost" ? "http://localhost:3000" : ''; 
-        const fetchUrl = `${fetchHost}/contract/${this.state.creator.contractAddress}`;
-        // TODO: Polyfill fetch for back suport
-        fetch(fetchUrl)
-          .then((res) => {return res.json()})
-          .then(data => {
-            this.setState({
-              ...this.state,
-              contract: data
-            });
-          });
+    //     const fetchHost = window.location.hostname === "localhost" ? "http://localhost:3000" : ''; 
+    //     const fetchUrl = `${fetchHost}/contract/${this.state.creator.contractAddress}`;
+    //     // TODO: Polyfill fetch for back suport
+    //     fetch(fetchUrl)
+    //       .then((res) => {return res.json()})
+    //       .then(data => {
+    //         this.setState({
+    //           ...this.state,
+    //           contract: data
+    //         });
+    //       });
 
-        if(typeof window.web3 !== 'undefined') {
-          this.hydrate();
-        }
-        else {
-          // Poll for web3 availability
-          web3Polling = setInterval(async ()=> {
-            if(typeof window.web3 !== 'undefined') {
-              clearInterval(web3Polling);
-              this.setState({"web3available": true});
-              this.hydrate();
-            }
-          }, 1500);
-        }
-      }
-      else {
-        // NO USER
-        console.log("NO SUER AT THIS ADDESS");
-      }
-    }, 1000);
+    //     if(typeof window.web3 !== 'undefined') {
+    //       this.hydrate();
+    //     }
+    //     else {
+    //       // Poll for web3 availability
+    //       web3Polling = setInterval(async ()=> {
+    //         if(typeof window.web3 !== 'undefined') {
+    //           clearInterval(web3Polling);
+    //           this.setState({"web3available": true});
+    //           this.hydrate();
+    //         }
+    //       }, 1500);
+    //     }
+    //   }
+    //   else {
+    //     // NO USER
+    //     console.log("NO SUER AT THIS ADDESS");
+    //   }
+    // }, 1000);
   }
 
   async hydrate() {
