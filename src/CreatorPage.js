@@ -58,65 +58,9 @@ class CreatorPage extends Component {
     window.CreatorPage = this;
   }
 
-  componentWillReceiveProps(nextProps) {
-    // We've changed to a new creator page. Let's refetch things
-    if(nextProps.match.url !== this.props.match.url) {
-      this.setState({userLoading: true});
-      this.setState({contractLoading: true});
-
-      if(typeof Creators[nextProps.match.url] !== 'undefined'){
-        const ipfsHash = Creators[nextProps.match.url];
-        fetch(`https://ipfs.infura.io/ipfs/${ipfsHash}`)
-          .then((res) => {return res.json()})
-          .then(data => {
-            this.setState({creator: data});
-            this.setState({userLoading: false});
-
-            const fetchHost = window.location.hostname === "localhost" ? "http://localhost:3000" : ''; 
-            const fetchUrl = `${fetchHost}/contract/${this.state.creator.contractAddress}`;
-            // TODO: Polyfill fetch for back suport
-            fetch(fetchUrl)
-              .then((res) => {return res.json()})
-              .then(data => {
-                this.setState({
-                  ...this.state,
-                  contract: data
-                });
-              });
-
-            if(typeof window.web3 !== 'undefined') {
-              this.hydrate();
-            }
-            else {
-              // Poll for web3 availability
-              web3Polling = setInterval(async ()=> {
-                if(typeof window.web3 !== 'undefined') {
-                  clearInterval(web3Polling);
-                  this.setState({"web3available": true});
-                  this.hydrate();
-                }
-              }, 1500);
-            }
-          });
-      }
-      else {
-        // NO USER
-        console.log("NO SUER AT THIS ADDESS");
-      }
-    }
-  }
-
-  async componentWillMount() {  
-    fetch("https://api.coinmarketcap.com/v1/ticker/ethereum/?convert=USD")
-      .then(res => {return res.json()})
-      .then(data => {
-        this.setState({
-          exchangeRate: parseInt(data[0].price_usd, 10)
-        });
-      });
-
-    if(typeof Creators[this.props.match.url] !== 'undefined'){
-      const ipfsHash = Creators[this.props.match.url];
+  fetchCreator(creatorUrl) {
+    if(typeof Creators[creatorUrl] !== 'undefined'){
+      const ipfsHash = Creators[creatorUrl];
       fetch(`https://ipfs.infura.io/ipfs/${ipfsHash}`)
         .then((res) => {return res.json()})
         .then(data => {
@@ -154,44 +98,27 @@ class CreatorPage extends Component {
       // NO USER
       console.log("NO SUER AT THIS ADDESS");
     }
+  }
 
-    // // Simulate async fetching user info
-    // setTimeout(()=> {
-    //   if(typeof Creators[this.props.match.url] !== 'undefined') {
-    //     this.setState({creator: Creators[this.props.match.url]});
-    //     this.setState({userLoading: false});
+  componentWillReceiveProps(nextProps) {
+    // We've changed to a new creator page. Let's refetch things
+    if(nextProps.match.url !== this.props.match.url) {
+      this.setState({userLoading: true});
+      this.setState({contractLoading: true});
 
-    //     const fetchHost = window.location.hostname === "localhost" ? "http://localhost:3000" : ''; 
-    //     const fetchUrl = `${fetchHost}/contract/${this.state.creator.contractAddress}`;
-    //     // TODO: Polyfill fetch for back suport
-    //     fetch(fetchUrl)
-    //       .then((res) => {return res.json()})
-    //       .then(data => {
-    //         this.setState({
-    //           ...this.state,
-    //           contract: data
-    //         });
-    //       });
+      this.fetchCreator(nextProps.match.url);
+    }
+  }
 
-    //     if(typeof window.web3 !== 'undefined') {
-    //       this.hydrate();
-    //     }
-    //     else {
-    //       // Poll for web3 availability
-    //       web3Polling = setInterval(async ()=> {
-    //         if(typeof window.web3 !== 'undefined') {
-    //           clearInterval(web3Polling);
-    //           this.setState({"web3available": true});
-    //           this.hydrate();
-    //         }
-    //       }, 1500);
-    //     }
-    //   }
-    //   else {
-    //     // NO USER
-    //     console.log("NO SUER AT THIS ADDESS");
-    //   }
-    // }, 1000);
+  async componentWillMount() {  
+    fetch("https://api.coinmarketcap.com/v1/ticker/ethereum/?convert=USD")
+      .then(res => {return res.json()})
+      .then(data => {
+        this.setState({
+          exchangeRate: parseInt(data[0].price_usd, 10)
+        });
+      });
+    this.fetchCreator(this.props.match.url);
   }
 
   async hydrate() {
@@ -252,30 +179,6 @@ class CreatorPage extends Component {
       if(key === "getContractBalance") key = "balance";
       this.setContractState(key, value);
     });
-
-    Web3Controller.getContractDetails({
-      id: 'is-funder',
-      instance: this.state.contractInstance,
-      functions: [
-        {name: 'isFunder', arg: this.state.currentEthAccount}
-      ]
-    }, (key, isFunder) => {
-      this.setState({
-        ...this.state,
-        isFunder: isFunder,
-      });        
-    });
-
-    Web3Controller.getContractDetails({
-      id: 'is-beneficiary',
-      instance: this.state.contractInstance,
-      variables: ['beneficiary']
-    }, (key, beneficiary) => {
-      this.setState({
-        ...this.state,
-        isBeneficiary: this.state.currentEthAccount === beneficiary,
-      });        
-    });
   }
 
   setContractState(key, value) {
@@ -299,13 +202,6 @@ class CreatorPage extends Component {
     let value = e.target.value;
     if(e.target.value === "") value = 0.1;
     this.setState({customAmount: value});
-  }
-
-  noWeb3() {
-    if(!this.state.web3available) {
-      return <div className="no-web3"><p>To fund StakeTree using the buttons below you need have <a href="https://metamask.io" target="_blank" rel="noopener noreferrer">MetaMask</a> installed. If you have MetaMask installed, try unlocking it before trying again. Otherwise send ether to this address, <code>{this.state.creator.contractAddress}</code>, using your preffered wallet.</p></div>;
-    }
-    return "";
   }
 
   async refundOld(e) {
