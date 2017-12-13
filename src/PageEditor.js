@@ -100,7 +100,13 @@ class PageEditor extends Component {
 
   convert() {
     const data = convertToRaw(this.state.editorState.getCurrentContent());
-    console.log(data);
+
+    let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
+    let downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href", dataStr);
+    downloadAnchorNode.setAttribute("download", "pageData.json");
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
   }
 
   render() {
