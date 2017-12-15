@@ -254,7 +254,7 @@ class CreatorPage extends Component {
           <div className="row">
             <div className="four columns sidebar">
               <div className="sidebar">
-                <span className="creatorpage-avatar"><img alt="Niel's face" src={this.state.creator.avatar} /></span>
+                <span className="creatorpage-avatar"><img alt={`Avatar for ${this.state.creator.title}`} src={this.state.creator.avatar} /></span>
                 <FundButton toAddress={this.state.creator.contractAddress} amount={customAmount} minAmount={minAmount} >Stake {customAmount} Ether</FundButton>
                 <input step="0.1" placeholder="Custom amount?" className="custom-value-input" type="number" onChange={this.handleCustomAmount.bind(this)} />
                 <div className="sidebar-key-info">
