@@ -67,6 +67,7 @@ class CreatorPage extends Component {
           this.setState({creator: data});
           this.setState({userLoading: false});
 
+          // TODO: serve -s build runs this on port 5000
           const fetchHost = window.location.hostname === "localhost" ? "http://localhost:3000" : ''; 
           const fetchUrl = `${fetchHost}/contract/${this.state.creator.contractAddress}`;
           // TODO: Polyfill fetch for back suport
@@ -96,7 +97,7 @@ class CreatorPage extends Component {
     }
     else {
       // NO USER
-      console.log("NO SUER AT THIS ADDESS");
+      console.log("NO USER AT THIS ADDESS");
     }
   }
 
@@ -222,12 +223,12 @@ class CreatorPage extends Component {
     const sunsetPeriodDays = Math.floor((this.state.contract.sunsetPeriod % 31536000) / 86400);
     const withdrawalPeriodDays = Math.floor((this.state.contract.withdrawalPeriod % 31536000) / 86400);
 
-    const balance = web3.utils.fromWei(this.state.contract.balance, 'ether');
+    const balance = web3.utils.fromWei(String(this.state.contract.balance), 'ether');
 
     let withdrawalAmount = this.state.exchangeRate * (balance * 0.1);
     withdrawalAmount = withdrawalAmount.toFixed(2);
 
-    const minAmount = web3.utils.fromWei(this.state.contract.minimumFundingAmount, 'ether');
+    const minAmount = web3.utils.fromWei(String(this.state.contract.minimumFundingAmount), 'ether');
 
     return (
       <div className="container creator-page">
