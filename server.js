@@ -69,6 +69,7 @@ app.get('/contract/:address', async (req, res, next) => {
     "tokenized": tokenized,
     "withdrawalCounter": withdrawalCounter
   });
+  
 });
 
 app.get('*', function (req, res) {
