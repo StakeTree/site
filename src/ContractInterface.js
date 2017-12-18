@@ -198,7 +198,7 @@ class ContractInterface extends Component {
     const sunsetPeriodDays = Math.floor((this.state.contract.sunsetWithdrawalPeriod % 31536000) / 86400);
     const withdrawalPeriodDays = Math.floor((this.state.contract.withdrawalPeriod % 31536000) / 86400);
 
-    const balance = web3.utils.fromWei(this.state.contract.balance, 'ether');
+    const balance = web3.utils.fromWei(String(this.state.contract.balance), 'ether');
     
     let withdrawalAmount = this.state.exchangeRate * (balance * 0.1);
     withdrawalAmount = withdrawalAmount.toFixed(2);
@@ -206,7 +206,7 @@ class ContractInterface extends Component {
     let totalStakedDollar = this.state.exchangeRate * (balance);
     totalStakedDollar = totalStakedDollar.toFixed(2);
 
-    const minAmount = web3.utils.fromWei(this.state.contract.minimumFundingAmount, 'ether');
+    const minAmount = web3.utils.fromWei(String(this.state.contract.minimumFundingAmount), 'ether');
 
     const noContractHtml = this.state.web3available && this.state.contractInstance === '' ? <div className="six columns offset-by-three">
                 <div className="contract-card">
