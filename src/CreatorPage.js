@@ -44,7 +44,7 @@ class CreatorPage extends Component {
         nextWithdrawal: "...",
         withdrawalPeriod: "...",
         live: true,
-        sunsetPeriod: "...",
+        sunsetWithdrawalPeriod: "...",
         minimumFundingAmount: 0,
         tokenContract: "0x0000000000000000000000000000000000000000"
       },
@@ -201,7 +201,7 @@ class CreatorPage extends Component {
 
     const fundStarted = new Date(this.state.contract.contractStartTime*1000).toLocaleDateString();
     const nextWithdrawal = new Date(this.state.contract.nextWithdrawal*1000).toLocaleDateString();
-    const sunsetPeriodDays = Math.floor((this.state.contract.sunsetPeriod % 31536000) / 86400);
+    const sunsetPeriodDays = Math.floor((this.state.contract.sunsetWithdrawalPeriod % 31536000) / 86400);
     const withdrawalPeriodDays = Math.floor((this.state.contract.withdrawalPeriod % 31536000) / 86400);
 
     const balance = web3.utils.fromWei(String(this.state.contract.balance), 'ether');
