@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import Web3 from 'web3'; // TODO: follow up on how to use web3 when pulled in vs metamask
-import TruffleContract from 'truffle-contract';
-import StakeTreeMVP from 'staketree-contracts/build/contracts/StakeTreeMVP.json';
 import { Link } from 'react-router-dom';
 
 import Creators from './creatorsToIPFSMap.json';
@@ -18,7 +16,6 @@ import EtherscanLink from './EtherscanLink.js';
 import FundButton from './FundButton.js';
 import PageEditor from './PageEditor.js';
 
-let contractInstanceMVP;
 let web3Polling;
 const web3 = new Web3();
 
@@ -158,13 +155,6 @@ class CreatorPage extends Component {
         this.setState({contractLoading: false});
       }
     });
-
-    // OLD MVP for refunding backwards compatible
-    const contractMVP = TruffleContract(StakeTreeMVP);
-    contractMVP.setProvider(window.web3.currentProvider);
-    contractInstanceMVP = await contractMVP.at("0xa899495d47B6a575c830Ffc330BC83318Df46a44");
-    window.contractInstanceMVP = contractInstanceMVP; // debugging
-    // OLD MVP for refunding backwards compatible
   }
 
   getContractDetails() {
@@ -205,15 +195,6 @@ class CreatorPage extends Component {
     this.setState({customAmount: value});
   }
 
-  async refundOld(e) {
-    e.preventDefault();
-    window.web3.eth.getAccounts(async (error, accounts) => {
-      // const gasRequired = await contractInstance.refund.estimateGas({from: accounts[0]});
-      // TODO: Figure out why estimated gas cost is wrong
-      await contractInstanceMVP.refund({"from": accounts[0], "gas": 100000});
-    });
-  }
-
   render() {
 
     const customAmount = this.state.customAmount > 0 ? this.state.customAmount : 0.1;
@@ -239,18 +220,6 @@ class CreatorPage extends Component {
               <h3 className="creatorpage-project-name">{this.state.creator.title}</h3>
             </div>
           </div>
-
-          {this.props.match.url === "/dev" ? 
-            <div className="row">
-              <div className="twelve columns">
-                <div style={{"marginBottom": "25px"}}className="well">
-                The <EtherscanLink text={"MVP contract"} type={"address"} id={"0xa899495d47B6a575c830Ffc330BC83318Df46a44"} /> has been put into sunset mode. Click <a href="" onClick={this.refundOld.bind(this)}>here</a> to refund your ether.<br />
-                Read more on <a target="_blank" rel="noopener noreferrer" href="https://medium.com/@StakeTree/sunsetting-the-mvp-now-with-tokenization-4b4be1339b71">what's changed</a> in the new contract. I hope to see you fund the new contract below!
-                </div>
-              </div>
-            </div>
-            : ''
-          }
           
           <div className="row">
             <div className="four columns sidebar">
