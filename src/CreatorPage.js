@@ -239,7 +239,7 @@ class CreatorPage extends Component {
                   Fund started: {fundStarted} <br />
                   Withdrawal period: {withdrawalPeriodDays} days <br />
                   Sunset Period: {sunsetPeriodDays} days <br />
-                  Contract Source: <a href={`https://etherscan.io/address/${this.state.creator.contractAddress}`} target="_blank" rel="noopener noreferrer">View on Etherscan</a>
+                  Contract Source: <EtherscanLink type={"address"} id={this.state.creator.contractAddress} text="View on Etherscan" />
                 </div>
               </div>
              
