@@ -42,6 +42,7 @@ class FunderCard extends Component {
     Web3Controller.getContractDetails({
       id: 'funder-card-details',
       instance: this.props.contract,
+      variables: ['version', 'minorVersion'],
       functions: [
         {name: 'getFunderBalance', arg: this.props.currentAccount},
         {name: 'getFunderContribution', arg: this.props.currentAccount},
@@ -108,7 +109,8 @@ class FunderCard extends Component {
     const funderBalance = window.web3.fromWei(this.state.funder.balance, 'ether');
     const funderContribution = window.web3.fromWei(this.state.funder.contribution, 'ether');
     const funderClaimAmount = window.web3.fromWei(this.state.funder.contribution-this.state.funder.contributionClaimed, 'ether');
-    
+    const tokenClaimAmount = this.state.funder.minorVersion === 1 ? funderClaimAmount*1000 : funderClaimAmount;
+
     const customAmount = this.state.customAmount > 0 ? this.state.customAmount : 0.1;
 
     // const minAmount = window.web3.fromWei(this.props.minAmount, 'ether');
@@ -121,7 +123,7 @@ class FunderCard extends Component {
             <li>Currently staked: {funderBalance} ether.</li>
             <li>Total contributed: {funderContribution} ether.</li>
             {this.props.tokenized ? <li>Current token balance: {this.state.tokens.balance/Math.pow(10, this.state.tokens.decimals)} {this.state.tokens.symbol} tokens.</li> : ''}
-            {this.props.tokenized ? <li>You can claim {funderClaimAmount} tokens.</li> : '' }
+            {this.props.tokenized ? <li>You can claim {tokenClaimAmount} tokens.</li> : '' }
           </ul>
           <div className="secondary-actions">
             <button className="btn clean full-width" onClick={this.toggleStakingOptions.bind(this)}>Stake more</button>
